@@ -122,7 +122,7 @@
                 </div>
                 <div class="doctor-card">
                     <div class="doc-img">
-                        <img src="Public/Doctors/ShreyaPokharel.jpg" alt="Dr. Shreya Pokharel" onerror="this.src='https://placehold.co/400x400/e3f2fd/0a5c8e?text=Dr.+Shreya'">
+                        <img src="Public/Doctors/ShreyaPokharel.jpeg" alt="Dr. Shreya Pokharel" onerror="this.src='https://placehold.co/400x400/e3f2fd/0a5c8e?text=Dr.+Shreya'">
                     </div>
                     <h3>Dr. Shreya Pokharel</h3>
                     <span class="specialty">Dentist & Maxillofacial Surgeon</span>
