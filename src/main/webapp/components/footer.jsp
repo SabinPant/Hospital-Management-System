@@ -1,5 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
+<%
+    String contextPath = request.getContextPath();
+%>
+
 <!-- ==================== FOOTER ==================== -->
 <footer>
     <div class="container footer-grid">
@@ -16,11 +20,11 @@
         <div class="footer-col">
             <h4>Quick Links</h4>
             <ul>
-                <li><a href="${pageContext.request.contextPath}/">Home</a></li>
-                <li><a href="${pageContext.request.contextPath}/about.jsp">About Us</a></li>
-                <li><a href="${pageContext.request.contextPath}/blog.jsp">Blog</a></li>
-                <li><a href="${pageContext.request.contextPath}/contact.jsp">Contact Us</a></li>
-                <li><a href="${pageContext.request.contextPath}/login.jsp">Login / Register</a></li>
+                <li><a href="<%= contextPath %>/">Home</a></li>
+                <li><a href="<%= contextPath %>/about.jsp">About Us</a></li>
+                <li><a href="<%= contextPath %>/blog.jsp">Blog</a></li>
+                <li><a href="${pageContext.request.contextPath}/contact">Contact Us</a></li>
+                <li><a href="<%= contextPath %>/login.jsp">Login / Register</a></li>
             </ul>
         </div>
         <div class="footer-col">

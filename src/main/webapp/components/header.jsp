@@ -5,8 +5,15 @@
     // Check if user is logged in
     HttpSession userSession = request.getSession(false);
     boolean isLoggedIn = (userSession != null && userSession.getAttribute("user_id") != null);
-    String userRole = isLoggedIn ? (String) userSession.getAttribute("role") : null;
-    String firstName = isLoggedIn ? (String) userSession.getAttribute("first_name") : null;
+    String userRole = isLoggedIn ? (String) userSession.getAttribute("user_type") : null;
+    String firstName = isLoggedIn ? (String) userSession.getAttribute("full_name") : null;
+    
+    // Handle null values
+    if (firstName == null) firstName = "";
+    if (userRole == null) userRole = "";
+    
+    // Get context path for proper URL building
+    String contextPath = request.getContextPath();
 %>
 
 <!-- ==================== TOP EMERGENCY BAR ==================== -->
@@ -37,25 +44,25 @@
         <nav>
             <ul class="nav-links">
                 <% if (isLoggedIn) { %>
-                    <li><a href="${pageContext.request.contextPath}/<%= userRole %>/dashboard.jsp" class="active">Dashboard</a></li>
-                    <li><a href="${pageContext.request.contextPath}/patient/book-appointment.jsp">Book Appointments</a></li>
-                    <li><a href="${pageContext.request.contextPath}/about.jsp">About Us</a></li>
-                    <li><a href="${pageContext.request.contextPath}/contact.jsp">Contact Us</a></li>
+                    <li><a href="<%= contextPath %>/patient/dashboard">Dashboard</a></li>
+                    <li><a href="<%= contextPath %>/book-appointment">Book Appointments</a></li>
+                    <li><a href="<%= contextPath %>/about.jsp">About Us</a></li>
+                    <li><a href="<%= contextPath %>/contact">Contact Us</a></li>
                 <% } else { %>
-                    <li><a href="${pageContext.request.contextPath}/" class="active">Home</a></li>
-                    <li><a href="${pageContext.request.contextPath}/about.jsp">About Us</a></li>
-                    <li><a href="${pageContext.request.contextPath}/blog.jsp">Blog</a></li>
-                    <li><a href="${pageContext.request.contextPath}/contact.jsp">Contact Us</a></li>
+                    <li><a href="<%= contextPath %>/">Home</a></li>
+                    <li><a href="<%= contextPath %>/about.jsp">About Us</a></li>
+                    <li><a href="<%= contextPath %>/blog.jsp">Blog</a></li>
+                    <li><a href="<%= contextPath %>/contact">Contact Us</a></li>
                 <% } %>
             </ul>
         </nav>
         <div class="nav-buttons">
             <% if (isLoggedIn) { %>
                 <span class="welcome-text">Welcome, <%= firstName %></span>
-                <a href="${pageContext.request.contextPath}/logout" class="btn-logout"><i class="fas fa-sign-out-alt"></i> LOGOUT</a>
+                <a href="<%= contextPath %>/logout" class="btn-logout"><i class="fas fa-sign-out-alt"></i> LOGOUT</a>
             <% } else { %>
-                <a href="${pageContext.request.contextPath}/login.jsp" class="btn-login"><i class="fas fa-sign-in-alt"></i> LOGIN</a>
-                <a href="${pageContext.request.contextPath}/register.jsp" class="btn-register"><i class="fas fa-user-plus"></i> REGISTER</a>
+                <a href="<%= contextPath %>/login" class="btn-login"><i class="fas fa-sign-in-alt"></i> LOGIN</a>
+                <a href="<%= contextPath %>/register" class="btn-register"><i class="fas fa-user-plus"></i> REGISTER</a>
             <% } %>
         </div>
     </div>
