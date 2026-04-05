@@ -158,15 +158,15 @@
             %>
             
             <form action="${pageContext.request.contextPath}/login" method="post">
-                <div class="form-group">
-                    <label><i class="fas fa-user"></i> Username</label>
-                    <input type="text" name="username" placeholder="Enter your username" required>
-                </div>
-                
-                <div class="form-group">
-                    <label><i class="fas fa-lock"></i> Password</label>
-                    <input type="password" name="password" placeholder="Enter your password" required>
-                </div>
+              <div class="form-group">
+    <label><i class="fas fa-envelope"></i> Email Address</label>
+    <input type="email" name="email" placeholder="Enter your registered email" required>
+</div>
+
+<div class="form-group">
+    <label><i class="fas fa-lock"></i> Password</label>
+    <input type="password" name="password" placeholder="Enter your password" required>
+</div>
                 
                 <button type="submit" class="btn-login-submit">
                     <i class="fas fa-sign-in-alt"></i> Login

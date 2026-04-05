@@ -192,14 +192,14 @@ public class UserDAO {
     }
     
     
-    // Get user by username (for login)
-    public User getUserByUsername(String username) {
-        String query = "SELECT * FROM users WHERE username = ?";
+ // Get user by email (for login)
+    public User getUserByEmail(String email) {
+        String query = "SELECT * FROM users WHERE email = ?";
         
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
             
-            pstmt.setString(1, username);
+            pstmt.setString(1, email);
             ResultSet rs = pstmt.executeQuery();
             
             if (rs.next()) {
@@ -222,6 +222,7 @@ public class UserDAO {
             }
             
         } catch (SQLException e) {
+            System.err.println("Error getting user by email: " + e.getMessage());
             e.printStackTrace();
         }
         

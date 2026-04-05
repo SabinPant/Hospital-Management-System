@@ -366,6 +366,11 @@
         padding: 12px 24px;
     }
 }
+.alert-error {
+    background: #fee2e2;
+    color: #991b1b;
+    border-left: 4px solid #ef4444;
+}
 
 @media (max-width: 400px) {
     .form-group input,

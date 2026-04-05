@@ -34,12 +34,13 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
-        String username = request.getParameter("username");
+        // Changed from username to email
+        String email = request.getParameter("email");
         String password = request.getParameter("password");
         
         // Validation
-        if (username == null || username.trim().isEmpty()) {
-            request.setAttribute("error", "Username is required");
+        if (email == null || email.trim().isEmpty()) {
+            request.setAttribute("error", "Email is required");
             request.getRequestDispatcher("/WEB-INF/views/login.jsp")
                    .forward(request, response);
             return;
@@ -52,11 +53,11 @@ public class LoginServlet extends HttpServlet {
             return;
         }
         
-        // Get user from database
-        User user = userDAO.getUserByUsername(username);
+        // Get user by email (changed from username)
+        User user = userDAO.getUserByEmail(email);
         
         if (user == null) {
-            request.setAttribute("error", "Invalid username or password");
+            request.setAttribute("error", "Invalid email or password");
             request.getRequestDispatcher("/WEB-INF/views/login.jsp")
                    .forward(request, response);
             return;
@@ -88,14 +89,13 @@ public class LoginServlet extends HttpServlet {
         boolean passwordValid = PasswordUtil.verifyPassword(password, user.getPassword());
         
         if (!passwordValid) {
-            request.setAttribute("error", "Invalid username or password");
+            request.setAttribute("error", "Invalid email or password");
             request.getRequestDispatcher("/WEB-INF/views/login.jsp")
                    .forward(request, response);
             return;
         }
         
-        // ========== DOCTOR APPROVAL CHECK ==========
-        // If user is a doctor, check approval status
+        // Doctor approval check
         if ("doctor".equals(user.getUserType())) {
             String approvalStatus = userDAO.getDoctorApprovalStatus(user.getId());
             
@@ -107,7 +107,7 @@ public class LoginServlet extends HttpServlet {
             }
             
             if ("pending".equals(approvalStatus)) {
-                request.setAttribute("error", "Your account is pending admin approval. Please wait for confirmation email.");
+                request.setAttribute("error", "Your account is pending admin approval. Please wait for confirmation.");
                 request.getRequestDispatcher("/WEB-INF/views/login.jsp")
                        .forward(request, response);
                 return;
@@ -119,27 +119,22 @@ public class LoginServlet extends HttpServlet {
                 if (rejectionReason != null && !rejectionReason.isEmpty()) {
                     message += " Reason: " + rejectionReason;
                 }
-                message += " Please contact admin for more information.";
                 request.setAttribute("error", message);
                 request.getRequestDispatcher("/WEB-INF/views/login.jsp")
                        .forward(request, response);
                 return;
             }
-            
-            // If approved, proceed with login
-            System.out.println("Doctor approved: " + user.getUsername());
         }
-        // ========== END DOCTOR APPROVAL CHECK ==========
         
         // Create session
         HttpSession session = request.getSession();
         session.setAttribute("user_id", user.getId());
-        session.setAttribute("username", user.getUsername());
+        session.setAttribute("email", user.getEmail());
         session.setAttribute("full_name", user.getFullName());
         session.setAttribute("user_type", user.getUserType());
         session.setAttribute("status", user.getStatus());
         
-        System.out.println("User logged in: " + user.getUsername() + " (" + user.getUserType() + ")");
+        System.out.println("User logged in: " + user.getEmail() + " (" + user.getUserType() + ")");
         
         // Redirect based on user type
         if ("patient".equals(user.getUserType())) {
