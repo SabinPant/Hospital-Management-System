@@ -1,20 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="models.AdminDashboardData, java.util.*" %>
-<%
-    // Check if admin is logged in
-    if (session.getAttribute("admin_id") == null) {
-        response.sendRedirect(request.getContextPath() + "/admin/login");
-        return;
-    }
-    
-    String adminName = (String) session.getAttribute("admin_name");
-    if (adminName == null) adminName = "Admin";
-    
-    AdminDashboardData data = (AdminDashboardData) request.getAttribute("dashboardData");
-    if (data == null) {
-        data = new AdminDashboardData();
-    }
-%>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -40,6 +26,7 @@
             <li><a href="${pageContext.request.contextPath}/admin/users"><i class="fas fa-users"></i> <span>Users</span></a></li>
             <li><a href="${pageContext.request.contextPath}/admin/doctors"><i class="fas fa-user-md"></i> <span>Doctors</span></a></li>
             <li><a href="${pageContext.request.contextPath}/admin/appointments"><i class="fas fa-calendar-check"></i> <span>Appointments</span></a></li>
+            <li><a href="${pageContext.request.contextPath}/admin/messages"><i class="fas fa-envelope"></i> <span>Messages</span></a></li>
             <li><a href="${pageContext.request.contextPath}/admin/logs"><i class="fas fa-history"></i> <span>System Logs</span></a></li>
             <li><a href="${pageContext.request.contextPath}/admin/announcement"><i class="fas fa-bullhorn"></i> <span>Announcement</span></a></li>
         </ul>
@@ -47,11 +34,23 @@
 
     <!-- Main Content -->
     <div class="admin-main">
+        <!-- Success/Error Messages -->
+        <c:if test="${not empty param.success}">
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle"></i> ${param.success}
+            </div>
+        </c:if>
+        <c:if test="${not empty param.error}">
+            <div class="alert alert-error">
+                <i class="fas fa-exclamation-circle"></i> ${param.error}
+            </div>
+        </c:if>
+        
         <!-- Top Bar -->
         <div class="admin-topbar">
             <h1>Dashboard</h1>
             <div class="admin-user">
-                <span><i class="fas fa-user-shield"></i> <%= adminName %></span>
+                <span><i class="fas fa-user-shield"></i> ${sessionScope.admin_name != null ? sessionScope.admin_name : 'Admin'}</span>
                 <a href="${pageContext.request.contextPath}/admin/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div>
         </div>
@@ -60,19 +59,19 @@
         <div class="stats-grid">
             <div class="stat-card">
                 <h3><i class="fas fa-users"></i> Total Users</h3>
-                <div class="stat-number"><%= data.getTotalUsers() %></div>
+                <div class="stat-number">${dashboardData.totalUsers}</div>
             </div>
             <div class="stat-card">
                 <h3><i class="fas fa-user-md"></i> Total Doctors</h3>
-                <div class="stat-number"><%= data.getTotalDoctors() %></div>
+                <div class="stat-number">${dashboardData.totalDoctors}</div>
             </div>
             <div class="stat-card">
                 <h3><i class="fas fa-user"></i> Total Patients</h3>
-                <div class="stat-number"><%= data.getTotalPatients() %></div>
+                <div class="stat-number">${dashboardData.totalPatients}</div>
             </div>
             <div class="stat-card">
                 <h3><i class="fas fa-clock"></i> Pending Approvals</h3>
-                <div class="stat-number"><%= data.getPendingDoctors() %></div>
+                <div class="stat-number">${dashboardData.pendingDoctors}</div>
             </div>
         </div>
 
@@ -80,15 +79,15 @@
         <div class="financial-summary">
             <div class="financial-item">
                 <div class="label">Total Revenue</div>
-                <div class="value">Rs <%= String.format("%,.2f", data.getTotalRevenue()) %></div>
+                <div class="value">Rs <fmt:formatNumber value="${dashboardData.totalRevenue}" type="number" minFractionDigits="2" maxFractionDigits="2"/></div>
             </div>
             <div class="financial-item">
                 <div class="label">Total Appointments</div>
-                <div class="value"><%= data.getTotalCompletedAppointments() %></div>
+                <div class="value">${dashboardData.totalCompletedAppointments}</div>
             </div>
             <div class="financial-item">
                 <div class="label">Avg Revenue/Appointment</div>
-                <div class="value">Rs <%= String.format("%,.2f", data.getAvgRevenuePerAppointment()) %></div>
+                <div class="value">Rs <fmt:formatNumber value="${dashboardData.avgRevenuePerAppointment}" type="number" minFractionDigits="2" maxFractionDigits="2"/></div>
             </div>
         </div>
 
@@ -97,80 +96,126 @@
             <!-- Pending Doctors -->
             <div class="dashboard-card">
                 <h3><i class="fas fa-user-clock"></i> Pending Doctor Approvals</h3>
-                <% if (data.getPendingDoctorsList() != null && !data.getPendingDoctorsList().isEmpty()) { %>
-                    <% for (Map<String, Object> doctor : data.getPendingDoctorsList()) { %>
-                        <div class="doctor-item">
-                            <div class="doctor-info">
-                                <h4><%= doctor.get("full_name") %></h4>
-                                <p><%= doctor.get("specialization") %> | <%= doctor.get("experience_years") %> yrs exp | License: <%= doctor.get("license_number") %></p>
+                <c:choose>
+                    <c:when test="${not empty dashboardData.pendingDoctorsList}">
+                        <c:forEach var="doctor" items="${dashboardData.pendingDoctorsList}">
+                            <div class="doctor-item">
+                                <div class="doctor-info">
+                                    <h4>${doctor.full_name}</h4>
+                                    <p>${doctor.specialization} | ${doctor.experience_years} yrs exp | License: ${doctor.license_number}</p>
+                                </div>
+                                <div class="doctor-actions">
+                                    <button class="btn-approve" onclick="approveDoctor(${doctor.id})">Approve</button>
+                                    <button class="btn-reject" onclick="rejectDoctor(${doctor.id})">Reject</button>
+                                </div>
                             </div>
-                            <div class="doctor-actions">
-                                <button class="btn-approve" onclick="approveDoctor(<%= doctor.get("id") %>)">Approve</button>
-                                <button class="btn-reject" onclick="rejectDoctor(<%= doctor.get("id") %>)">Reject</button>
-                            </div>
-                        </div>
-                    <% } %>
-                <% } else { %>
-                    <p style="text-align: center; color: #64748b; padding: 20px;">No pending approvals</p>
-                <% } %>
+                        </c:forEach>
+                    </c:when>
+                    <c:otherwise>
+                        <p style="text-align: center; color: #64748b; padding: 20px;">No pending approvals</p>
+                    </c:otherwise>
+                </c:choose>
             </div>
 
             <!-- Today's Appointments -->
             <div class="dashboard-card">
-                <h3><i class="fas fa-calendar-day"></i> Today's Appointments (<%= data.getTodayAppointments() %>)</h3>
-                <% if (data.getTodayAppointmentsList() != null && !data.getTodayAppointmentsList().isEmpty()) { %>
-                    <% for (Map<String, Object> apt : data.getTodayAppointmentsList()) { %>
-                        <div class="appointment-item">
-                            <span class="appointment-time"><%= apt.get("appointment_time") %></span>
-                            <div class="appointment-info">
-                                <p><strong><%= apt.get("doctor_name") %></strong> - <%= apt.get("patient_name") %></p>
+                <h3><i class="fas fa-calendar-day"></i> Today's Appointments (${dashboardData.todayAppointments})</h3>
+                <c:choose>
+                    <c:when test="${not empty dashboardData.todayAppointmentsList}">
+                        <c:forEach var="apt" items="${dashboardData.todayAppointmentsList}">
+                            <div class="appointment-item">
+                                <span class="appointment-time">${apt.appointment_time}</span>
+                                <div class="appointment-info">
+                                    <p><strong>${apt.doctor_name}</strong> - ${apt.patient_name}</p>
+                                </div>
+                                <span class="appointment-status">${apt.status}</span>
                             </div>
-                            <span class="appointment-status"><%= apt.get("status") %></span>
-                        </div>
-                    <% } %>
-                <% } else { %>
-                    <p style="text-align: center; color: #64748b; padding: 20px;">No appointments today</p>
-                <% } %>
+                        </c:forEach>
+                    </c:when>
+                    <c:otherwise>
+                        <p style="text-align: center; color: #64748b; padding: 20px;">No appointments today</p>
+                    </c:otherwise>
+                </c:choose>
             </div>
         </div>
 
         <!-- Top Doctors -->
         <div class="dashboard-card" style="margin-bottom: 24px;">
             <h3><i class="fas fa-trophy"></i> Top Doctors (By Completed Appointments)</h3>
-            <% if (data.getTopDoctorsList() != null && !data.getTopDoctorsList().isEmpty()) { %>
-                <% for (Map<String, Object> doctor : data.getTopDoctorsList()) { %>
-                    <div class="doctor-item">
-                        <div class="doctor-info">
-                            <h4><%= doctor.get("rank") %>. <%= doctor.get("full_name") %></h4>
-                            <p><%= doctor.get("appointment_count") %> completed appointments</p>
+            <c:choose>
+                <c:when test="${not empty dashboardData.topDoctorsList}">
+                    <c:forEach var="doctor" items="${dashboardData.topDoctorsList}">
+                        <div class="doctor-item">
+                            <div class="doctor-info">
+                                <h4>${doctor.rank}. ${doctor.full_name}</h4>
+                                <p>${doctor.appointment_count} completed appointments</p>
+                            </div>
                         </div>
-                    </div>
-                <% } %>
-            <% } else { %>
-                <p style="text-align: center; color: #64748b; padding: 20px;">No data available</p>
-            <% } %>
+                    </c:forEach>
+                </c:when>
+                <c:otherwise>
+                    <p style="text-align: center; color: #64748b; padding: 20px;">No data available</p>
+                </c:otherwise>
+            </c:choose>
         </div>
+        
+        <!-- Recent Messages & Monthly Revenue Grid -->
+        <div class="dashboard-grid">
+            <!-- Recent Contact Messages -->
+            <div class="dashboard-card">
+                <h3><i class="fas fa-envelope"></i> Recent Contact Messages</h3>
+                <c:choose>
+                    <c:when test="${not empty recentMessages}">
+                        <c:forEach var="msg" items="${recentMessages}">
+                            <div class="message-item">
+                                <h4>${msg.name} - ${msg.subject}</h4>
+                                <p>
+                                    <c:choose>
+                                        <c:when test="${msg.message.length() > 60}">
+                                            ${msg.message.substring(0, 60)}...
+                                        </c:when>
+                                        <c:otherwise>
+                                            ${msg.message}
+                                        </c:otherwise>
+                                    </c:choose>
+                                </p>
+                                <span class="message-date">${msg.createdAt}</span>
+                            </div>
+                        </c:forEach>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="empty-state">
+                            <i class="fas fa-inbox"></i>
+                            <p>No messages yet</p>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+            </div>
 
-        <!-- Monthly Revenue -->
-        <div class="dashboard-card">
-            <h3><i class="fas fa-chart-line"></i> Monthly Revenue</h3>
-            <table class="revenue-table">
-                <thead>
-                    <tr><th>Month</th><th>Revenue</th></tr>
-                </thead>
-                <tbody>
-                    <% if (data.getMonthlyRevenueList() != null && !data.getMonthlyRevenueList().isEmpty()) { %>
-                        <% for (Map<String, Object> month : data.getMonthlyRevenueList()) { %>
-                            <tr>
-                                <td><%= month.get("month") %></td>
-                                <td>Rs <%= String.format("%,.2f", month.get("revenue")) %></td>
-                            </tr>
-                        <% } %>
-                    <% } else { %>
-                        <tr><td colspan="2" style="text-align: center;">No revenue data available</td></tr>
-                    <% } %>
-                </tbody>
-            </table>
+            <!-- Monthly Revenue -->
+            <div class="dashboard-card">
+                <h3><i class="fas fa-chart-line"></i> Monthly Revenue</h3>
+                <table class="revenue-table">
+                    <thead>
+                        <tr><th>Month</th><th>Revenue</th></tr>
+                    </thead>
+                    <tbody>
+                        <c:choose>
+                            <c:when test="${not empty dashboardData.monthlyRevenueList}">
+                                <c:forEach var="month" items="${dashboardData.monthlyRevenueList}">
+                                    <tr>
+                                        <td>${month.month}</td>
+                                        <td>Rs <fmt:formatNumber value="${month.revenue}" type="number" minFractionDigits="2" maxFractionDigits="2"/></td>
+                                    </tr>
+                                </c:forEach>
+                            </c:when>
+                            <c:otherwise>
+                                <tr><td colspan="2" class="empty-state">No revenue data available</td></tr>
+                            </c:otherwise>
+                        </c:choose>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
@@ -183,8 +228,11 @@
     }
     
     function rejectDoctor(doctorId) {
-        if(confirm('Reject this doctor?')) {
-            window.location.href = '${pageContext.request.contextPath}/admin/reject-doctor?id=' + doctorId;
+        let reason = prompt('Please enter reason for rejection:');
+        if(reason !== null && reason.trim() !== '') {
+            window.location.href = '${pageContext.request.contextPath}/admin/reject-doctor?id=' + doctorId + '&reason=' + encodeURIComponent(reason);
+        } else if(reason !== null) {
+            alert('Please provide a reason for rejection');
         }
     }
 </script>

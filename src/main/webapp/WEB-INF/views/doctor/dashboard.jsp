@@ -1,20 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%
-    // Check if user is logged in
-    if (session.getAttribute("user_id") == null) {
-        response.sendRedirect(request.getContextPath() + "/login");
-        return;
-    }
-    
-    String userType = (String) session.getAttribute("user_type");
-    if (!"doctor".equals(userType)) {
-        response.sendRedirect(request.getContextPath() + "/login");
-        return;
-    }
-    
-    String fullName = (String) session.getAttribute("full_name");
-    if (fullName == null) fullName = "Doctor";
-%>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,8 +18,8 @@
 
     <div class="dashboard-container">
         <div class="welcome-card">
-            <h1>Welcome, Dr. <%= fullName %>!</h1>
-            <p>Manage your appointments and patient records here.</p>
+<h1>Welcome, Dr. ${sessionScope.full_name != null ? sessionScope.full_name : 'Doctor'}!</h1>           
+ <p>Manage your appointments and patient records here.</p>
         </div>
         
         <div class="dashboard-grid">

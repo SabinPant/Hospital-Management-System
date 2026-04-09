@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,12 +46,6 @@
             color: var(--gray-dark);
         }
         
-        .form-group label i {
-            color: var(--primary-blue);
-            width: 20px;
-            margin-right: 8px;
-        }
-        
         .form-group input {
             width: 100%;
             padding: 12px 16px;
@@ -58,7 +53,6 @@
             border-radius: 12px;
             font-family: 'Inter', sans-serif;
             font-size: 0.95rem;
-            transition: all 0.3s ease;
         }
         
         .form-group input:focus {
@@ -73,21 +67,16 @@
             color: white;
             padding: 14px;
             border: none;
-            border-radius: 9999px;
+            border-radius: 30px;
             font-size: 1rem;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
         }
         
         .btn-login-submit:hover {
             background: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(10, 92, 142, 0.3);
         }
         
         .alert {
@@ -145,28 +134,23 @@
         </div>
         
         <div class="login-body">
-            <%
-                String error = (String) request.getAttribute("error");
-                if (error != null) {
-            %>
+            <c:if test="${not empty error}">
                 <div class="alert alert-error">
                     <i class="fas fa-exclamation-circle"></i>
-                    <%= error %>
+                    ${error}
                 </div>
-            <%
-                }
-            %>
+            </c:if>
             
             <form action="${pageContext.request.contextPath}/login" method="post">
-              <div class="form-group">
-    <label><i class="fas fa-envelope"></i> Email Address</label>
-    <input type="email" name="email" placeholder="Enter your registered email" required>
-</div>
-
-<div class="form-group">
-    <label><i class="fas fa-lock"></i> Password</label>
-    <input type="password" name="password" placeholder="Enter your password" required>
-</div>
+                <div class="form-group">
+                    <label><i class="fas fa-envelope"></i> Email Address</label>
+                    <input type="email" name="email" placeholder="Enter your registered email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" name="password" placeholder="Enter your password" required>
+                </div>
                 
                 <button type="submit" class="btn-login-submit">
                     <i class="fas fa-sign-in-alt"></i> Login

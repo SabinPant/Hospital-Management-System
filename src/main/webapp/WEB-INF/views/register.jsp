@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,35 +22,28 @@
         </div>
         
         <div class="register-body">
-            <%-- Display messages --%>
-            <%
-                String success = (String) request.getAttribute("success");
-                String error = (String) request.getAttribute("error");
-                
-                if (success != null) {
-            %>
+            <!-- Display messages using JSTL -->
+            <c:if test="${not empty success}">
                 <div class="alert alert-success">
                     <i class="fas fa-check-circle"></i>
-                    <%= success %>
+                    ${success}
                     <div style="margin-top: 10px;">
                         <a href="${pageContext.request.contextPath}/login" class="btn-login" style="display: inline-block; padding: 8px 20px; margin-top: 5px;">Go to Login</a>
                     </div>
                 </div>
-            <%
-                } else if (error != null) {
-            %>
+            </c:if>
+            
+            <c:if test="${not empty error}">
                 <div class="alert alert-error">
                     <i class="fas fa-exclamation-circle"></i>
-                    <%= error %>
+                    ${error}
                 </div>
-            <%
-                }
-            %>
+            </c:if>
             
             <form action="${pageContext.request.contextPath}/register" method="post" id="registerForm">
                 <!-- User Type Selection -->
                 <div class="user-type-selector">
-                    <div class="user-type-btn" data-type="patient">
+                    <div class="user-type-btn active" data-type="patient">
                         <i class="fas fa-user"></i>
                         <span>Patient Registration</span>
                     </div>
@@ -110,8 +104,8 @@
                     </div>
                     
                     <div class="form-group">
-                        <label><i class="fas fa-phone"></i> Phone Number</label>
-                        <input type="tel" name="phone" placeholder="10 digits number">
+                        <label><i class="fas fa-phone"></i> Phone Number *</label>
+                        <input type="tel" name="phone" placeholder="10 digits number" required>
                     </div>
                     
                     <div class="form-group full-width">
@@ -120,46 +114,46 @@
                     </div>
                 </div>
                 
-            <!-- Patient Fields (Conditional) -->
-<div id="patientFields" class="conditional-fields active">
-    <h3 style="margin: 20px 0 15px; color: var(--primary-blue);"><i class="fas fa-notes-medical"></i> Patient Details</h3>
-    <div class="form-grid">
-        <div class="form-group">
-            <label><i class="fas fa-calendar-alt"></i> Date of Birth</label>
-            <input type="date" name="dob">
-        </div>
-        
-        <div class="form-group">
-            <label><i class="fas fa-tint"></i> Blood Group</label>
-            <select name="bloodGroup">
-                <option value="">Select Blood Group</option>
-                <option value="A+">A+</option>
-                <option value="A-">A-</option>
-                <option value="B+">B+</option>
-                <option value="B-">B-</option>
-                <option value="O+">O+</option>
-                <option value="O-">O-</option>
-                <option value="AB+">AB+</option>
-                <option value="AB-">AB-</option>
-            </select>
-        </div>
-        
-        <div class="form-group">
-            <label><i class="fas fa-phone-alt"></i> Emergency Contact</label>
-            <input type="tel" name="emergencyContact" placeholder="Emergency phone number">
-        </div>
-        
-        <div class="form-group full-width">
-            <label><i class="fas fa-file-alt"></i> Medical History</label>
-            <textarea name="medicalHistory" placeholder="Any past medical conditions, surgeries, etc."></textarea>
-        </div>
-        
-        <div class="form-group full-width">
-            <label><i class="fas fa-allergies"></i> Allergies</label>
-            <textarea name="allergies" placeholder="Any known allergies (medications, food, etc.)"></textarea>
-        </div>
-    </div>
-</div>
+                <!-- Patient Fields (Conditional) -->
+                <div id="patientFields" class="conditional-fields active">
+                    <h3 style="margin: 20px 0 15px; color: var(--primary-blue);"><i class="fas fa-notes-medical"></i> Patient Details</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label><i class="fas fa-calendar-alt"></i> Date of Birth</label>
+                            <input type="date" name="dob">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label><i class="fas fa-tint"></i> Blood Group</label>
+                            <select name="bloodGroup">
+                                <option value="">Select Blood Group</option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label><i class="fas fa-phone-alt"></i> Emergency Contact</label>
+                            <input type="tel" name="emergencyContact" placeholder="Emergency phone number">
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label><i class="fas fa-file-alt"></i> Medical History</label>
+                            <textarea name="medicalHistory" placeholder="Any past medical conditions, surgeries, etc."></textarea>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label><i class="fas fa-allergies"></i> Allergies</label>
+                            <textarea name="allergies" placeholder="Any known allergies (medications, food, etc.)"></textarea>
+                        </div>
+                    </div>
+                </div>
                 
                 <!-- Doctor Fields (Conditional) -->
                 <div id="doctorFields" class="conditional-fields">
@@ -228,8 +222,9 @@
 
     <jsp:include page="../../components/footer.jsp" />
 
+
     <script>
-        // Toggle password visibility
+        // Toggle password visibility 
         function togglePassword() {
             const password = document.getElementById('password');
             const icon = document.querySelector('.password-toggle');
@@ -259,7 +254,6 @@
         function checkPasswordStrength(password) {
             let score = 0;
             
-            // Length check
             if (password.length >= 8) {
                 reqLength.innerHTML = '<i class="fas fa-check-circle"></i> At least 8 characters';
                 reqLength.classList.add('valid');
@@ -269,7 +263,6 @@
                 reqLength.classList.remove('valid');
             }
             
-            // Uppercase
             if (/[A-Z]/.test(password)) {
                 reqUpper.innerHTML = '<i class="fas fa-check-circle"></i> Uppercase letter (A-Z)';
                 reqUpper.classList.add('valid');
@@ -279,7 +272,6 @@
                 reqUpper.classList.remove('valid');
             }
             
-            // Lowercase
             if (/[a-z]/.test(password)) {
                 reqLower.innerHTML = '<i class="fas fa-check-circle"></i> Lowercase letter (a-z)';
                 reqLower.classList.add('valid');
@@ -289,7 +281,6 @@
                 reqLower.classList.remove('valid');
             }
             
-            // Number
             if (/[0-9]/.test(password)) {
                 reqNumber.innerHTML = '<i class="fas fa-check-circle"></i> Number (0-9)';
                 reqNumber.classList.add('valid');
@@ -299,7 +290,6 @@
                 reqNumber.classList.remove('valid');
             }
             
-            // Special character
             if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
                 reqSpecial.innerHTML = '<i class="fas fa-check-circle"></i> Special character (!@#$%^&*)';
                 reqSpecial.classList.add('valid');
@@ -309,7 +299,6 @@
                 reqSpecial.classList.remove('valid');
             }
             
-            // Update strength meter
             if (score >= 5) {
                 strengthBar.className = 'strength-bar strong';
                 strengthText.innerHTML = 'Strong';
@@ -332,7 +321,6 @@
             checkConfirmMatch();
         });
         
-        // Confirm password match
         function checkConfirmMatch() {
             if (confirmInput.value === passwordInput.value && confirmInput.value !== '') {
                 document.getElementById('confirmMatch').innerHTML = '<i class="fas fa-check-circle" style="color: #10b981;"></i> Passwords match';
@@ -347,7 +335,7 @@
         
         confirmInput.addEventListener('input', checkConfirmMatch);
         
-        // User Type Toggle
+        // User Type Toggle (changes which fields are visible)
         const patientBtn = document.querySelector('[data-type="patient"]');
         const doctorBtn = document.querySelector('[data-type="doctor"]');
         const patientFields = document.getElementById('patientFields');
@@ -362,17 +350,9 @@
                 doctorFields.classList.remove('active');
                 userTypeInput.value = 'patient';
                 
-                // Make doctor required fields optional
                 document.querySelectorAll('#doctorFields input, #doctorFields select, #doctorFields textarea').forEach(field => {
                     if (field.hasAttribute('required')) {
                         field.removeAttribute('required');
-                    }
-                });
-                
-                // Make patient required fields
-                document.querySelectorAll('#patientFields input[type="text"], #patientFields select, #patientFields textarea').forEach(field => {
-                    if (field.name === 'emergencyContact' || field.name === 'medicalHistory' || field.name === 'allergies') {
-                        // Optional
                     }
                 });
             } else {
@@ -382,7 +362,6 @@
                 patientFields.classList.remove('active');
                 userTypeInput.value = 'doctor';
                 
-                // Make doctor required fields required
                 document.querySelectorAll('#doctorFields input, #doctorFields select, #doctorFields textarea').forEach(field => {
                     if (field.name === 'specialization' || field.name === 'qualification' || 
                         field.name === 'licenseNumber' || field.name === 'experienceYears' || 
@@ -396,7 +375,7 @@
         patientBtn.addEventListener('click', () => setUserType('patient'));
         doctorBtn.addEventListener('click', () => setUserType('doctor'));
         
-        // Specialization dropdown "Other" handling
+        // Specialization dropdown "Other" handling 
         const specializationSelect = document.getElementById('specialization');
         const otherGroup = document.getElementById('otherSpecializationGroup');
         

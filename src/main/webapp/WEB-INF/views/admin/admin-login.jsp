@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -47,7 +48,7 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            color: var(--gray-dark);
+            color: #334155;
         }
         
         .form-group input {
@@ -104,7 +105,7 @@
         }
         
         .back-link a {
-            color: var(--gray);
+            color: #64748b;
             text-decoration: none;
             font-size: 0.85rem;
         }
@@ -124,17 +125,12 @@
         </div>
         
         <div class="admin-login-body">
-            <%
-                String error = (String) request.getAttribute("error");
-                if (error != null) {
-            %>
+            <c:if test="${not empty error}">
                 <div class="alert alert-error">
                     <i class="fas fa-exclamation-circle"></i>
-                    <%= error %>
+                    ${error}
                 </div>
-            <%
-                }
-            %>
+            </c:if>
             
             <form action="${pageContext.request.contextPath}/admin/login" method="post">
                 <div class="form-group">
