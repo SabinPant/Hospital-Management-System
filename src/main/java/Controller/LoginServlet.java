@@ -9,18 +9,22 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
 import dao.UserDAO;
+import dao.PatientDAO;
 import models.User;
+import models.PatientProfile;
 import utils.PasswordUtil;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private UserDAO userDAO;
+    private PatientDAO patientDAO;
     
     @Override
     public void init() throws ServletException {
         super.init();
         userDAO = new UserDAO();
+        patientDAO = new PatientDAO();
     }
     
     @Override
@@ -34,7 +38,6 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
-        // Changed from username to email
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         
@@ -53,7 +56,7 @@ public class LoginServlet extends HttpServlet {
             return;
         }
         
-        // Get user by email (changed from username)
+        // Get user by email
         User user = userDAO.getUserByEmail(email);
         
         if (user == null) {
@@ -126,13 +129,27 @@ public class LoginServlet extends HttpServlet {
             }
         }
         
-        // Create session
+        // ========== CREATE SESSION ==========
         HttpSession session = request.getSession();
         session.setAttribute("user_id", user.getId());
+        session.setAttribute("user_id_display", user.getUserId());
         session.setAttribute("email", user.getEmail());
         session.setAttribute("full_name", user.getFullName());
+        session.setAttribute("phone", user.getPhone());
         session.setAttribute("user_type", user.getUserType());
         session.setAttribute("status", user.getStatus());
+        session.setAttribute("joined_date", user.getCreatedAt());
+        
+        // ========== ADD BLOOD GROUP FOR PATIENTS ==========
+        if ("patient".equals(user.getUserType())) {
+            PatientProfile profile = patientDAO.getPatientProfileByUserId(user.getId());
+            if (profile != null && profile.getBloodGroup() != null) {
+                session.setAttribute("blood_group", profile.getBloodGroup());
+            } else {
+                session.setAttribute("blood_group", "Not specified");
+            }
+        }
+        // ========== END BLOOD GROUP ==========
         
         System.out.println("User logged in: " + user.getEmail() + " (" + user.getUserType() + ")");
         

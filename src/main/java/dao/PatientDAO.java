@@ -50,4 +50,34 @@ public class PatientDAO {
         
         return false;
     }
+    
+ // Get patient profile by user_id
+    public PatientProfile getPatientProfileByUserId(int userId) {
+        String query = "SELECT * FROM patient_profiles WHERE user_id = ?";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                PatientProfile profile = new PatientProfile();
+                profile.setId(rs.getInt("id"));
+                profile.setUserId(rs.getInt("user_id"));
+                profile.setDateOfBirth(rs.getDate("date_of_birth"));
+                profile.setBloodGroup(rs.getString("blood_group"));
+                profile.setEmergencyContact(rs.getString("emergency_contact"));
+                profile.setMedicalHistory(rs.getString("medical_history"));
+                profile.setAllergies(rs.getString("allergies"));
+                return profile;
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error getting patient profile: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return null;
+    }
 }
