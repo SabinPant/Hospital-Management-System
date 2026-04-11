@@ -41,11 +41,10 @@
 </div>
                 
                 <!-- Quick Stats -->
-                <div class="quick-stats">
-                    <h4>TOTAL APPOINTMENTS</h4>
-                    <div class="stat-number">${totalAppointments != null ? totalAppointments : 0}</div>
-                </div>
-                
+                <div class="quick-stats outline">
+    <h4>TOTAL APPOINTMENTS</h4>
+    <div class="stat-number">${totalAppointments != null ? totalAppointments : 0}</div>
+</div>
                 <!-- Quick Actions -->
                 <div class="quick-actions">
                     <button class="action-btn" onclick="location.href='${pageContext.request.contextPath}/patient/book-appointment'">
@@ -84,14 +83,14 @@
                                     <div class="appointment-item">
                                         <div class="appointment-info">
                                             <h4>Dr. ${apt.doctorName}</h4>
-                                            <p>${apt.specialization}</p>
+                                            <p>${apt.doctorSpecialization}</p>
                                             <span class="status-badge status-${apt.status}">${apt.status}</span>
                                         </div>
                                         <div class="appointment-date">
                                             <div class="date"><fmt:formatDate value="${apt.appointmentDate}" pattern="MMM dd, yyyy"/></div>
                                             <div class="time">${apt.appointmentTime}</div>
                                             <c:if test="${apt.status == 'pending' or apt.status == 'confirmed'}">
-                                                <button class="cancel-btn" onclick="cancelAppointment(${apt.id})">Cancel</button>
+                                                <button class="cancel-btn" data-id="${apt.id}" onclick="cancelAppointment(${apt.id})">Cancel</button>
                                             </c:if>
                                         </div>
                                     </div>
@@ -168,13 +167,16 @@
 
     <jsp:include page="../../../components/footer.jsp" />
 
-    <script>
-        function cancelAppointment(appointmentId) {
-            if(confirm('Are you sure you want to cancel this appointment?')) {
-                window.location.href = '${pageContext.request.contextPath}/patient/cancel-appointment?id=' + appointmentId;
-            }
+  <script>
+    function cancelAppointment(appointmentId) {
+        const reason = prompt('Please enter reason for cancellation:');
+        if (reason !== null && reason.trim() !== '') {
+            window.location.href = '${pageContext.request.contextPath}/patient/cancel-appointment?id=' + appointmentId + '&reason=' + encodeURIComponent(reason);
+        } else if (reason !== null) {
+            alert('Please provide a reason for cancellation');
         }
-    </script>
+    }
+</script>
 
 </body>
 </html>
