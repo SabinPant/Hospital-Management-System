@@ -19,7 +19,9 @@ public class Appointment {
     private String cancellationReason;
     private Timestamp createdAt;
     private Timestamp updatedAt;
-    
+    private String patientEmail;
+    private String patientPhone;
+
     // Additional fields for display (not in database)
     private String doctorName;
     private String doctorSpecialization;
@@ -80,6 +82,13 @@ public class Appointment {
     
     public Timestamp getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(Timestamp updatedAt) { this.updatedAt = updatedAt; }
+    
+   
+    public String getPatientEmail() { return patientEmail; }
+    public void setPatientEmail(String patientEmail) { this.patientEmail = patientEmail; }
+
+    public String getPatientPhone() { return patientPhone; }
+    public void setPatientPhone(String patientPhone) { this.patientPhone = patientPhone; }
     
     // Display fields
     public String getDoctorName() { return doctorName; }

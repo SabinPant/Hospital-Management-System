@@ -11,8 +11,8 @@ import java.io.IOException;
 import dao.AppointmentDAO;
 import models.Appointment;
 
-@WebServlet("/patient/cancel-appointment")
-public class CancelAppointmentServlet extends HttpServlet {
+@WebServlet("/patient/appointment-details")
+public class AppointmentDetailsServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private AppointmentDAO appointmentDAO;
     
@@ -33,14 +33,12 @@ public class CancelAppointmentServlet extends HttpServlet {
         
         String idParam = request.getParameter("id");
         if (idParam == null || idParam.isEmpty()) {
-            response.sendRedirect(request.getContextPath() + "/patient/appointments?error=Invalid appointment ID");
+            response.sendRedirect(request.getContextPath() + "/patient/appointments");
             return;
         }
         
         try {
             int appointmentId = Integer.parseInt(idParam);
-            
-            // Get appointment to check status
             Appointment apt = appointmentDAO.getAppointmentById(appointmentId);
             
             if (apt == null) {
@@ -48,27 +46,19 @@ public class CancelAppointmentServlet extends HttpServlet {
                 return;
             }
             
-            // ONLY allow cancellation for pending appointments
-            if (!"pending".equals(apt.getStatus())) {
-                response.sendRedirect(request.getContextPath() + "/patient/appointments?error=Cannot cancel " + apt.getStatus() + " appointment");
-                return;
-            }
+            // Get doctor name and specialization
+            String doctorName = appointmentDAO.getDoctorNameByAppointmentId(appointmentId);
+            String doctorSpecialization = appointmentDAO.getDoctorSpecializationByAppointmentId(appointmentId);
             
-            String reason = request.getParameter("reason");
-            if (reason == null || reason.isEmpty()) {
-                reason = "Cancelled by patient";
-            }
+            apt.setDoctorName(doctorName);
+            apt.setDoctorSpecialization(doctorSpecialization);
             
-            boolean cancelled = appointmentDAO.cancelAppointment(appointmentId, reason);
-            
-            if (cancelled) {
-                response.sendRedirect(request.getContextPath() + "/patient/appointments?success=Appointment cancelled successfully");
-            } else {
-                response.sendRedirect(request.getContextPath() + "/patient/appointments?error=Failed to cancel appointment");
-            }
-            
+            request.setAttribute("appointment", apt);
+            request.getRequestDispatcher("/WEB-INF/views/patient/appointment-details.jsp")
+                   .forward(request, response);
+                   
         } catch (NumberFormatException e) {
-            response.sendRedirect(request.getContextPath() + "/patient/appointments?error=Invalid appointment ID");
+            response.sendRedirect(request.getContextPath() + "/patient/appointments?error=Invalid ID");
         }
     }
 }

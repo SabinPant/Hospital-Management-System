@@ -112,6 +112,324 @@ public class AppointmentDAO {
         
         return doctors;
     }
+ // Get doctor's appointments by specific date (exclude completed and cancelled)
+    public List<Appointment> getDoctorAppointmentsByDate(int doctorId, String date) {
+        List<Appointment> appointments = new ArrayList<>();
+        String query = "SELECT a.*, u.full_name as patient_name " +
+                       "FROM appointments a " +
+                       "JOIN users u ON a.patient_id = u.id " +
+                       "WHERE a.doctor_id = ? AND a.appointment_date = ? " +
+                       "AND a.status NOT IN ('completed', 'cancelled') " +
+                       "ORDER BY a.appointment_time ASC";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, doctorId);
+            pstmt.setDate(2, Date.valueOf(date));
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                Appointment apt = extractAppointmentFromResultSet(rs);
+                apt.setPatientName(rs.getString("patient_name"));
+                appointments.add(apt);
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error getting doctor appointments by date: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return appointments;
+    }
+    
+ // Get patient ID by appointment ID
+    public int getPatientIdByAppointmentId(int appointmentId) {
+        String query = "SELECT patient_id FROM appointments WHERE id = ?";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, appointmentId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getInt("patient_id");
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error getting patient ID: " + e.getMessage());
+        }
+        
+        return 0;
+    }
+
+ // Get doctor's upcoming appointments (future dates) - exclude completed and cancelled
+    public List<Appointment> getDoctorUpcomingAppointments(int doctorId) {
+        List<Appointment> appointments = new ArrayList<>();
+        String query = "SELECT a.*, u.full_name as patient_name " +
+                       "FROM appointments a " +
+                       "JOIN users u ON a.patient_id = u.id " +
+                       "WHERE a.doctor_id = ? AND a.appointment_date > CURDATE() " +
+                       "AND a.status NOT IN ('completed', 'cancelled') " +
+                       "ORDER BY a.appointment_date ASC, a.appointment_time ASC " +
+                       "LIMIT 10";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, doctorId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                Appointment apt = extractAppointmentFromResultSet(rs);
+                apt.setPatientName(rs.getString("patient_name"));
+                appointments.add(apt);
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error getting doctor upcoming appointments: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return appointments;
+    }
+
+ // Get doctor's recent completed appointments (for history)
+    public List<Appointment> getDoctorRecentAppointments(int doctorId, int limit) {
+        List<Appointment> appointments = new ArrayList<>();
+        String query = "SELECT a.*, u.full_name as patient_name " +
+                       "FROM appointments a " +
+                       "JOIN users u ON a.patient_id = u.id " +
+                       "WHERE a.doctor_id = ? AND a.status = 'completed' " +
+                       "ORDER BY a.appointment_date DESC, a.appointment_time DESC " +
+                       "LIMIT ?";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, doctorId);
+            pstmt.setInt(2, limit);
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                Appointment apt = extractAppointmentFromResultSet(rs);
+                apt.setPatientName(rs.getString("patient_name"));
+                appointments.add(apt);
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error getting doctor recent appointments: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return appointments;
+    }
+
+ // Get doctor's total unique patients count
+    public int getDoctorTotalPatients(int doctorId) {
+        String query = "SELECT COUNT(DISTINCT patient_id) as total FROM appointments WHERE doctor_id = ?";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, doctorId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error getting doctor total patients: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return 0;
+    }
+    
+ // Get doctor's today's appointment count
+    public int getDoctorTodayAppointmentCount(int doctorId) {
+        String query = "SELECT COUNT(*) as count FROM appointments WHERE doctor_id = ? AND appointment_date = CURDATE()";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, doctorId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getInt("count");
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error getting doctor today count: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return 0;
+    }
+
+ // Get doctor's pending appointments count (only pending, not confirmed)
+    public int getDoctorPendingCount(int doctorId) {
+        String query = "SELECT COUNT(*) as count FROM appointments WHERE doctor_id = ? AND status = 'pending'";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, doctorId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getInt("count");
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error getting doctor pending count: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return 0;
+    }
+
+    // Get doctor's completed appointments count
+    public int getDoctorCompletedCount(int doctorId) {
+        String query = "SELECT COUNT(*) as count FROM appointments WHERE doctor_id = ? AND status = 'completed'";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, doctorId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getInt("count");
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error getting doctor completed count: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return 0;
+    }
+
+ // Get doctor name by appointment ID
+    public String getDoctorNameByAppointmentId(int appointmentId) {
+        String query = "SELECT u.full_name FROM appointments a " +
+                       "JOIN users u ON a.doctor_id = u.id " +
+                       "WHERE a.id = ?";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, appointmentId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getString("full_name");
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error getting doctor name: " + e.getMessage());
+        }
+        
+        return "Unknown";
+    }
+
+    // Get doctor specialization by appointment ID
+    public String getDoctorSpecializationByAppointmentId(int appointmentId) {
+        String query = "SELECT dp.specialization FROM appointments a " +
+                       "JOIN users u ON a.doctor_id = u.id " +
+                       "JOIN doctor_profiles dp ON u.id = dp.user_id " +
+                       "WHERE a.id = ?";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, appointmentId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getString("specialization");
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error getting doctor specialization: " + e.getMessage());
+        }
+        
+        return "General Medicine";
+    }
+    
+    // Get appointment by ID with patient details
+    public Appointment getAppointmentById(int appointmentId) {
+        String query = "SELECT a.*, u.full_name as patient_name, u.email as patient_email, u.phone as patient_phone " +
+                       "FROM appointments a " +
+                       "JOIN users u ON a.patient_id = u.id " +
+                       "WHERE a.id = ?";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, appointmentId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                Appointment apt = extractAppointmentFromResultSet(rs);
+                apt.setPatientName(rs.getString("patient_name"));
+                apt.setPatientEmail(rs.getString("patient_email"));
+                apt.setPatientPhone(rs.getString("patient_phone"));
+                return apt;
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error getting appointment by ID: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return null;
+    }
+    
+    // Confirm appointment (pending -> confirmed)
+    public boolean confirmAppointment(int appointmentId) {
+        String query = "UPDATE appointments SET status = 'confirmed' WHERE id = ? AND status = 'pending'";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, appointmentId);
+            int rowsAffected = pstmt.executeUpdate();
+            System.out.println("Confirm appointment - Rows affected: " + rowsAffected);
+            return rowsAffected > 0;
+            
+        } catch (SQLException e) {
+            System.err.println("Error confirming appointment: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+ // Complete appointment with diagnosis and prescription
+    public boolean completeAppointment(int appointmentId, String diagnosis, String prescription) {
+        String query = "UPDATE appointments SET status = 'completed', diagnosis = ?, prescription = ? WHERE id = ?";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setString(1, diagnosis);
+            pstmt.setString(2, prescription);
+            pstmt.setInt(3, appointmentId);
+            
+            int rowsAffected = pstmt.executeUpdate();
+            System.out.println("Complete appointment - Rows affected: " + rowsAffected);
+            return rowsAffected > 0;
+            
+        } catch (SQLException e) {
+            System.err.println("Error completing appointment: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
     
     // Get appointments by patient ID
     public List<Appointment> getAppointmentsByPatientId(int patientId) {
@@ -172,6 +490,38 @@ public class AppointmentDAO {
             
         } catch (SQLException e) {
             System.err.println("Error getting upcoming appointments: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return appointments;
+    }
+    
+ // Get completed appointments for patient (medical history)
+    public List<Appointment> getCompletedAppointmentsByPatientId(int patientId) {
+        List<Appointment> appointments = new ArrayList<>();
+        String query = "SELECT a.*, u.full_name as doctor_name, dp.specialization " +
+                       "FROM appointments a " +
+                       "JOIN users u ON a.doctor_id = u.id " +
+                       "JOIN doctor_profiles dp ON u.id = dp.user_id " +
+                       "WHERE a.patient_id = ? AND a.status = 'completed' " +
+                       "ORDER BY a.appointment_date DESC " +
+                       "LIMIT 5";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, patientId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                Appointment apt = extractAppointmentFromResultSet(rs);
+                apt.setDoctorName(rs.getString("doctor_name"));
+                apt.setDoctorSpecialization(rs.getString("specialization"));
+                appointments.add(apt);
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error getting completed appointments: " + e.getMessage());
             e.printStackTrace();
         }
         

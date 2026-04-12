@@ -53,7 +53,7 @@ public class AdminDashboardDAO {
                 if (rs.next()) data.setTodayAppointments(rs.getInt(1));
             }
             
-            // Total Revenue (from billings)
+         // Total Revenue from billings
             String revenueQuery = "SELECT SUM(amount) FROM billings WHERE payment_status = 'paid'";
             try (PreparedStatement stmt = conn.prepareStatement(revenueQuery);
                  ResultSet rs = stmt.executeQuery()) {

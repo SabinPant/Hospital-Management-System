@@ -40,7 +40,13 @@ public class PatientDashboardServlet extends HttpServlet {
         List<Appointment> allAppointments = appointmentDAO.getAppointmentsByPatientId(patientId);
         request.setAttribute("totalAppointments", allAppointments.size());
         
+     // Add this to get completed appointments for medical history
+        List<Appointment> completedAppointments = appointmentDAO.getCompletedAppointmentsByPatientId(patientId);
+        request.setAttribute("completedAppointments", completedAppointments);
+        
         request.getRequestDispatcher("/WEB-INF/views/patient/dashboard.jsp")
                .forward(request, response);
     }
+    
+    
 }

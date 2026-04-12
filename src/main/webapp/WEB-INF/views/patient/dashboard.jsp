@@ -89,9 +89,7 @@
                                         <div class="appointment-date">
                                             <div class="date"><fmt:formatDate value="${apt.appointmentDate}" pattern="MMM dd, yyyy"/></div>
                                             <div class="time">${apt.appointmentTime}</div>
-                                            <c:if test="${apt.status == 'pending' or apt.status == 'confirmed'}">
-                                                <button class="cancel-btn" data-id="${apt.id}" onclick="cancelAppointment(${apt.id})">Cancel</button>
-                                            </c:if>
+                                          
                                         </div>
                                     </div>
                                 </c:forEach>

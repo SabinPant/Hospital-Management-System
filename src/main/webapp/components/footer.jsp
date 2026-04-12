@@ -24,7 +24,6 @@
                 <li><a href="<%= contextPath %>/about.jsp">About Us</a></li>
                 <li><a href="<%= contextPath %>/blog.jsp">Blog</a></li>
                 <li><a href="${pageContext.request.contextPath}/contact">Contact Us</a></li>
-                <li><a href="<%= contextPath %>/login.jsp">Login / Register</a></li>
             </ul>
         </div>
         <div class="footer-col">

@@ -195,6 +195,7 @@
             <!-- Monthly Revenue -->
             <div class="dashboard-card">
                 <h3><i class="fas fa-chart-line"></i> Monthly Revenue</h3>
+                
                 <table class="revenue-table">
                     <thead>
                         <tr><th>Month</th><th>Revenue</th></tr>

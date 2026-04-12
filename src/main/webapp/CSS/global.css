@@ -38,7 +38,7 @@ body {
     background-color: var(--white);
     color: var(--gray-dark);
     line-height: 1.5;
-    overflow-x: hidden;
+    overflow-x: clip;
 }
 
 .container {

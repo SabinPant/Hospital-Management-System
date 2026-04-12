@@ -61,10 +61,8 @@ public class BookAppointmentServlet extends HttpServlet {
             
             // Validate inputs
             if (doctorId == 0 || appointmentDate == null || symptoms == null || symptoms.trim().isEmpty()) {
-                request.setAttribute("error", "Please fill all required fields");
-                request.setAttribute("doctors", appointmentDAO.getAllDoctors());
-                request.getRequestDispatcher("/WEB-INF/views/patient/book-appointment.jsp")
-                       .forward(request, response);
+                session.setAttribute("bookingError", "Please fill all required fields");
+                response.sendRedirect(request.getContextPath() + "/patient/book-appointment");
                 return;
             }
             
@@ -75,20 +73,18 @@ public class BookAppointmentServlet extends HttpServlet {
             boolean saved = appointmentDAO.saveAppointment(appointment);
             
             if (saved) {
-            	response.sendRedirect(request.getContextPath() + "/patient/appointments?success=Appointment booked successfully! ID: " + appointment.getAppointmentId());
+                // Store success message in session (not in URL)
+                session.setAttribute("bookingSuccess", "Appointment booked successfully! ID: " + appointment.getAppointmentId());
+                response.sendRedirect(request.getContextPath() + "/patient/appointments");
             } else {
-            	 request.setAttribute("error", "Failed to book appointment. Please try again.");
-            	    request.setAttribute("doctors", appointmentDAO.getAllDoctors());
-            	    request.getRequestDispatcher("/WEB-INF/views/patient/book-appointment.jsp")
-            	           .forward(request, response);
+                session.setAttribute("bookingError", "Failed to book appointment. Please try again.");
+                response.sendRedirect(request.getContextPath() + "/patient/book-appointment");
             }
             
         } catch (Exception e) {
             System.err.println("Error booking appointment: " + e.getMessage());
-            request.setAttribute("error", "Invalid input. Please check your entries.");
-            request.setAttribute("doctors", appointmentDAO.getAllDoctors());
-            request.getRequestDispatcher("/WEB-INF/views/patient/book-appointment.jsp")
-                   .forward(request, response);
+            session.setAttribute("bookingError", "Invalid input. Please check your entries.");
+            response.sendRedirect(request.getContextPath() + "/patient/book-appointment");
         }
     }
 }

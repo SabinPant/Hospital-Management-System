@@ -17,6 +17,12 @@
     <jsp:include page="../../../components/header.jsp" />
 
     <div class="booking-page">
+     <c:if test="${not empty sessionScope.bookingError}">
+        <div class="alert alert-error">
+            <i class="fas fa-exclamation-circle"></i> ${sessionScope.bookingError}
+            <% session.removeAttribute("bookingError"); %>
+        </div>
+    </c:if>
         <div class="booking-header">
             <h1><i class="fas fa-calendar-plus"></i> Book an Appointment</h1>
             <p>Schedule a consultation with our experienced doctors</p>
@@ -114,7 +120,6 @@
     <jsp:include page="../../../components/footer.jsp" />
 
     <script>
-        // UI Only - No data handling
         const doctorsList = document.querySelectorAll('.doctor-card');
         const doctorIdInput = document.getElementById('doctorId');
         const selectedDoctorName = document.getElementById('selectedDoctorName');
@@ -122,7 +127,7 @@
         const feeAmount = document.getElementById('feeAmount');
         const bookBtn = document.getElementById('bookBtn');
         
-        // Doctor selection UI
+        // Doctor selection 
         doctorsList.forEach(card => {
             card.addEventListener('click', function() {
                 // Remove selected class from all
