@@ -495,9 +495,8 @@ public class AppointmentDAO {
         
         return appointments;
     }
-    
  // Get completed appointments for patient (medical history)
-    public List<Appointment> getCompletedAppointmentsByPatientId(int patientId) {
+    public List<Appointment> getCompletedAppointmentsByPatientId(int patientId, int limit) {
         List<Appointment> appointments = new ArrayList<>();
         String query = "SELECT a.*, u.full_name as doctor_name, dp.specialization " +
                        "FROM appointments a " +
@@ -505,12 +504,13 @@ public class AppointmentDAO {
                        "JOIN doctor_profiles dp ON u.id = dp.user_id " +
                        "WHERE a.patient_id = ? AND a.status = 'completed' " +
                        "ORDER BY a.appointment_date DESC " +
-                       "LIMIT 5";
+                       "LIMIT ?";
         
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
             
             pstmt.setInt(1, patientId);
+            pstmt.setInt(2, limit);
             ResultSet rs = pstmt.executeQuery();
             
             while (rs.next()) {

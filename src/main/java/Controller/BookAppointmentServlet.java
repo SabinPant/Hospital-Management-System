@@ -12,7 +12,7 @@ import java.sql.Time;
 
 import dao.AppointmentDAO;
 import models.Appointment;
-
+import dao.NotificationDAO;
 @WebServlet("/patient/book-appointment")
 public class BookAppointmentServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -71,9 +71,15 @@ public class BookAppointmentServlet extends HttpServlet {
             appointment.setAppointmentId(appointmentDAO.generateAppointmentId());
             
             boolean saved = appointmentDAO.saveAppointment(appointment);
-            
             if (saved) {
-                // Store success message in session (not in URL)
+                // Get doctor name
+                String doctorName = appointmentDAO.getDoctorNameByAppointmentId(appointment.getId());
+                
+                // Add notification
+                NotificationDAO notifDAO = new NotificationDAO();
+                notifDAO.addNotification(patientId, "Appointment Booked", 
+                    "Your appointment with Dr. " + doctorName + " on " + appointmentDate + " has been booked. Awaiting confirmation.", "info");
+                
                 session.setAttribute("bookingSuccess", "Appointment booked successfully! ID: " + appointment.getAppointmentId());
                 response.sendRedirect(request.getContextPath() + "/patient/appointments");
             } else {

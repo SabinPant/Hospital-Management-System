@@ -55,10 +55,7 @@
                         <i class="fas fa-calendar-check"></i>
                         <span>My Appointments</span>
                     </button>
-                    <button class="action-btn" onclick="location.href='${pageContext.request.contextPath}/patient/medical-records'">
-                        <i class="fas fa-file-medical"></i>
-                        <span>Medical Records</span>
-                    </button>
+        
                     <button class="action-btn" onclick="location.href='${pageContext.request.contextPath}/patient/profile'">
                         <i class="fas fa-user-edit"></i>
                         <span>Edit Profile</span>
@@ -101,63 +98,88 @@
                     </c:choose>
                 </div>
                 
-                <!-- Recent Medical History -->
-                <div class="section-card">
-                    <div class="section-header">
-                        <h2><i class="fas fa-notes-medical"></i> Recent Medical History</h2>
-                        <a href="${pageContext.request.contextPath}/patient/medical-records">View All →</a>
+            <!-- Recent Medical History -->
+<div class="section-card">
+    <div class="section-header">
+        <h2><i class="fas fa-notes-medical"></i> Recent Medical History</h2>
+        <a href="${pageContext.request.contextPath}/patient/medical-records">View All →</a>
+    </div>
+    
+    <c:choose>
+        <c:when test="${not empty medicalHistory}">
+            <div class="history-list">
+                <c:forEach var="record" items="${medicalHistory}">
+                    <div class="history-item">
+                        <div class="history-header">
+                            <h4>Dr. ${record.doctorName} - ${record.doctorSpecialization}</h4>
+                            <span class="date"><fmt:formatDate value="${record.appointmentDate}" pattern="MMM dd, yyyy"/></span>
+                        </div>
+                        <div class="history-diagnosis">
+                            <strong>Diagnosis:</strong> ${record.diagnosis != null ? record.diagnosis : 'Not recorded'}
+                        </div>
+                        <div class="history-prescription">
+                            <strong>Prescription:</strong> ${record.prescription != null ? record.prescription : 'Not recorded'}
+                        </div>
                     </div>
-                    
-                    <c:choose>
-                        <c:when test="${not empty recentHistory}">
-                            <div class="history-list">
-                                <c:forEach var="record" items="${recentHistory}">
-                                    <div class="history-item">
-                                        <div class="history-header">
-                                            <h4>Dr. ${record.doctorName} - ${record.specialization}</h4>
-                                            <span class="date"><fmt:formatDate value="${record.appointmentDate}" pattern="MMM dd, yyyy"/></span>
-                                        </div>
-                                        <div class="history-diagnosis">
-                                            <strong>Diagnosis:</strong> ${record.diagnosis != null ? record.diagnosis : 'Not recorded'}
-                                        </div>
-                                        <div class="history-prescription">
-                                            <strong>Prescription:</strong> ${record.prescription != null ? record.prescription : 'Not recorded'}
-                                        </div>
-                                    </div>
-                                </c:forEach>
+                </c:forEach>
+            </div>
+        </c:when>
+        <c:otherwise>
+            <div class="empty-state">
+                <i class="fas fa-notes-medical"></i>
+                <p>No medical records found.</p>
+                <p style="font-size: 0.8rem;">Complete appointments with doctors to see your medical history here.</p>
+            </div>
+        </c:otherwise>
+    </c:choose>
+</div>
+               <!-- Recent Activity / Notifications -->
+<div class="section-card">
+    <div class="section-header">
+        <h2><i class="fas fa-bell"></i> Recent Activity</h2>
+    </div>
+    
+    <c:choose>
+        <c:when test="${not empty recentActivities}">
+            <div class="activity-list">
+                <c:forEach var="activity" items="${recentActivities}">
+                    <div class="activity-item">
+                        <div class="activity-icon ${activity.type}">
+                            <c:choose>
+                                <c:when test="${activity.type == 'success'}">
+                                    <i class="fas fa-check-circle"></i>
+                                </c:when>
+                                <c:when test="${activity.type == 'warning'}">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </c:when>
+                                <c:when test="${activity.type == 'error'}">
+                                    <i class="fas fa-times-circle"></i>
+                                </c:when>
+                                <c:otherwise>
+                                    <i class="fas fa-info-circle"></i>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">${activity.title}</div>
+                            <div class="activity-message">${activity.message}</div>
+                            <div class="activity-time">
+                                <fmt:formatDate value="${activity.createdAt}" pattern="MMM dd, yyyy HH:mm"/>
                             </div>
-                        </c:when>
-                        <c:otherwise>
-                            <p style="text-align: center; color: #64748b; padding: 30px;">No medical records found.</p>
-                        </c:otherwise>
-                    </c:choose>
-                </div>
-                
-                <!-- Recent Activity / Notifications -->
-                <div class="section-card">
-                    <div class="section-header">
-                        <h2><i class="fas fa-bell"></i> Recent Activity</h2>
+                        </div>
                     </div>
-                    
-                    <c:choose>
-                        <c:when test="${not empty notifications}">
-                            <div class="history-list">
-                                <c:forEach var="notif" items="${notifications}">
-                                    <div class="history-item">
-                                        <div class="history-header">
-                                            <h4>${notif.title}</h4>
-                                            <span class="date"><fmt:formatDate value="${notif.createdAt}" pattern="MMM dd, yyyy HH:mm"/></span>
-                                        </div>
-                                        <div class="history-diagnosis">${notif.message}</div>
-                                    </div>
-                                </c:forEach>
-                            </div>
-                        </c:when>
-                        <c:otherwise>
-                            <p style="text-align: center; color: #64748b; padding: 30px;">No recent activity.</p>
-                        </c:otherwise>
-                    </c:choose>
-                </div>
+                </c:forEach>
+            </div>
+        </c:when>
+        <c:otherwise>
+            <div class="empty-state">
+                <i class="fas fa-bell-slash"></i>
+                <p>No recent activity</p>
+                <p style="font-size: 0.8rem;">Activities like booking, confirmations, and completions will appear here.</p>
+            </div>
+        </c:otherwise>
+    </c:choose>
+</div>
                 
             </div>
         </div>

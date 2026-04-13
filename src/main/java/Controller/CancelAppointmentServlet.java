@@ -10,7 +10,7 @@ import java.io.IOException;
 
 import dao.AppointmentDAO;
 import models.Appointment;
-
+import dao.NotificationDAO;
 @WebServlet("/patient/cancel-appointment")
 public class CancelAppointmentServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -62,6 +62,14 @@ public class CancelAppointmentServlet extends HttpServlet {
             boolean cancelled = appointmentDAO.cancelAppointment(appointmentId, reason);
             
             if (cancelled) {
+                // Get doctor name
+                String doctorName = appointmentDAO.getDoctorNameByAppointmentId(appointmentId);
+                
+                // Add notification
+                NotificationDAO notifDAO = new NotificationDAO();
+                notifDAO.addNotification(apt.getPatientId(), "Appointment Cancelled", 
+                    "Your appointment with Dr. " + doctorName + " has been cancelled. Reason: " + reason, "warning");
+                
                 response.sendRedirect(request.getContextPath() + "/patient/appointments?success=Appointment cancelled successfully");
             } else {
                 response.sendRedirect(request.getContextPath() + "/patient/appointments?error=Failed to cancel appointment");

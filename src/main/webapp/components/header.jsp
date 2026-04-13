@@ -44,20 +44,19 @@
         <nav>
             <ul class="nav-links">
                <% if (isLoggedIn && "patient".equals(userRole)) { %>
-    <li><a href="<%= contextPath %>/patient/dashboard">Dashboard</a></li>
-    <li><a href="<%= contextPath %>/patient/book-appointment">Book Appointment</a></li>
-    <li><a href="<%= contextPath %>/patient/appointments">My Appointments</a></li>
-    <li><a href="<%= contextPath %>/contact">Contact Us</a></li>
-<% } else if (isLoggedIn && "doctor".equals(userRole)) { %>
-    <li><a href="<%= contextPath %>/doctor/dashboard">Dashboard</a></li>
-    <li><a href="<%= contextPath %>/doctor/appointments">My Appointments</a></li>
-    <li><a href="<%= contextPath %>/contact">Contact Us</a></li>
-<% } else { %>
-    <li><a href="<%= contextPath %>/">Home</a></li>
-    <li><a href="<%= contextPath %>/about.jsp">About Us</a></li>
-    <li><a href="<%= contextPath %>/blog.jsp">Blog</a></li>
-    <li><a href="<%= contextPath %>/contact">Contact Us</a></li>
-<% } %>
+                    <li><a href="<%= contextPath %>/patient/dashboard">Dashboard</a></li>
+                    <li><a href="<%= contextPath %>/patient/book-appointment">Book Appointment</a></li>
+                    <li><a href="<%= contextPath %>/patient/appointments">My Appointments</a></li>
+                    <li><a href="<%= contextPath %>/contact">Contact Us</a></li>
+                <% } else if (isLoggedIn && "doctor".equals(userRole)) { %>
+                    <li><a href="<%= contextPath %>/doctor/dashboard">Dashboard</a></li>
+                    <li><a href="<%= contextPath %>/contact">Contact Us</a></li>
+                <% } else { %>
+                    <li><a href="<%= contextPath %>/">Home</a></li>
+                    <li><a href="<%= contextPath %>/about.jsp">About Us</a></li>
+                    <li><a href="<%= contextPath %>/blog.jsp">Blog</a></li>
+                    <li><a href="<%= contextPath %>/contact">Contact Us</a></li>
+                <% } %>
             </ul>
         </nav>
         <div class="nav-buttons">
