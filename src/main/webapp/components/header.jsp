@@ -53,9 +53,11 @@
                     <li><a href="<%= contextPath %>/contact">Contact Us</a></li>
                 <% } else { %>
                     <li><a href="<%= contextPath %>/">Home</a></li>
-                    <li><a href="<%= contextPath %>/about.jsp">About Us</a></li>
-                    <li><a href="<%= contextPath %>/blog.jsp">Blog</a></li>
+                    <li><a href="<%= contextPath %>/about_us">About Us</a></li>
+                    <li><a href="<%= contextPath %>/blog">Blog</a></li>
+                    <li><a href="<%= contextPath %>/research">Research</a></li>
                     <li><a href="<%= contextPath %>/contact">Contact Us</a></li>
+                    
                 <% } %>
             </ul>
         </nav>
