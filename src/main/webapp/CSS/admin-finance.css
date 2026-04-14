@@ -1,0 +1,319 @@
+/* ============================================
+   Admin Finance Page Styles
+   Clean & Professional
+   ============================================ */
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border-left: 4px solid #0a5c8e;
+}
+
+.stat-card h3 {
+    font-size: 0.8rem;
+    color: #64748b;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.stat-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.stat-trend {
+    font-size: 0.7rem;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.trend-up {
+    color: #10b981;
+}
+
+.trend-down {
+    color: #ef4444;
+}
+
+/* Two Column Layout */
+.finance-two-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+/* Section Card */
+.section-card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.section-header h2 {
+    font-size: 1.1rem;
+    color: #1e293b;
+    font-weight: 600;
+}
+
+.section-header h2 i {
+    color: #0a5c8e;
+    margin-right: 8px;
+}
+
+/* CSS Bar Chart */
+.bar-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.bar-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.bar-label {
+    width: 70px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #475569;
+}
+
+.bar-container {
+    flex: 1;
+    background: #f1f5f9;
+    border-radius: 20px;
+    overflow: hidden;
+    height: 30px;
+}
+
+.bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #0a5c8e, #2c7cb6);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 10px;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.bar-value {
+    width: 80px;
+    text-align: right;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+/* Revenue Table */
+.revenue-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.revenue-table th {
+    text-align: left;
+    padding: 10px 8px;
+    background: #f8fafc;
+    color: #475569;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.revenue-table td {
+    padding: 10px 8px;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 0.85rem;
+    color: #334155;
+}
+
+.revenue-table tr:hover {
+    background: #f8fafc;
+}
+
+.trend-up-small {
+    color: #10b981;
+    font-size: 0.7rem;
+}
+
+.trend-down-small {
+    color: #ef4444;
+    font-size: 0.7rem;
+}
+
+/* Export Button */
+.btn-export {
+    background: #10b981;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: background 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-export:hover {
+    background: #059669;
+}
+
+/* Doctor List */
+.doctor-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.doctor-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.doctor-item:last-child {
+    border-bottom: none;
+}
+
+.doctor-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.doctor-rank {
+    width: 28px;
+    height: 28px;
+    background: #e0e7ff;
+    color: #4f46e5;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.doctor-name {
+    font-weight: 500;
+    color: #1e293b;
+}
+
+.doctor-stats {
+    text-align: right;
+}
+
+.doctor-revenue {
+    font-weight: 600;
+    color: #0a5c8e;
+}
+
+.doctor-appointments {
+    font-size: 0.7rem;
+    color: #64748b;
+}
+
+/* Billings Table */
+.billings-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.billings-table th {
+    text-align: left;
+    padding: 10px 8px;
+    background: #f8fafc;
+    color: #475569;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.billings-table td {
+    padding: 10px 8px;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 0.8rem;
+    color: #334155;
+}
+
+/* Spacing between sections */
+.section-card {
+    margin-bottom: 25px;
+}
+
+.section-card:last-child {
+    margin-bottom: 0;
+}
+
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .finance-two-columns {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .bar-item {
+        flex-wrap: wrap;
+    }
+    
+    .bar-label {
+        width: 100%;
+    }
+    
+    .bar-value {
+        width: 100%;
+        text-align: left;
+        margin-top: 5px;
+    }
+    
+    .revenue-table,
+    .billings-table {
+        display: block;
+        overflow-x: auto;
+    }
+}

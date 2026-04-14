@@ -9,7 +9,10 @@ import java.sql.Timestamp;
 
 import models.User;
 import utils.DBConnection;
-
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 public class UserDAO {
     
     // Check if username exists
@@ -85,7 +88,7 @@ public class UserDAO {
         }
     }
     
-    // Save user to database
+    
  // Save user to database
     public boolean saveUser(User user) {
         String query = "INSERT INTO users (user_id, username, email, password, full_name, phone, address, user_type, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -191,6 +194,109 @@ public class UserDAO {
         return null;
     }
     
+    
+ // Get all users with optional filter and search
+    public List<Map<String, Object>> getAllUsers(String filter, String search) {
+        List<Map<String, Object>> users = new ArrayList<>();
+        StringBuilder query = new StringBuilder(
+            "SELECT u.id, u.user_id, u.username, u.email, u.full_name, u.phone, u.user_type, u.status, " +
+            "dp.specialization, dp.consultation_fee, " +
+            "pp.blood_group " +
+            "FROM users u " +
+            "LEFT JOIN doctor_profiles dp ON u.id = dp.user_id " +
+            "LEFT JOIN patient_profiles pp ON u.id = pp.user_id " +
+            "WHERE 1=1"
+        );
+        
+        if ("doctor".equals(filter)) {
+            query.append(" AND u.user_type = 'doctor'");
+        } else if ("patient".equals(filter)) {
+            query.append(" AND u.user_type = 'patient'");
+        }
+        
+        if (search != null && !search.trim().isEmpty()) {
+            query.append(" AND (u.full_name LIKE ? OR u.email LIKE ? OR u.username LIKE ? OR u.user_id LIKE ?)");
+        }
+        
+        query.append(" ORDER BY u.created_at DESC");
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query.toString())) {
+            
+            int paramIndex = 1;
+            if (search != null && !search.trim().isEmpty()) {
+                String searchPattern = "%" + search.trim() + "%";
+                pstmt.setString(paramIndex++, searchPattern);
+                pstmt.setString(paramIndex++, searchPattern);
+                pstmt.setString(paramIndex++, searchPattern);
+                pstmt.setString(paramIndex++, searchPattern);
+            }
+            
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                Map<String, Object> user = new HashMap<>();
+                user.put("id", rs.getInt("id"));
+                user.put("user_id", rs.getString("user_id"));
+                user.put("username", rs.getString("username"));
+                user.put("email", rs.getString("email"));
+                user.put("full_name", rs.getString("full_name"));
+                user.put("phone", rs.getString("phone"));
+                user.put("user_type", rs.getString("user_type"));
+                user.put("status", rs.getString("status"));
+                user.put("specialization", rs.getString("specialization"));
+                user.put("consultation_fee", rs.getDouble("consultation_fee"));
+                user.put("blood_group", rs.getString("blood_group"));
+                users.add(user);
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error getting users: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return users;
+    }
+    
+ // Lock user account
+    public boolean lockUser(int userId, String reason) {
+        String query = "UPDATE users SET status = 'locked', lock_reason = ?, locked_at = ? WHERE id = ?";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setString(1, reason);
+            pstmt.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
+            pstmt.setInt(3, userId);
+            
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+            
+        } catch (SQLException e) {
+            System.err.println("Error locking user: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // Unlock user account
+    public boolean unlockUser(int userId) {
+        String query = "UPDATE users SET status = 'active', lock_reason = NULL, locked_at = NULL WHERE id = ?";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, userId);
+            
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+            
+        } catch (SQLException e) {
+            System.err.println("Error unlocking user: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
     
  // Get user by email (for login)
     public User getUserByEmail(String email) {

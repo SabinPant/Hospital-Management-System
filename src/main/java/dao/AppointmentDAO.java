@@ -13,9 +13,12 @@ import java.util.List;
 
 import models.Appointment;
 import utils.DBConnection;
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 public class AppointmentDAO {
-    
+
 	// Generate appointment ID (APT-2026-0001 format)
 	public String generateAppointmentId() {
 	    String query = "SELECT appointment_id FROM appointments ORDER BY id DESC LIMIT 1";
@@ -81,6 +84,75 @@ public class AppointmentDAO {
         }
         
         return false;
+    }
+    
+ // Get all appointments with optional status filter and search
+    public List<Map<String, Object>> getAllAppointments(String status, String search) {
+        List<Map<String, Object>> appointments = new ArrayList<>();
+        StringBuilder query = new StringBuilder(
+            "SELECT a.id, a.appointment_id, a.appointment_date, a.appointment_time, a.status, " +
+            "a.symptoms, a.diagnosis, a.prescription, a.cancellation_reason, " +
+            "p.full_name as patient_name, p.email as patient_email, p.phone as patient_phone, " +
+            "d.full_name as doctor_name, dp.specialization " +
+            "FROM appointments a " +
+            "JOIN users p ON a.patient_id = p.id " +
+            "JOIN users d ON a.doctor_id = d.id " +
+            "LEFT JOIN doctor_profiles dp ON d.id = dp.user_id " +
+            "WHERE 1=1"
+        );
+        
+        if (status != null && !status.trim().isEmpty() && !"all".equals(status)) {
+            query.append(" AND a.status = ?");
+        }
+        
+        if (search != null && !search.trim().isEmpty()) {
+            query.append(" AND (p.full_name LIKE ? OR d.full_name LIKE ? OR a.appointment_id LIKE ?)");
+        }
+        
+        query.append(" ORDER BY a.appointment_date DESC, a.appointment_time DESC");
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query.toString())) {
+            
+            int paramIndex = 1;
+            if (status != null && !status.trim().isEmpty() && !"all".equals(status)) {
+                pstmt.setString(paramIndex++, status);
+            }
+            
+            if (search != null && !search.trim().isEmpty()) {
+                String searchPattern = "%" + search.trim() + "%";
+                pstmt.setString(paramIndex++, searchPattern);
+                pstmt.setString(paramIndex++, searchPattern);
+                pstmt.setString(paramIndex++, searchPattern);
+            }
+            
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                Map<String, Object> apt = new HashMap<>();
+                apt.put("id", rs.getInt("id"));
+                apt.put("appointment_id", rs.getString("appointment_id"));
+                apt.put("appointment_date", rs.getDate("appointment_date"));
+                apt.put("appointment_time", rs.getString("appointment_time"));
+                apt.put("status", rs.getString("status"));
+                apt.put("symptoms", rs.getString("symptoms"));
+                apt.put("diagnosis", rs.getString("diagnosis"));
+                apt.put("prescription", rs.getString("prescription"));
+                apt.put("cancellation_reason", rs.getString("cancellation_reason"));
+                apt.put("patient_name", rs.getString("patient_name"));
+                apt.put("patient_email", rs.getString("patient_email"));
+                apt.put("patient_phone", rs.getString("patient_phone"));
+                apt.put("doctor_name", rs.getString("doctor_name"));
+                apt.put("specialization", rs.getString("specialization"));
+                appointments.add(apt);
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error getting appointments: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return appointments;
     }
     
     // Get all doctors (for booking dropdown)
