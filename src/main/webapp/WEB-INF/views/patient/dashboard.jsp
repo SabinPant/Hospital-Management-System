@@ -133,7 +133,7 @@
         </c:otherwise>
     </c:choose>
 </div>
-               <!-- Recent Activity / Notifications -->
+              <%-- 
 <div class="section-card">
     <div class="section-header">
         <h2><i class="fas fa-bell"></i> Recent Activity</h2>
@@ -180,6 +180,7 @@
         </c:otherwise>
     </c:choose>
 </div>
+--%>
                 
             </div>
         </div>

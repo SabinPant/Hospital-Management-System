@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="jakarta.servlet.http.HttpSession" %>
+<%@ page import="dao.NotificationDAO" %>
 
 <%
     // Check if user is logged in
@@ -14,6 +15,14 @@
     
     // Get context path for proper URL building
     String contextPath = request.getContextPath();
+    
+    // Get unread notification count for logged in users
+    int unreadCount = 0;
+    if (isLoggedIn) {
+        NotificationDAO notifDAO = new NotificationDAO();
+        int userId = (int) userSession.getAttribute("user_id");
+        unreadCount = notifDAO.getUnreadCount(userId);
+    }
 %>
 
 <!-- ==================== TOP EMERGENCY BAR ==================== -->
@@ -60,14 +69,22 @@
                 <% } %>
             </ul>
         </nav>
-        <div class="nav-buttons">
-            <% if (isLoggedIn) { %>
-                <span class="welcome-text">Welcome, <%= firstName %></span>
-                <a href="<%= contextPath %>/logout" class="btn-logout"><i class="fas fa-sign-out-alt"></i> LOGOUT</a>
-            <% } else { %>
-                <a href="<%= contextPath %>/login" class="btn-login"><i class="fas fa-sign-in-alt"></i> LOGIN</a>
-                <a href="<%= contextPath %>/register" class="btn-register"><i class="fas fa-user-plus"></i> REGISTER</a>
+       <div class="nav-buttons">
+    <% if (isLoggedIn) { %>
+        <!-- Notification Bell -->
+        <a href="<%= contextPath %>/notifications" class="notification-bell-link">
+            <i class="fas fa-bell"></i>
+            <% if (unreadCount > 0) { %>
+                <span class="notification-badge"><%= unreadCount %></span>
             <% } %>
-        </div>
+        </a>
+        
+        <span class="welcome-text">Welcome, <%= firstName %></span>
+        <a href="<%= contextPath %>/logout" class="btn-logout"><i class="fas fa-sign-out-alt"></i> LOGOUT</a>
+    <% } else { %>
+        <a href="<%= contextPath %>/login" class="btn-login"><i class="fas fa-sign-in-alt"></i> LOGIN</a>
+        <a href="<%= contextPath %>/register" class="btn-register"><i class="fas fa-user-plus"></i> REGISTER</a>
+    <% } %>
+</div>
     </div>
 </header>

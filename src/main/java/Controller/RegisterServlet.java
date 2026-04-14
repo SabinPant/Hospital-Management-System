@@ -15,7 +15,7 @@ import models.User;
 import models.PatientProfile;
 import models.DoctorProfile;
 import utils.PasswordUtil;
-
+import jakarta.servlet.http.HttpSession;
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -34,6 +34,22 @@ public class RegisterServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
+        
+        HttpSession session = request.getSession(false);
+        
+        // If already logged in, redirect to dashboard
+        if (session != null && session.getAttribute("user_id") != null) {
+            String userType = (String) session.getAttribute("user_type");
+            if ("patient".equals(userType)) {
+                response.sendRedirect(request.getContextPath() + "/patient/dashboard");
+            } else if ("doctor".equals(userType)) {
+                response.sendRedirect(request.getContextPath() + "/doctor/dashboard");
+            } else {
+                response.sendRedirect(request.getContextPath() + "/");
+            }
+            return;
+        }
+        
         request.getRequestDispatcher("/WEB-INF/views/register.jsp")
                .forward(request, response);
     }

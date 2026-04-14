@@ -26,6 +26,15 @@ public class AdminLoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
+        
+        HttpSession session = request.getSession(false);
+        
+        // If already logged in as admin, redirect to dashboard
+        if (session != null && session.getAttribute("admin_id") != null) {
+            response.sendRedirect(request.getContextPath() + "/admin/dashboard");
+            return;
+        }
+        
         request.getRequestDispatcher("/WEB-INF/views/admin/admin-login.jsp")
                .forward(request, response);
     }

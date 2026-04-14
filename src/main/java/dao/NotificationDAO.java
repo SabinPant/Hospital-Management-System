@@ -10,6 +10,8 @@ import java.util.List;
 
 import models.Notification;
 import utils.DBConnection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class NotificationDAO {
     
@@ -62,6 +64,98 @@ public class NotificationDAO {
             
         } catch (SQLException e) {
             System.err.println("Error getting notifications: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return notifications;
+    }
+    
+ // Get previous announcements (admin sent, user_id IS NULL means sent to all)
+    public List<Map<String, Object>> getPreviousAnnouncements() {
+        List<Map<String, Object>> announcements = new ArrayList<>();
+        String query = "SELECT n.*, a.full_name as admin_name " +
+                       "FROM notifications n " +
+                       "JOIN admins a ON n.admin_id = a.id " +
+                       "WHERE n.user_id IS NULL " +
+                       "ORDER BY n.created_at DESC LIMIT 20";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query);
+             ResultSet rs = pstmt.executeQuery()) {
+            
+            while (rs.next()) {
+                Map<String, Object> announcement = new HashMap<>();
+                announcement.put("id", rs.getInt("id"));
+                announcement.put("title", rs.getString("title"));
+                announcement.put("message", rs.getString("message"));
+                announcement.put("type", rs.getString("type"));
+                announcement.put("admin_name", rs.getString("admin_name"));
+                announcement.put("created_at", rs.getTimestamp("created_at"));
+                announcements.add(announcement);
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error getting announcements: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return announcements;
+    }
+    
+ // Get user IDs by type (all, patients, doctors)
+    public List<Integer> getUserIdsByType(String type) {
+        List<Integer> userIds = new ArrayList<>();
+        String query;
+        
+        if ("patients".equals(type)) {
+            query = "SELECT id FROM users WHERE user_type = 'patient'";
+        } else if ("doctors".equals(type)) {
+            query = "SELECT id FROM users WHERE user_type = 'doctor'";
+        } else {
+            query = "SELECT id FROM users WHERE user_type IN ('patient', 'doctor')";
+        }
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query);
+             ResultSet rs = pstmt.executeQuery()) {
+            
+            while (rs.next()) {
+                userIds.add(rs.getInt("id"));
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error getting user IDs: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return userIds;
+    }
+    
+ // Get notifications for a user (for bell dropdown)
+    public List<Map<String, Object>> getUserNotifications(int userId, int limit) {
+        List<Map<String, Object>> notifications = new ArrayList<>();
+        String query = "SELECT * FROM notifications WHERE user_id = ? ORDER BY created_at DESC LIMIT ?";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, userId);
+            pstmt.setInt(2, limit);
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                Map<String, Object> notif = new HashMap<>();
+                notif.put("id", rs.getInt("id"));
+                notif.put("title", rs.getString("title"));
+                notif.put("message", rs.getString("message"));
+                notif.put("type", rs.getString("type"));
+                notif.put("is_read", rs.getBoolean("is_read"));
+                notif.put("created_at", rs.getTimestamp("created_at"));
+                notifications.add(notif);
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error getting user notifications: " + e.getMessage());
             e.printStackTrace();
         }
         

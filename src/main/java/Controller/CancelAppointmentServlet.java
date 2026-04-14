@@ -1,6 +1,7 @@
 package Controller;
 
 import jakarta.servlet.ServletException;
+import dao.NotificationDAO;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,7 +11,6 @@ import java.io.IOException;
 
 import dao.AppointmentDAO;
 import models.Appointment;
-import dao.NotificationDAO;
 @WebServlet("/patient/cancel-appointment")
 public class CancelAppointmentServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -62,10 +62,10 @@ public class CancelAppointmentServlet extends HttpServlet {
             boolean cancelled = appointmentDAO.cancelAppointment(appointmentId, reason);
             
             if (cancelled) {
-                // Get doctor name
+                // Get doctor name for notification
                 String doctorName = appointmentDAO.getDoctorNameByAppointmentId(appointmentId);
                 
-                // Add notification
+                // Add notification for the patient
                 NotificationDAO notifDAO = new NotificationDAO();
                 notifDAO.addNotification(apt.getPatientId(), "Appointment Cancelled", 
                     "Your appointment with Dr. " + doctorName + " has been cancelled. Reason: " + reason, "warning");

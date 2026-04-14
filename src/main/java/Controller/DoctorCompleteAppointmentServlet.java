@@ -10,7 +10,7 @@ import java.io.IOException;
 
 import dao.AppointmentDAO;
 import dao.BillingDAO;
-
+import dao.NotificationDAO;
 @WebServlet("/doctor/complete-appointment")
 public class DoctorCompleteAppointmentServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -63,7 +63,18 @@ public class DoctorCompleteAppointmentServlet extends HttpServlet {
             if (completed) {
                 // Create billing record
                 boolean billingCreated = billingDAO.createBilling(appointmentId, patientId, doctorId, consultationFee);
-                System.out.println("Billing created: " + billingCreated);
+                
+                // Get doctor name for notification
+                String doctorName = (String) session.getAttribute("full_name");
+                
+                // Add notification for the patient
+                NotificationDAO notifDAO = new NotificationDAO();
+                notifDAO.addNotification(patientId, "Appointment Completed", 
+                    "Your appointment with Dr. " + doctorName + " has been completed. You can view your diagnosis and prescription in medical history.", "success");
+                
+                // Add notification for billing
+                notifDAO.addNotification(patientId, "Billing Generated", 
+                    "A bill of Rs " + consultationFee + " has been generated for your appointment with Dr. " + doctorName + ".", "info");
                 
                 if (billingCreated) {
                     session.setAttribute("success", "Appointment completed and billing created");

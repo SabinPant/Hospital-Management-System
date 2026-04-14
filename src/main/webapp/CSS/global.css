@@ -512,6 +512,22 @@ footer {
     color: #ef4444;
 }
 
+/* Make nav-buttons align properly */
+.nav-buttons {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Welcome text style */
+.welcome-text {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--primary-blue);
+}
+
 /* -------------------------------------------- */
 /* 6. Responsive Design */
 /* -------------------------------------------- */

@@ -1,6 +1,7 @@
 package Controller;
 
 import jakarta.servlet.ServletException;
+import dao.NotificationDAO;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,7 +13,6 @@ import java.sql.Time;
 
 import dao.AppointmentDAO;
 import models.Appointment;
-import dao.NotificationDAO;
 @WebServlet("/patient/book-appointment")
 public class BookAppointmentServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -75,14 +75,14 @@ public class BookAppointmentServlet extends HttpServlet {
                 // Get doctor name
                 String doctorName = appointmentDAO.getDoctorNameByAppointmentId(appointment.getId());
                 
-                // Add notification
+                // Add notification for the patient
                 NotificationDAO notifDAO = new NotificationDAO();
                 notifDAO.addNotification(patientId, "Appointment Booked", 
-                    "Your appointment with Dr. " + doctorName + " on " + appointmentDate + " has been booked. Awaiting confirmation.", "info");
+                    "Your appointment with Dr. " + doctorName + " on " + appointmentDate + " at " + appointmentTime + " has been booked. Awaiting confirmation.", "info");
                 
                 session.setAttribute("bookingSuccess", "Appointment booked successfully! ID: " + appointment.getAppointmentId());
                 response.sendRedirect(request.getContextPath() + "/patient/appointments");
-            } else {
+            }else {
                 session.setAttribute("bookingError", "Failed to book appointment. Please try again.");
                 response.sendRedirect(request.getContextPath() + "/patient/book-appointment");
             }
