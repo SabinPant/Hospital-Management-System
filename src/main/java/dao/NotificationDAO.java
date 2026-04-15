@@ -131,16 +131,31 @@ public class NotificationDAO {
         return userIds;
     }
     
- // Get notifications for a user (for bell dropdown)
-    public List<Map<String, Object>> getUserNotifications(int userId, int limit) {
+ // Mark notification as read
+    public boolean markAsRead(int notificationId) {
+        String query = "UPDATE notifications SET is_read = TRUE WHERE id = ?";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, notificationId);
+            return pstmt.executeUpdate() > 0;
+            
+        } catch (SQLException e) {
+            System.err.println("Error marking notification as read: " + e.getMessage());
+            return false;
+        }
+    }
+    
+ // Get all notifications for a user
+    public List<Map<String, Object>> getUserNotifications(int userId) {
         List<Map<String, Object>> notifications = new ArrayList<>();
-        String query = "SELECT * FROM notifications WHERE user_id = ? ORDER BY created_at DESC LIMIT ?";
+        String query = "SELECT * FROM notifications WHERE user_id = ? ORDER BY created_at DESC";
         
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
             
             pstmt.setInt(1, userId);
-            pstmt.setInt(2, limit);
             ResultSet rs = pstmt.executeQuery();
             
             while (rs.next()) {
@@ -156,13 +171,12 @@ public class NotificationDAO {
             
         } catch (SQLException e) {
             System.err.println("Error getting user notifications: " + e.getMessage());
-            e.printStackTrace();
         }
         
         return notifications;
     }
-    
-    // Get unread notification count for a user
+
+    // Get unread count for a user
     public int getUnreadCount(int userId) {
         String query = "SELECT COUNT(*) FROM notifications WHERE user_id = ? AND is_read = FALSE";
         
@@ -178,7 +192,6 @@ public class NotificationDAO {
             
         } catch (SQLException e) {
             System.err.println("Error getting unread count: " + e.getMessage());
-            e.printStackTrace();
         }
         
         return 0;

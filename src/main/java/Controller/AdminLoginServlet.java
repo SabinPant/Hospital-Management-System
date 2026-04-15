@@ -8,19 +8,18 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
-import dao.AdminDAO;
 import models.Admin;
-import utils.PasswordUtil;
+import services.AdminService;
 
 @WebServlet("/admin/login")
 public class AdminLoginServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private AdminDAO adminDAO;
+    private AdminService adminService;
     
     @Override
     public void init() throws ServletException {
         super.init();
-        adminDAO = new AdminDAO();
+        adminService = new AdminService();
     }
     
     @Override
@@ -61,27 +60,10 @@ public class AdminLoginServlet extends HttpServlet {
             return;
         }
         
-        // Get admin from database
-        Admin admin = adminDAO.getAdminByUsername(username);
+        // Authenticate admin
+        Admin admin = adminService.authenticate(username, password);
         
         if (admin == null) {
-            request.setAttribute("error", "Invalid username or password");
-            request.getRequestDispatcher("/WEB-INF/views/admin/admin-login.jsp")
-                   .forward(request, response);
-            return;
-        }
-        
-        // Check if admin account is active
-        if ("inactive".equals(admin.getStatus())) {
-            request.setAttribute("error", "Your admin account is inactive. Please contact super admin.");
-            request.getRequestDispatcher("/WEB-INF/views/admin/admin-login.jsp")
-                   .forward(request, response);
-            return;
-        }
-        
-        // Verify password (for now, compare directly since default password is not hashed)
-        // In production, use PasswordUtil.verifyPassword()
-        if (!password.equals(admin.getPassword())) {
             request.setAttribute("error", "Invalid username or password");
             request.getRequestDispatcher("/WEB-INF/views/admin/admin-login.jsp")
                    .forward(request, response);
@@ -99,7 +81,7 @@ public class AdminLoginServlet extends HttpServlet {
         System.out.println("Admin logged in: " + admin.getUsername());
         
         // Update last login
-        adminDAO.updateLastLogin(admin.getId());
+        adminService.updateLastLogin(admin.getId());
         
         response.sendRedirect(request.getContextPath() + "/admin/dashboard");
     }

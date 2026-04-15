@@ -8,15 +8,20 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.util.List;
+import java.util.Map;
 
-import utils.DBConnection;
+import dao.SystemLogDAO;
 
 @WebServlet("/admin/export-logs")
 public class ExportLogsServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
+    private SystemLogDAO systemLogDAO;
+    
+    @Override
+    public void init() throws ServletException {
+        systemLogDAO = new SystemLogDAO();
+    }
     
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
@@ -31,38 +36,24 @@ public class ExportLogsServlet extends HttpServlet {
         response.setContentType("text/csv");
         response.setHeader("Content-Disposition", "attachment; filename=\"system_logs_" + System.currentTimeMillis() + ".csv\"");
         
-        try (PrintWriter writer = response.getWriter();
-             Connection conn = DBConnection.getConnection()) {
+        try (PrintWriter writer = response.getWriter()) {
             
             // CSV Header
             writer.println("Timestamp,User,Type,Action,Details,IP Address");
             
-            String query = "SELECT l.*, " +
-                           "CASE WHEN l.admin_id IS NOT NULL THEN a.full_name " +
-                           "     WHEN l.user_id IS NOT NULL THEN u.full_name " +
-                           "     ELSE 'System' END as actor_name, " +
-                           "CASE WHEN l.admin_id IS NOT NULL THEN 'Admin' " +
-                           "     WHEN l.user_id IS NOT NULL THEN u.user_type " +
-                           "     ELSE 'System' END as actor_type " +
-                           "FROM system_logs l " +
-                           "LEFT JOIN admins a ON l.admin_id = a.id " +
-                           "LEFT JOIN users u ON l.user_id = u.id " +
-                           "ORDER BY l.created_at DESC";
+            // Get data from DAO
+            List<Map<String, Object>> logs = systemLogDAO.getAllLogsForExport();
             
-            try (PreparedStatement stmt = conn.prepareStatement(query);
-                 ResultSet rs = stmt.executeQuery()) {
+            for (Map<String, Object> log : logs) {
+                String timestamp = log.get("created_at").toString();
+                String actor = (String) log.get("actor_name");
+                String type = (String) log.get("actor_type");
+                String action = (String) log.get("action");
+                String details = log.get("details") != null ? ((String) log.get("details")).replace(",", ";") : "";
+                String ip = log.get("ip_address") != null ? (String) log.get("ip_address") : "";
                 
-                while (rs.next()) {
-                    String timestamp = rs.getTimestamp("created_at").toString();
-                    String actor = rs.getString("actor_name");
-                    String type = rs.getString("actor_type");
-                    String action = rs.getString("action");
-                    String details = rs.getString("details") != null ? rs.getString("details").replace(",", ";") : "";
-                    String ip = rs.getString("ip_address") != null ? rs.getString("ip_address") : "";
-                    
-                    writer.println(String.format("\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"",
-                        timestamp, actor, type, action, details, ip));
-                }
+                writer.println(String.format("\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"",
+                    timestamp, actor, type, action, details, ip));
             }
             
             writer.flush();

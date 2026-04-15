@@ -6,29 +6,20 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.Date;
 
-import dao.UserDAO;
-import dao.PatientDAO;
-import dao.DoctorDAO;
 import models.User;
-import models.PatientProfile;
-import models.DoctorProfile;
-import utils.PasswordUtil;
+import services.UserService;
 import jakarta.servlet.http.HttpSession;
+
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private UserDAO userDAO;
-    private PatientDAO patientDAO;
-    private DoctorDAO doctorDAO;
+    private UserService userService;
     
     @Override
     public void init() throws ServletException {
         super.init();
-        userDAO = new UserDAO();
-        patientDAO = new PatientDAO();
-        doctorDAO = new DoctorDAO();
+        userService = new UserService();
     }
     
     @Override
@@ -58,10 +49,7 @@ public class RegisterServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
-        System.out.println("\n=== NEW REGISTRATION ATTEMPT ===");
-        
         String userType = request.getParameter("userType");
-        System.out.println("User Type: " + userType);
         
         // Get common fields
         String username = request.getParameter("username");
@@ -72,86 +60,38 @@ public class RegisterServlet extends HttpServlet {
         String phone = request.getParameter("phone");
         String address = request.getParameter("address");
         
-        System.out.println("Username: " + username);
-        System.out.println("Email: " + email);
-        System.out.println("Phone: " + phone);
-        
-        // Validation
-        if (username == null || username.trim().isEmpty()) {
-            request.setAttribute("error", "Username is required");
-            forwardWithError(request, response);
-            return;
-        }
-        
-        if (email == null || email.trim().isEmpty()) {
-            request.setAttribute("error", "Email is required");
-            forwardWithError(request, response);
-            return;
-        }
-        
-        if (password == null || password.trim().isEmpty()) {
-            request.setAttribute("error", "Password is required");
-            forwardWithError(request, response);
-            return;
-        }
-        
-        if (!password.equals(confirmPassword)) {
-            request.setAttribute("error", "Passwords do not match");
-            forwardWithError(request, response);
-            return;
-        }
-        
-        if (fullName == null || fullName.trim().isEmpty()) {
-            request.setAttribute("error", "Full name is required");
-            forwardWithError(request, response);
-            return;
-        }
-        
-        if (phone == null || phone.trim().isEmpty()) {
-            request.setAttribute("error", "Phone number is required");
-            forwardWithError(request, response);
+        // Validate input
+        String validationError = userService.validateRegistration(username, email, password, confirmPassword, 
+                                                                   fullName, phone, userType);
+        if (validationError != null) {
+            request.setAttribute("error", validationError);
+            request.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(request, response);
             return;
         }
         
         // Check existing
-        if (userDAO.isUsernameExists(username)) {
+        if (userService.isUsernameExists(username)) {
             request.setAttribute("error", "Username already exists");
-            forwardWithError(request, response);
+            request.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(request, response);
             return;
         }
         
-        if (userDAO.isEmailExists(email)) {
+        if (userService.isEmailExists(email)) {
             request.setAttribute("error", "Email already registered");
-            forwardWithError(request, response);
+            request.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(request, response);
             return;
         }
         
-        // Create user
-        String hashedPassword = PasswordUtil.hashPassword(password);
-        String generatedUserId = userDAO.generateUserId(userType);
+        // Register user
+        User user = userService.registerUser(username, email, password, fullName, phone, address, userType);
         
-        User user = new User(username, email, hashedPassword, fullName, userType);
-        user.setUserId(generatedUserId);
-        user.setPhone(phone);
-        user.setAddress(address);
-        
-        if (userType.equals("patient")) {
-            user.setStatus("active");
-        } else {
-            user.setStatus("active");
-        }
-        
-        // Save user
-        boolean userSaved = userDAO.saveUser(user);
-        System.out.println("User saved: " + userSaved);
-        
-        if (!userSaved) {
+        if (user == null) {
             request.setAttribute("error", "Database error. Please try again.");
-            forwardWithError(request, response);
+            request.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(request, response);
             return;
         }
         
-        // Handle patient or doctor
+        // Handle patient or doctor profile
         if (userType.equals("patient")) {
             String dob = request.getParameter("dob");
             String bloodGroup = request.getParameter("bloodGroup");
@@ -159,23 +99,8 @@ public class RegisterServlet extends HttpServlet {
             String medicalHistory = request.getParameter("medicalHistory");
             String allergies = request.getParameter("allergies");
             
-            PatientProfile profile = new PatientProfile(user.getId());
-            
-            if (dob != null && !dob.isEmpty()) {
-                try {
-                    profile.setDateOfBirth(Date.valueOf(dob));
-                } catch (Exception e) {
-                    System.out.println("Invalid date: " + dob);
-                }
-            }
-            
-            profile.setBloodGroup(bloodGroup);
-            profile.setEmergencyContact(emergencyContact);
-            profile.setMedicalHistory(medicalHistory);
-            profile.setAllergies(allergies);
-            
-            boolean profileSaved = patientDAO.savePatientProfile(profile);
-            System.out.println("Patient profile saved: " + profileSaved);
+            boolean profileSaved = userService.registerPatientProfile(user.getId(), dob, bloodGroup, 
+                                                                       emergencyContact, medicalHistory, allergies);
             
             if (!profileSaved) {
                 System.out.println("Warning: Patient profile not saved but user was created");
@@ -192,24 +117,10 @@ public class RegisterServlet extends HttpServlet {
             String consultationFee = request.getParameter("consultationFee");
             String bio = request.getParameter("bio");
             
-            // Handle "Other" specialization
-            if ("Other".equals(specialization) && otherSpecialization != null && !otherSpecialization.isEmpty()) {
-                specialization = otherSpecialization;
-            }
-            
-            DoctorProfile profile = new DoctorProfile(
-                user.getId(),
-                specialization,
-                qualification,
-                licenseNumber,
-                Integer.parseInt(experienceYears),
-                Double.parseDouble(consultationFee)
-            );
-            profile.setBio(bio);
-            profile.setApprovalStatus("pending");
-            
-            boolean profileSaved = doctorDAO.saveDoctorProfile(profile);
-            System.out.println("Doctor profile saved: " + profileSaved);
+            boolean profileSaved = userService.registerDoctorProfile(user.getId(), specialization, otherSpecialization,
+                                                                      qualification, licenseNumber,
+                                                                      Integer.parseInt(experienceYears),
+                                                                      Double.parseDouble(consultationFee), bio);
             
             if (!profileSaved) {
                 System.out.println("Warning: Doctor profile not saved but user was created");
@@ -218,11 +129,6 @@ public class RegisterServlet extends HttpServlet {
             request.setAttribute("success", "Registration submitted! Your application is pending admin approval.");
         }
         
-        request.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(request, response);
-    }
-    
-    private void forwardWithError(HttpServletRequest request, HttpServletResponse response) 
-            throws ServletException, IOException {
         request.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(request, response);
     }
 }

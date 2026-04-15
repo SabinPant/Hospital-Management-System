@@ -8,16 +8,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
-import dao.DoctorDAO;
+import services.DoctorService;
 
 @WebServlet("/admin/reject-doctor")
 public class RejectDoctorServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private DoctorDAO doctorDAO;
+    private DoctorService doctorService;
     
     @Override
     public void init() throws ServletException {
-        doctorDAO = new DoctorDAO();
+        doctorService = new DoctorService();
     }
     
     @Override
@@ -26,7 +26,6 @@ public class RejectDoctorServlet extends HttpServlet {
         
         HttpSession session = request.getSession(false);
         
-        // Check if admin is logged in
         if (session == null || session.getAttribute("admin_id") == null) {
             response.sendRedirect(request.getContextPath() + "/admin/login");
             return;
@@ -42,14 +41,9 @@ public class RejectDoctorServlet extends HttpServlet {
             int doctorId = Integer.parseInt(idParam);
             int adminId = (int) session.getAttribute("admin_id");
             
-            // Get rejection reason from request (optional)
             String rejectionReason = request.getParameter("reason");
-            if (rejectionReason == null || rejectionReason.isEmpty()) {
-                rejectionReason = "Application does not meet our requirements";
-            }
             
-            // Update doctor rejection status
-            boolean updated = doctorDAO.rejectDoctor(doctorId, adminId, rejectionReason);
+            boolean updated = doctorService.rejectDoctor(doctorId, adminId, rejectionReason);
             
             if (updated) {
                 response.sendRedirect(request.getContextPath() + "/admin/dashboard?success=Doctor rejected");

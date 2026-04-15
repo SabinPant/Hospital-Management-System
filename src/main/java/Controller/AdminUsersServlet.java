@@ -27,41 +27,6 @@ public class AdminUsersServlet extends HttpServlet {
         userDAO = new UserDAO();
     }
     
- // Lock user account
-    public boolean lockUser(int userId, String reason) {
-        String query = "UPDATE users SET status = 'locked', lock_reason = ?, locked_at = ? WHERE id = ?";
-        
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-            
-            pstmt.setString(1, reason);
-            pstmt.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
-            pstmt.setInt(3, userId);
-            
-            return pstmt.executeUpdate() > 0;
-            
-        } catch (SQLException e) {
-            System.err.println("Error locking user: " + e.getMessage());
-            return false;
-        }
-    }
-
-    // Unlock user account
-    public boolean unlockUser(int userId) {
-        String query = "UPDATE users SET status = 'active', lock_reason = NULL, locked_at = NULL WHERE id = ?";
-        
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-            
-            pstmt.setInt(1, userId);
-            return pstmt.executeUpdate() > 0;
-            
-        } catch (SQLException e) {
-            System.err.println("Error unlocking user: " + e.getMessage());
-            return false;
-        }
-    }
-    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {

@@ -8,16 +8,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
-import dao.UserDAO;
+import services.UserService;
 
 @WebServlet("/admin/lock-user")
 public class LockUserServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private UserDAO userDAO;
+    private UserService userService;
     
     @Override
     public void init() throws ServletException {
-        userDAO = new UserDAO();
+        userService = new UserService();
     }
     
     @Override
@@ -30,10 +30,11 @@ public class LockUserServlet extends HttpServlet {
             return;
         }
         
+        int adminId = (int) session.getAttribute("admin_id");
         int userId = Integer.parseInt(request.getParameter("id"));
         String reason = request.getParameter("reason");
         
-        boolean locked = userDAO.lockUser(userId, reason);
+        boolean locked = userService.lockUser(userId, reason, adminId);
         
         if (locked) {
             response.sendRedirect(request.getContextPath() + "/admin/users?success=User locked");

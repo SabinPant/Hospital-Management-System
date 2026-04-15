@@ -115,25 +115,4 @@ public class DoctorDAO {
         
         return "General Medicine";
     }
-
-    // Helper method to get specialization as fallback
-    private String getDoctorSpecialization(int userId) {
-        String query = "SELECT specialization FROM doctor_profiles WHERE user_id = ?";
-        
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-            
-            pstmt.setInt(1, userId);
-            ResultSet rs = pstmt.executeQuery();
-            
-            if (rs.next()) {
-                return rs.getString("specialization");
-            }
-            
-        } catch (SQLException e) {
-            System.err.println("Error getting specialization: " + e.getMessage());
-        }
-        
-        return "General Medicine";
-    }
 }

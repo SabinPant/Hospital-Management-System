@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import models.SystemLog;
 import utils.DBConnection;
@@ -156,6 +158,43 @@ return false;
         } catch (SQLException e) {
             System.err.println("Error getting logs: " + e.getMessage());
             e.printStackTrace();
+        }
+        
+        return logs;
+    }
+    
+ // Get all logs for export
+    public List<Map<String, Object>> getAllLogsForExport() {
+        List<Map<String, Object>> logs = new ArrayList<>();
+        String query = "SELECT l.*, " +
+                       "CASE WHEN l.admin_id IS NOT NULL THEN a.full_name " +
+                       "     WHEN l.user_id IS NOT NULL THEN u.full_name " +
+                       "     ELSE 'System' END as actor_name, " +
+                       "CASE WHEN l.admin_id IS NOT NULL THEN 'Admin' " +
+                       "     WHEN l.user_id IS NOT NULL THEN u.user_type " +
+                       "     ELSE 'System' END as actor_type " +
+                       "FROM system_logs l " +
+                       "LEFT JOIN admins a ON l.admin_id = a.id " +
+                       "LEFT JOIN users u ON l.user_id = u.id " +
+                       "ORDER BY l.created_at DESC";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+            
+            while (rs.next()) {
+                Map<String, Object> log = new HashMap<>();
+                log.put("created_at", rs.getTimestamp("created_at"));
+                log.put("actor_name", rs.getString("actor_name"));
+                log.put("actor_type", rs.getString("actor_type"));
+                log.put("action", rs.getString("action"));
+                log.put("details", rs.getString("details"));
+                log.put("ip_address", rs.getString("ip_address"));
+                logs.add(log);
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error getting logs for export: " + e.getMessage());
         }
         
         return logs;

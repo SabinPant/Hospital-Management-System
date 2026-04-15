@@ -6,14 +6,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 import models.Appointment;
 import utils.DBConnection;
-import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -153,6 +150,48 @@ public class AppointmentDAO {
         }
         
         return appointments;
+    }
+    
+ // Get appointment details by ID for admin
+    public Map<String, Object> getAppointmentDetailsForAdmin(int appointmentId) {
+        Map<String, Object> data = new HashMap<>();
+        String query = "SELECT a.*, " +
+                       "p.full_name as patient_name, p.email as patient_email, p.phone as patient_phone, " +
+                       "d.full_name as doctor_name, " +
+                       "dp.specialization " +
+                       "FROM appointments a " +
+                       "JOIN users p ON a.patient_id = p.id " +
+                       "JOIN users d ON a.doctor_id = d.id " +
+                       "LEFT JOIN doctor_profiles dp ON d.id = dp.user_id " +
+                       "WHERE a.id = ?";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, appointmentId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                data.put("appointment_id", rs.getString("appointment_id"));
+                data.put("appointment_date", rs.getDate("appointment_date").toString());
+                data.put("appointment_time", rs.getString("appointment_time"));
+                data.put("status", rs.getString("status"));
+                data.put("symptoms", rs.getString("symptoms"));
+                data.put("diagnosis", rs.getString("diagnosis"));
+                data.put("prescription", rs.getString("prescription"));
+                data.put("cancellation_reason", rs.getString("cancellation_reason"));
+                data.put("patient_name", rs.getString("patient_name"));
+                data.put("patient_email", rs.getString("patient_email"));
+                data.put("patient_phone", rs.getString("patient_phone"));
+                data.put("doctor_name", rs.getString("doctor_name"));
+                data.put("specialization", rs.getString("specialization"));
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error getting appointment details: " + e.getMessage());
+        }
+        
+        return data;
     }
     
     // Get all doctors (for booking dropdown)

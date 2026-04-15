@@ -7,14 +7,18 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 
-import utils.DBConnection;
+import dao.NotificationDAO;
 
 @WebServlet("/notification/read")
 public class MarkNotificationReadServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
+    private NotificationDAO notificationDAO;
+    
+    @Override
+    public void init() throws ServletException {
+        notificationDAO = new NotificationDAO();
+    }
     
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
@@ -29,18 +33,7 @@ public class MarkNotificationReadServlet extends HttpServlet {
         String idParam = request.getParameter("id");
         if (idParam != null && !idParam.isEmpty()) {
             int notificationId = Integer.parseInt(idParam);
-            
-            String query = "UPDATE notifications SET is_read = TRUE WHERE id = ?";
-            
-            try (Connection conn = DBConnection.getConnection();
-                 PreparedStatement pstmt = conn.prepareStatement(query)) {
-                
-                pstmt.setInt(1, notificationId);
-                pstmt.executeUpdate();
-                
-            } catch (Exception e) {
-                System.err.println("Error marking notification as read: " + e.getMessage());
-            }
+            notificationDAO.markAsRead(notificationId);
         }
         
         response.sendRedirect(request.getContextPath() + "/notifications");

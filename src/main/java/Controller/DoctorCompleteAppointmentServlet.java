@@ -8,19 +8,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
-import dao.AppointmentDAO;
-import dao.BillingDAO;
-import dao.NotificationDAO;
+import services.AppointmentService;
+
 @WebServlet("/doctor/complete-appointment")
 public class DoctorCompleteAppointmentServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private AppointmentDAO appointmentDAO;
-    private BillingDAO billingDAO;
+    private AppointmentService appointmentService;
     
     @Override
     public void init() throws ServletException {
-        appointmentDAO = new AppointmentDAO();
-        billingDAO = new BillingDAO();
+        appointmentService = new AppointmentService();
     }
     
     @Override
@@ -34,6 +31,8 @@ public class DoctorCompleteAppointmentServlet extends HttpServlet {
             return;
         }
         
+        int doctorId = (int) session.getAttribute("user_id");
+        String doctorName = (String) session.getAttribute("full_name");
         String idParam = request.getParameter("id");
         String diagnosis = request.getParameter("diagnosis");
         String prescription = request.getParameter("prescription");
@@ -46,51 +45,20 @@ public class DoctorCompleteAppointmentServlet extends HttpServlet {
         
         try {
             int appointmentId = Integer.parseInt(idParam);
-            int doctorId = (int) session.getAttribute("user_id");
             
-            // Get patient ID
-            int patientId = appointmentDAO.getPatientIdByAppointmentId(appointmentId);
-            
-            
-            // Get consultation fee
-            double consultationFee = billingDAO.getDoctorConsultationFee(doctorId);
-           
-            
-            // Update appointment to completed
-            boolean completed = appointmentDAO.completeAppointment(appointmentId, diagnosis, prescription);
-            
+            // Call Service (business logic is in Service)
+            boolean completed = appointmentService.completeAppointment(appointmentId, doctorId, doctorName, diagnosis, prescription);
             
             if (completed) {
-                // Create billing record
-                boolean billingCreated = billingDAO.createBilling(appointmentId, patientId, doctorId, consultationFee);
-                
-                // Get doctor name for notification
-                String doctorName = (String) session.getAttribute("full_name");
-                
-                // Add notification for the patient
-                NotificationDAO notifDAO = new NotificationDAO();
-                notifDAO.addNotification(patientId, "Appointment Completed", 
-                    "Your appointment with Dr. " + doctorName + " has been completed. You can view your diagnosis and prescription in medical history.", "success");
-                
-                // Add notification for billing
-                notifDAO.addNotification(patientId, "Billing Generated", 
-                    "A bill of Rs " + consultationFee + " has been generated for your appointment with Dr. " + doctorName + ".", "info");
-                
-                if (billingCreated) {
-                    session.setAttribute("success", "Appointment completed and billing created");
-                } else {
-                    session.setAttribute("error", "Appointment completed but billing failed - check console");
-                }
+                session.setAttribute("success", "Appointment completed and billing created");
             } else {
-                session.setAttribute("error", "Failed to complete appointment");
+                session.setAttribute("error", "Failed to complete appointment - Appointment must be confirmed first");
             }
             
         } catch (NumberFormatException e) {
-            System.err.println("Number format error: " + e.getMessage());
             session.setAttribute("error", "Invalid ID format");
         } catch (Exception e) {
             System.err.println("Unexpected error: " + e.getMessage());
-            e.printStackTrace();
             session.setAttribute("error", "Error: " + e.getMessage());
         }
         

@@ -8,15 +8,20 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.util.List;
+import java.util.Map;
 
-import utils.DBConnection;
+import dao.FinanceDAO;
 
 @WebServlet("/admin/export-finance")
 public class ExportFinanceServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
+    private FinanceDAO financeDAO;
+    
+    @Override
+    public void init() throws ServletException {
+        financeDAO = new FinanceDAO();
+    }
     
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
@@ -31,29 +36,22 @@ public class ExportFinanceServlet extends HttpServlet {
         response.setContentType("text/csv");
         response.setHeader("Content-Disposition", "attachment; filename=\"finance_report_" + System.currentTimeMillis() + ".csv\"");
         
-        try (PrintWriter writer = response.getWriter();
-             Connection conn = DBConnection.getConnection()) {
+        try (PrintWriter writer = response.getWriter()) {
             
             // CSV Header
             writer.println("Month,Revenue,Appointments,Average per Appointment");
             
-            String query = "SELECT DATE_FORMAT(payment_date, '%b %Y') as month, SUM(amount) as revenue, COUNT(*) as count " +
-                           "FROM billings WHERE payment_status = 'paid' " +
-                           "GROUP BY DATE_FORMAT(payment_date, '%Y-%m') " +
-                           "ORDER BY payment_date DESC";
+            // Get data from DAO
+            List<Map<String, Object>> financeData = financeDAO.getFinanceDataForExport();
             
-            try (PreparedStatement stmt = conn.prepareStatement(query);
-                 ResultSet rs = stmt.executeQuery()) {
+            for (Map<String, Object> data : financeData) {
+                String month = (String) data.get("month");
+                double revenue = (double) data.get("revenue");
+                int count = (int) data.get("count");
+                double avg = count > 0 ? revenue / count : 0;
                 
-                while (rs.next()) {
-                    String month = rs.getString("month");
-                    double revenue = rs.getDouble("revenue");
-                    int count = rs.getInt("count");
-                    double avg = count > 0 ? revenue / count : 0;
-                    
-                    writer.println(String.format("\"%s\",\"%.2f\",\"%d\",\"%.2f\"",
-                        month, revenue, count, avg));
-                }
+                writer.println(String.format("\"%s\",\"%.2f\",\"%d\",\"%.2f\"",
+                    month, revenue, count, avg));
             }
             
             writer.flush();

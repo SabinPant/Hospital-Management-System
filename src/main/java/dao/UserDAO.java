@@ -32,6 +32,31 @@ public class UserDAO {
         }
     }
     
+ // Get user by ID
+    public User getUserById(int userId) {
+        String query = "SELECT * FROM users WHERE id = ?";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("id"));
+                user.setFullName(rs.getString("full_name"));
+                // Set other fields as needed
+                return user;
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return null;
+    }
+    
     // Check if email exists
     public boolean isEmailExists(String email) {
         String query = "SELECT * FROM users WHERE email = ?";

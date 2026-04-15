@@ -38,7 +38,7 @@ public class NotificationBellServlet extends HttpServlet {
         
         int userId = (int) session.getAttribute("user_id");
         int unreadCount = notificationDAO.getUnreadCount(userId);
-        List<Map<String, Object>> notifications = notificationDAO.getUserNotifications(userId, 5);
+        List<Map<String, Object>> notifications = notificationDAO.getUserNotifications(userId);
         
         Map<String, Object> result = new HashMap<>();
         result.put("unreadCount", unreadCount);

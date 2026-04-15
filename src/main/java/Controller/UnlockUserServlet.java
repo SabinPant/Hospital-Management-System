@@ -8,16 +8,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
-import dao.UserDAO;
+import services.UserService;
 
 @WebServlet("/admin/unlock-user")
 public class UnlockUserServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private UserDAO userDAO;
+    private UserService userService;
     
     @Override
     public void init() throws ServletException {
-        userDAO = new UserDAO();
+        userService = new UserService();
     }
     
     @Override
@@ -30,9 +30,10 @@ public class UnlockUserServlet extends HttpServlet {
             return;
         }
         
+        int adminId = (int) session.getAttribute("admin_id");
         int userId = Integer.parseInt(request.getParameter("id"));
         
-        boolean unlocked = userDAO.unlockUser(userId);
+        boolean unlocked = userService.unlockUser(userId, adminId);
         
         if (unlocked) {
             response.sendRedirect(request.getContextPath() + "/admin/users?success=User unlocked");

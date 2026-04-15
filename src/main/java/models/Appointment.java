@@ -22,14 +22,15 @@ public class Appointment {
     private String patientEmail;
     private String patientPhone;
 
+    public Appointment() {
+        // Default constructor
+    }
+    
     // Additional fields for display (not in database)
     private String doctorName;
     private String doctorSpecialization;
     private String patientName;
     private double consultationFee;
-    
-    // Constructors
-    public Appointment() {}
     
     public Appointment(int patientId, int doctorId, Date appointmentDate, Time appointmentTime, String symptoms) {
         this.patientId = patientId;

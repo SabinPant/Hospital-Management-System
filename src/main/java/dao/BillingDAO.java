@@ -7,6 +7,10 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 
 import utils.DBConnection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.ArrayList;
 
 public class BillingDAO {
     
@@ -42,6 +46,39 @@ public class BillingDAO {
             e.printStackTrace();
             return false;
         }
+    }
+    
+ // Get all billings for export
+    public List<Map<String, Object>> getAllBillingsForExport() {
+        List<Map<String, Object>> billings = new ArrayList<>();
+        String query = "SELECT b.billing_id, b.appointment_id, b.amount, b.payment_status, b.payment_date, " +
+                       "p.full_name as patient_name, d.full_name as doctor_name " +
+                       "FROM billings b " +
+                       "JOIN users p ON b.patient_id = p.id " +
+                       "JOIN users d ON b.doctor_id = d.id " +
+                       "ORDER BY b.payment_date DESC";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+            
+            while (rs.next()) {
+                Map<String, Object> billing = new HashMap<>();
+                billing.put("billing_id", rs.getString("billing_id"));
+                billing.put("appointment_id", rs.getString("appointment_id"));
+                billing.put("patient_name", rs.getString("patient_name"));
+                billing.put("doctor_name", rs.getString("doctor_name"));
+                billing.put("amount", rs.getDouble("amount"));
+                billing.put("payment_status", rs.getString("payment_status"));
+                billing.put("payment_date", rs.getTimestamp("payment_date"));
+                billings.add(billing);
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error getting billings for export: " + e.getMessage());
+        }
+        
+        return billings;
     }
     
     // Get consultation fee for doctor
