@@ -223,14 +223,14 @@ public class AppointmentDAO {
         
         return doctors;
     }
- // Get doctor's appointments by specific date (exclude completed and cancelled)
+ // Get today's appointments - show pending AND confirmed
     public List<Appointment> getDoctorAppointmentsByDate(int doctorId, String date) {
         List<Appointment> appointments = new ArrayList<>();
         String query = "SELECT a.*, u.full_name as patient_name " +
                        "FROM appointments a " +
                        "JOIN users u ON a.patient_id = u.id " +
                        "WHERE a.doctor_id = ? AND a.appointment_date = ? " +
-                       "AND a.status NOT IN ('completed', 'cancelled') " +
+                       "AND a.status IN ('pending', 'confirmed') " +
                        "ORDER BY a.appointment_time ASC";
         
         try (Connection conn = DBConnection.getConnection();

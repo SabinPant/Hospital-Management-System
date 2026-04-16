@@ -92,46 +92,52 @@
         <!-- Two Column: Today + Upcoming -->
         <div class="appt-columns">
 
-            <!-- Today's Appointments -->
-            <div class="appt-panel">
-                <div class="panel-header">
-                    <div class="panel-title">
-                        <span class="panel-dot dot-blue"></span>
-                        <h2>Today's Appointments</h2>
+           <!-- Today's Appointments -->
+<div class="appt-panel">
+    <div class="panel-header">
+        <div class="panel-title">
+            <span class="panel-dot dot-blue"></span>
+            <h2>Today's Appointments</h2>
+        </div>
+        <span class="panel-count">${todayCount}</span>
+    </div>
+    <div class="panel-body">
+        <c:choose>
+            <c:when test="${not empty todayAppointments}">
+                <c:forEach var="apt" items="${todayAppointments}">
+                    <div class="appt-item">
+                        <div class="appt-time-col">
+                            <div class="appt-time"><fmt:formatDate value="${apt.appointmentTime}" pattern="hh:mm"/></div>
+                            <div class="appt-ampm"><fmt:formatDate value="${apt.appointmentTime}" pattern="a"/></div>
+                        </div>
+                        <div class="appt-divider"></div>
+                        <div class="appt-details">
+                            <div class="appt-name">${apt.patientName}</div>
+                            <div class="appt-note">${apt.symptoms != null ? apt.symptoms : "No symptoms noted"}</div>
+                        </div>
+                        <div class="appt-action">
+                            <c:if test="${apt.status == 'pending'}">
+                                <form action="${pageContext.request.contextPath}/doctor/confirm-appointment" method="post" style="display:inline;">
+                                    <input type="hidden" name="id" value="${apt.id}">
+                                    <button type="submit" class="btn-confirm">Confirm</button>
+                                </form>
+                            </c:if>
+                            <c:if test="${apt.status == 'confirmed'}">
+                                <button class="btn-complete" onclick="openCompleteModal(${apt.id})">Complete</button>
+                            </c:if>
+                        </div>
                     </div>
-                    <span class="panel-count">${todayCount}</span>
+                </c:forEach>
+            </c:when>
+            <c:otherwise>
+                <div class="empty-panel">
+                    <i class="fas fa-calendar-day"></i>
+                    <p>No appointments today</p>
                 </div>
-                <div class="panel-body">
-                    <c:choose>
-                        <c:when test="${not empty todayAppointments}">
-                            <c:forEach var="apt" items="${todayAppointments}">
-                                <div class="appt-item">
-                                    <div class="appt-time-col">
-                                        <div class="appt-time"><fmt:formatDate value="${apt.appointmentTime}" pattern="hh:mm"/></div>
-                                        <div class="appt-ampm"><fmt:formatDate value="${apt.appointmentTime}" pattern="a"/></div>
-                                    </div>
-                                    <div class="appt-divider"></div>
-                                    <div class="appt-details">
-                                        <div class="appt-name">${apt.patientName}</div>
-                                        <div class="appt-note">${apt.symptoms != null ? apt.symptoms : "No symptoms noted"}</div>
-                                    </div>
-                                    <div class="appt-action">
-                                        <button class="btn-complete" onclick="openCompleteModal(${apt.id})">
-                                            <i class="fas fa-check"></i> Complete
-                                        </button>
-                                    </div>
-                                </div>
-                            </c:forEach>
-                        </c:when>
-                        <c:otherwise>
-                            <div class="empty-panel">
-                                <i class="fas fa-calendar-day"></i>
-                                <p>No appointments today</p>
-                            </div>
-                        </c:otherwise>
-                    </c:choose>
-                </div>
-            </div>
+            </c:otherwise>
+        </c:choose>
+    </div>
+</div>
 
             <!-- Upcoming Appointments -->
             <div class="appt-panel">
