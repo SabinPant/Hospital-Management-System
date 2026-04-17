@@ -2,16 +2,20 @@ package services;
 
 import dao.UserDAO;
 
+import java.io.IOException;
 import java.sql.Date;
 
 import dao.PatientDAO;
 import models.User;
 import models.DoctorProfile;
 import models.PatientProfile;
+import utils.FileUploadUtil;
 import utils.PasswordUtil;
 import jakarta.servlet.http.HttpSession;
 import dao.DoctorDAO;
 import dao.NotificationDAO;
+import jakarta.servlet.http.Part;
+
 public class UserService {
     private UserDAO userDAO;
     private PatientDAO patientDAO;
@@ -61,7 +65,7 @@ public class UserService {
 
     // Business logic: Register new user
     public User registerUser(String username, String email, String password, String fullName, 
-                             String phone, String address, String userType) {
+            String gender, String phone, String address, String userType) {
         String hashedPassword = PasswordUtil.hashPassword(password);
         String generatedUserId = userDAO.generateUserId(userType);
         
@@ -69,6 +73,7 @@ public class UserService {
         user.setUserId(generatedUserId);
         user.setPhone(phone);
         user.setAddress(address);
+        user.setGender(gender);  
         user.setStatus("active"); // Both patient and doctor start as active (doctor approval is separate)
         
         boolean saved = userDAO.saveUser(user);
@@ -100,22 +105,38 @@ public class UserService {
         return patientDAO.savePatientProfile(profile);
     }
 
-    // Business logic: Register doctor profile
+ /// Business logic: Register doctor profile
     public boolean registerDoctorProfile(int userId, String specialization, String otherSpecialization,
-                                         String qualification, String licenseNumber, 
-                                         int experienceYears, double consultationFee, String bio) {
-        // Handle "Other" specialization
-        if ("Other".equals(specialization) && otherSpecialization != null && !otherSpecialization.isEmpty()) {
-            specialization = otherSpecialization;
-        }
-        
-        DoctorProfile profile = new DoctorProfile(userId, specialization, qualification, 
-                                                  licenseNumber, experienceYears, consultationFee);
-        profile.setBio(bio);
-        profile.setApprovalStatus("pending");
-        
-        return doctorDAO.saveDoctorProfile(profile);
-    }
+            String qualification, String licenseNumber, 
+            int experienceYears, double consultationFee, String bio, Part licenseImagePart, String appPath) {
+// Handle "Other" specialization
+if ("Other".equals(specialization) && otherSpecialization != null && !otherSpecialization.isEmpty()) {
+specialization = otherSpecialization;
+}
+
+// Handle license image upload with validation
+String licenseImagePath = null;
+if (licenseImagePart != null && licenseImagePart.getSize() > 0) {
+if (FileUploadUtil.isValidImage(licenseImagePart)) {
+try {
+licenseImagePath = FileUploadUtil.saveFile(licenseImagePart, "license_" + userId, appPath);
+System.out.println("License image saved: " + licenseImagePath);
+} catch (IOException e) {
+System.err.println("Error saving license image: " + e.getMessage());
+}
+} else {
+System.err.println("Invalid license image file - rejected");
+}
+}
+
+DoctorProfile profile = new DoctorProfile(userId, specialization, qualification, 
+                     licenseNumber, experienceYears, consultationFee);
+profile.setBio(bio);
+profile.setApprovalStatus("pending");
+profile.setLicenseImage(licenseImagePath);
+
+return doctorDAO.saveDoctorProfile(profile);
+}
     
     
     // Business logic: Authenticate user
@@ -193,6 +214,38 @@ public class UserService {
         
         return locked;
     }
+    
+ // Business logic: Update user profile image
+    public String updateProfileImage(int userId, Part filePart, String appPath) {
+        if (!FileUploadUtil.isValidImage(filePart)) {
+            return null;
+        }
+        
+        try {
+            String imagePath = FileUploadUtil.saveFile(filePart, "profile_" + userId, appPath);
+            userDAO.updateProfileImage(userId, imagePath);
+            return imagePath;
+        } catch (IOException e) {
+            System.err.println("Error saving profile image: " + e.getMessage());
+            return null;
+        }
+    }
+
+    // Business logic: Update doctor license image
+    public String updateLicenseImage(int userId, Part filePart, String appPath) {
+        if (!FileUploadUtil.isValidImage(filePart)) {
+            return null;
+        }
+        
+        try {
+            String imagePath = FileUploadUtil.saveFile(filePart, "license_" + userId, appPath);
+            doctorDAO.updateLicenseImage(userId, imagePath);
+            return imagePath;
+        } catch (IOException e) {
+            System.err.println("Error saving license image: " + e.getMessage());
+            return null;
+        }
+    }
 
     // Business logic: Unlock user account
     public boolean unlockUser(int userId, int adminId) {
@@ -205,5 +258,28 @@ public class UserService {
         }
         
         return unlocked;
+    }
+    
+ // Handle image upload (profile or license)
+    public String handleImageUpload(int userId, String userType, String imageType, Part filePart, String appPath) {
+        if (!FileUploadUtil.isValidImage(filePart)) {
+            return null;
+        }
+        
+        try {
+            if ("profile".equals(imageType)) {
+                String imagePath = FileUploadUtil.saveFile(filePart, "profile_" + userId, appPath);
+                userDAO.updateProfileImage(userId, imagePath);
+                return imagePath;
+            } else if ("license".equals(imageType) && "doctor".equals(userType)) {
+                String imagePath = FileUploadUtil.saveFile(filePart, "license_" + userId, appPath);
+                doctorDAO.updateLicenseImage(userId, imagePath);
+                return imagePath;
+            }
+        } catch (IOException e) {
+            System.err.println("Error saving file: " + e.getMessage());
+        }
+        
+        return null;
     }
 }

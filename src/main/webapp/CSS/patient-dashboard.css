@@ -496,6 +496,35 @@
     color: #94a3b8;
 }
 
+.profile-avatar img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.btn-upload {
+    background: #0a5c8e;
+    color: white;
+    border: none;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.btn-upload:hover {
+    background: #074268;
+}
+
+.profile-avatar form small {
+    display: block;
+    font-size: 0.6rem;
+    color: #64748b;
+    margin-top: 5px;
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
     .dashboard-layout {

@@ -34,40 +34,59 @@
     </div>
 
     <!-- Main Content -->
-    <div class="admin-main">
-        <!-- Top Bar -->
-        <div class="admin-topbar">
-            <h1><i class="fas fa-chart-line"></i> Financial Reports</h1>
-            <div class="admin-user">
-                <span><i class="fas fa-user-shield"></i> ${sessionScope.admin_name != null ? sessionScope.admin_name : 'Admin'}</span>
-                <a href="${pageContext.request.contextPath}/admin/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+   <div class="admin-main">
+        <div class="admin-topbar" style="margin-bottom: 32px;">
+            <h1 style="color: #1e293b; font-size: 1.8rem; font-weight: 700;">Financial Reports</h1>
+            <div class="admin-user" style="display: flex; gap: 20px; align-items: center;">
+                <span style="color: #64748b; font-weight: 500;"><i class="fas fa-user-shield" style="color: #0ea5e9;"></i> ${sessionScope.admin_name != null ? sessionScope.admin_name : 'Admin'}</span>
+                <a href="${pageContext.request.contextPath}/admin/logout" style="color: #ef4444; text-decoration: none; font-weight: 600; padding: 8px 16px; background: #fef2f2; border-radius: 8px; transition: 0.2s;"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div>
         </div>
         
-        <!-- Stats Cards -->
         <div class="stats-grid">
             <div class="stat-card">
-                <h3><i class="fas fa-dollar-sign"></i> Total Revenue</h3>
-                <div class="stat-value">Rs <fmt:formatNumber value="${totalRevenue}" type="number" minFractionDigits="2" maxFractionDigits="2"/></div>
+                <div class="stat-icon" style="background: #e0f2fe; color: #0ea5e9;">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="stat-details">
+                    <p style="color: #64748b; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin: 0 0 4px 0;">Total Revenue</p>
+                    <h3 style="font-size: 1.5rem; margin: 0; color: #1e293b;">Rs <fmt:formatNumber value="${totalRevenue}" type="number" minFractionDigits="2" maxFractionDigits="2"/></h3>
+                </div>
             </div>
+            
             <div class="stat-card">
-                <h3><i class="fas fa-calendar-month"></i> This Month</h3>
-                <div class="stat-value">Rs <fmt:formatNumber value="${monthlyRevenue}" type="number" minFractionDigits="2" maxFractionDigits="2"/></div>
+                <div class="stat-icon" style="background: #dcfce7; color: #10b981;">
+                    <i class="fas fa-calendar-month"></i>
+                </div>
+                <div class="stat-details">
+                    <p style="color: #64748b; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin: 0 0 4px 0;">This Month</p>
+                    <h3 style="font-size: 1.5rem; margin: 0; color: #1e293b;">Rs <fmt:formatNumber value="${monthlyRevenue}" type="number" minFractionDigits="2" maxFractionDigits="2"/></h3>
+                </div>
             </div>
+            
             <div class="stat-card">
-                <h3><i class="fas fa-calendar-check"></i> Total Appointments</h3>
-                <div class="stat-value">${totalAppointments}</div>
+                <div class="stat-icon" style="background: #f3e8ff; color: #a855f7;">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="stat-details">
+                    <p style="color: #64748b; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin: 0 0 4px 0;">Appointments</p>
+                    <h3 style="font-size: 1.5rem; margin: 0; color: #1e293b;">${totalAppointments}</h3>
+                </div>
             </div>
+            
             <div class="stat-card">
-                <h3><i class="fas fa-chart-simple"></i> Avg per Appointment</h3>
-                <div class="stat-value">Rs <fmt:formatNumber value="${avgRevenue}" type="number" minFractionDigits="2" maxFractionDigits="2"/></div>
+                <div class="stat-icon" style="background: #ffedd5; color: #f97316;">
+                    <i class="fas fa-chart-pie"></i>
+                </div>
+                <div class="stat-details">
+                    <p style="color: #64748b; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin: 0 0 4px 0;">Avg Per Appt</p>
+                    <h3 style="font-size: 1.5rem; margin: 0; color: #1e293b;">Rs <fmt:formatNumber value="${avgRevenue}" type="number" minFractionDigits="2" maxFractionDigits="2"/></h3>
+                </div>
             </div>
         </div>
         
-        <!-- Two Column Layout -->
         <div class="finance-two-columns">
-            <!-- Revenue Overview (Bar Chart) -->
-            <div class="section-card">
+            <div class="dashboard-section" style="margin-bottom: 0;">
                 <div class="section-header">
                     <h2><i class="fas fa-chart-bar"></i> Revenue Overview</h2>
                 </div>
@@ -85,38 +104,44 @@
                         </div>
                     </c:forEach>
                     <c:if test="${empty monthlyRevenueList}">
-                        <div class="empty-state">No revenue data available</div>
+                        <div class="empty-state" style="text-align: center; padding: 30px; color: #94a3b8;">
+                            <i class="fas fa-chart-bar" style="font-size: 2rem; margin-bottom: 10px; opacity: 0.5;"></i>
+                            <p style="margin: 0;">No revenue data available</p>
+                        </div>
                     </c:if>
                 </div>
             </div>
             
-            <!-- Revenue by Doctor -->
-            <div class="section-card">
+            <div class="dashboard-section" style="margin-bottom: 0;">
                 <div class="section-header">
                     <h2><i class="fas fa-user-md"></i> Top Doctors by Revenue</h2>
                 </div>
                 <div class="doctor-list">
                     <c:forEach var="doctor" items="${topDoctors}">
-                        <div class="doctor-item">
-                            <div class="doctor-info">
-                                <div class="doctor-rank">${doctor.rank}</div>
-                                <div class="doctor-name">Dr. ${doctor.name}</div>
+                        <div class="doctor-list-item">
+                            <div class="doctor-info-wrap">
+                                <div class="doctor-rank-badge">#${doctor.rank}</div>
+                                <div>
+                                    <div style="font-weight: 600; color: #1e293b; font-size: 0.95rem;">Dr. ${doctor.name}</div>
+                                    <div style="font-size: 0.8rem; color: #64748b;">${doctor.appointments} appointments</div>
+                                </div>
                             </div>
-                            <div class="doctor-stats">
-                                <div class="doctor-revenue">Rs <fmt:formatNumber value="${doctor.revenue}" type="number" minFractionDigits="0"/></div>
-                                <div class="doctor-appointments">${doctor.appointments} appointments</div>
+                            <div class="doctor-revenue-text">
+                                Rs <fmt:formatNumber value="${doctor.revenue}" type="number" minFractionDigits="0"/>
                             </div>
                         </div>
                     </c:forEach>
                     <c:if test="${empty topDoctors}">
-                        <div class="empty-state">No doctor revenue data available</div>
+                        <div class="empty-state" style="text-align: center; padding: 30px; color: #94a3b8;">
+                            <i class="fas fa-user-md" style="font-size: 2rem; margin-bottom: 10px; opacity: 0.5;"></i>
+                            <p style="margin: 0;">No doctor revenue data available</p>
+                        </div>
                     </c:if>
                 </div>
             </div>
         </div>
         
-        <!-- Monthly Revenue Table with Export -->
-        <div class="section-card">
+        <div class="dashboard-section">
             <div class="section-header">
                 <h2><i class="fas fa-table"></i> Monthly Revenue</h2>
                 <a href="${pageContext.request.contextPath}/admin/export-finance" class="btn-export">
@@ -125,68 +150,75 @@
             </div>
             <c:choose>
                 <c:when test="${not empty monthlyRevenueList}">
-                    <table class="revenue-table">
-                        <thead>
-                            <tr>
-                                <th>Month</th>
-                                <th>Revenue</th>
-                                <th>Appointments</th>
-                                <th>Average</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <c:forEach var="month" items="${monthlyRevenueList}">
-                                <c:set var="avg" value="${month.revenue / month.count}"/>
+                    <div class="finance-table-wrapper">
+                        <table class="revenue-table">
+                            <thead>
                                 <tr>
-                                    <td>${month.month}</td>
-                                    <td>Rs <fmt:formatNumber value="${month.revenue}" type="number" minFractionDigits="2" maxFractionDigits="2"/></td>
-                                    <td>${month.count}</td>
-                                    <td>Rs <fmt:formatNumber value="${avg}" type="number" minFractionDigits="2" maxFractionDigits="2"/></td>
+                                    <th>Month</th>
+                                    <th>Revenue</th>
+                                    <th>Appointments</th>
+                                    <th>Average</th>
                                 </tr>
-                            </c:forEach>
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                <c:forEach var="month" items="${monthlyRevenueList}">
+                                    <c:set var="avg" value="${month.revenue / month.count}"/>
+                                    <tr>
+                                        <td style="font-weight: 600;">${month.month}</td>
+                                        <td style="color: #0ea5e9; font-weight: 600;">Rs <fmt:formatNumber value="${month.revenue}" type="number" minFractionDigits="2" maxFractionDigits="2"/></td>
+                                        <td>${month.count}</td>
+                                        <td>Rs <fmt:formatNumber value="${avg}" type="number" minFractionDigits="2" maxFractionDigits="2"/></td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
+                    </div>
                 </c:when>
                 <c:otherwise>
-                    <div class="empty-state">No revenue data available</div>
+                    <div class="empty-state" style="text-align: center; padding: 30px; color: #94a3b8;">No revenue data available</div>
                 </c:otherwise>
             </c:choose>
         </div>
         
-        <!-- Recent Billings -->
-        <div class="section-card">
+        <div class="dashboard-section">
             <div class="section-header">
                 <h2><i class="fas fa-receipt"></i> Recent Billings</h2>
             </div>
             <c:choose>
                 <c:when test="${not empty recentBillings}">
-                    <table class="billings-table">
-                        <thead>
-                            <tr>
-                                <th>Billing ID</th>
-                                <th>Patient</th>
-                                <th>Doctor</th>
-                                <th>Amount</th>
-                                <th>Date</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <c:forEach var="billing" items="${recentBillings}">
+                    <div class="finance-table-wrapper">
+                        <table class="billings-table">
+                            <thead>
                                 <tr>
-                                    <td>${billing.billing_id}</td>
-                                    <td>${billing.patient_name}</td>
-                                    <td>Dr. ${billing.doctor_name}</td>
-                                    <td>Rs <fmt:formatNumber value="${billing.amount}" type="number" minFractionDigits="2" maxFractionDigits="2"/></td>
-                                    <td><fmt:formatDate value="${billing.payment_date}" pattern="MMM dd, yyyy"/></td>
-                                    <td><span class="status-active">${billing.status}</span></td>
+                                    <th>Billing ID</th>
+                                    <th>Patient</th>
+                                    <th>Doctor</th>
+                                    <th>Amount</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
                                 </tr>
-                            </c:forEach>
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                <c:forEach var="billing" items="${recentBillings}">
+                                    <tr>
+                                        <td style="font-family: monospace; color: #64748b;">#${billing.billing_id}</td>
+                                        <td style="font-weight: 500;">${billing.patient_name}</td>
+                                        <td>Dr. ${billing.doctor_name}</td>
+                                        <td style="font-weight: 600; color: #1e293b;">Rs <fmt:formatNumber value="${billing.amount}" type="number" minFractionDigits="2" maxFractionDigits="2"/></td>
+                                        <td><fmt:formatDate value="${billing.payment_date}" pattern="MMM dd, yyyy"/></td>
+                                        <td>
+                                            <span class="status-badge ${billing.status.toLowerCase() == 'pending' ? 'pending' : 'paid'}">
+                                                ${billing.status}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
+                    </div>
                 </c:when>
                 <c:otherwise>
-                    <div class="empty-state">No billing records found</div>
+                    <div class="empty-state" style="text-align: center; padding: 30px; color: #94a3b8;">No billing records found</div>
                 </c:otherwise>
             </c:choose>
         </div>

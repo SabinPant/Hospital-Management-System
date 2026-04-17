@@ -1,6 +1,7 @@
 package Controller;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,8 +11,15 @@ import java.io.IOException;
 import models.User;
 import services.UserService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
 
 @WebServlet("/register")
+@MultipartConfig(
+	    fileSizeThreshold = 1024 * 1024 * 2,
+	    maxFileSize = 1024 * 1024 * 5,
+	    maxRequestSize = 1024 * 1024 * 10
+	)
+
 public class RegisterServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private UserService userService;
@@ -57,6 +65,7 @@ public class RegisterServlet extends HttpServlet {
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirmPassword");
         String fullName = request.getParameter("fullName");
+        String gender = request.getParameter("gender");  
         String phone = request.getParameter("phone");
         String address = request.getParameter("address");
         
@@ -82,8 +91,9 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
         
-        // Register user
-        User user = userService.registerUser(username, email, password, fullName, phone, address, userType);
+     
+     // Register user
+        User user = userService.registerUser(username, email, password, fullName, gender, phone, address, userType);
         
         if (user == null) {
             request.setAttribute("error", "Database error. Please try again.");
@@ -117,10 +127,27 @@ public class RegisterServlet extends HttpServlet {
             String consultationFee = request.getParameter("consultationFee");
             String bio = request.getParameter("bio");
             
+            // Get the file part
+            Part licenseImagePart = request.getPart("licenseImage");
+            String appPath = getServletContext().getRealPath("");
+            
+            // Validate image first
+            if (licenseImagePart == null || licenseImagePart.getSize() == 0) {
+                request.setAttribute("error", "License document is required");
+                request.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(request, response);
+                return;
+            }
+            
+            if (!utils.FileUploadUtil.isValidImage(licenseImagePart)) {
+                request.setAttribute("error", "Invalid file type! Please upload an image (JPG, PNG, GIF only, Max 5MB)");
+                request.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(request, response);
+                return;
+            }
+            
             boolean profileSaved = userService.registerDoctorProfile(user.getId(), specialization, otherSpecialization,
                                                                       qualification, licenseNumber,
                                                                       Integer.parseInt(experienceYears),
-                                                                      Double.parseDouble(consultationFee), bio);
+                                                                      Double.parseDouble(consultationFee), bio, licenseImagePart, appPath);
             
             if (!profileSaved) {
                 System.out.println("Warning: Doctor profile not saved but user was created");

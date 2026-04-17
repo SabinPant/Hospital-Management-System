@@ -331,6 +331,8 @@
     text-decoration: underline;
 }
 
+
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .register-container {

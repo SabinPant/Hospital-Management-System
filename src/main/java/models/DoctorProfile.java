@@ -15,7 +15,8 @@ public class DoctorProfile {
     private String rejectionReason;
     private Integer approvedBy;
     private Timestamp approvedAt;
-    
+    private String licenseImage;
+
     public DoctorProfile() {}
     
     public DoctorProfile(int userId, String specialization, String qualification, 
@@ -42,7 +43,8 @@ public class DoctorProfile {
     public String getRejectionReason() { return rejectionReason; }
     public Integer getApprovedBy() { return approvedBy; }
     public Timestamp getApprovedAt() { return approvedAt; }
-    
+    public String getLicenseImage() { return licenseImage; }
+
     // Setters
     public void setId(int id) { this.id = id; }
     public void setUserId(int userId) { this.userId = userId; }
@@ -56,4 +58,6 @@ public class DoctorProfile {
     public void setRejectionReason(String rejectionReason) { this.rejectionReason = rejectionReason; }
     public void setApprovedBy(Integer approvedBy) { this.approvedBy = approvedBy; }
     public void setApprovedAt(Timestamp approvedAt) { this.approvedAt = approvedAt; }
+    public void setLicenseImage(String licenseImage) { this.licenseImage = licenseImage; }
+
 }

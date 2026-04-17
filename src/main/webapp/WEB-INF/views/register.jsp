@@ -40,7 +40,7 @@
                 </div>
             </c:if>
             
-            <form action="${pageContext.request.contextPath}/register" method="post" id="registerForm">
+            <form action="${pageContext.request.contextPath}/register" method="post" id="registerForm" enctype="multipart/form-data">
                 <!-- User Type Selection -->
                 <div class="user-type-selector">
                     <div class="user-type-btn active" data-type="patient">
@@ -102,11 +102,21 @@
                         <label><i class="fas fa-user"></i> Full Name *</label>
                         <input type="text" name="fullName" placeholder="Enter your full name" required>
                     </div>
-                    
-                    <div class="form-group">
-                        <label><i class="fas fa-phone"></i> Phone Number *</label>
-                        <input type="tel" name="phone" placeholder="10 digits number" required>
-                    </div>
+
+<div class="form-group">
+    <label><i class="fas fa-venus-mars"></i> Gender</label>
+    <select name="gender">
+        <option value="">Select Gender</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Other">Other</option>
+    </select>
+</div>
+
+<div class="form-group">
+    <label><i class="fas fa-phone"></i> Phone Number *</label>
+    <input type="tel" name="phone" placeholder="10 digits number" required>
+</div>
                     
                     <div class="form-group full-width">
                         <label><i class="fas fa-map-marker-alt"></i> Address</label>
@@ -155,64 +165,71 @@
                     </div>
                 </div>
                 
-                <!-- Doctor Fields (Conditional) -->
-                <div id="doctorFields" class="conditional-fields">
-                    <h3 style="margin: 20px 0 15px; color: var(--primary-blue);"><i class="fas fa-stethoscope"></i> Professional Details</h3>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label><i class="fas fa-brain"></i> Specialization *</label>
-                            <select name="specialization" id="specialization">
-                                <option value="">Select Specialization</option>
-                                <option value="Cardiology">Cardiology</option>
-                                <option value="Neurology">Neurology</option>
-                                <option value="Orthopedics">Orthopedics</option>
-                                <option value="Pediatrics">Pediatrics</option>
-                                <option value="Dermatology">Dermatology</option>
-                                <option value="Gynecology">Gynecology</option>
-                                <option value="Ophthalmology">Ophthalmology</option>
-                                <option value="Dentistry">Dentistry</option>
-                                <option value="Radiology">Radiology</option>
-                                <option value="Emergency Medicine">Emergency Medicine</option>
-                                <option value="Other">Other (Please specify)</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group" id="otherSpecializationGroup" style="display: none;">
-                            <label><i class="fas fa-pen"></i> Specify Specialization *</label>
-                            <input type="text" name="otherSpecialization" placeholder="Enter your specialization">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label><i class="fas fa-graduation-cap"></i> Qualification *</label>
-                            <input type="text" name="qualification" placeholder="e.g., MD, MBBS, PhD" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label><i class="fas fa-id-card"></i> License Number *</label>
-                            <input type="text" name="licenseNumber" placeholder="Medical license number" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label><i class="fas fa-chart-line"></i> Experience (Years) *</label>
-                            <input type="number" name="experienceYears" placeholder="Years of experience" min="0" max="60" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label><i class="fas fa-money-bill-wave"></i> Consultation Fee (Rs.) *</label>
-                            <input type="number" name="consultationFee" placeholder="Fee per consultation" min="0" required>
-                        </div>
-                        
-                        <div class="form-group full-width">
-                            <label><i class="fas fa-user-md"></i> Bio / Biography</label>
-                            <textarea name="bio" placeholder="Tell us about your experience, expertise, and approach to patient care..."></textarea>
-                        </div>
-                    </div>
-                </div>
+<!-- Doctor Fields (Conditional) -->
+<div id="doctorFields" class="conditional-fields">
+    <h3 style="margin: 20px 0 15px; color: var(--primary-blue);"><i class="fas fa-stethoscope"></i> Professional Details</h3>
+    <div class="form-grid">
+        <div class="form-group">
+            <label><i class="fas fa-brain"></i> Specialization *</label>
+            <select name="specialization" id="specialization">
+                <option value="">Select Specialization</option>
+                <option value="Cardiology">Cardiology</option>
+                <option value="Neurology">Neurology</option>
+                <option value="Orthopedics">Orthopedics</option>
+                <option value="Pediatrics">Pediatrics</option>
+                <option value="Dermatology">Dermatology</option>
+                <option value="Gynecology">Gynecology</option>
+                <option value="Ophthalmology">Ophthalmology</option>
+                <option value="Dentistry">Dentistry</option>
+                <option value="Radiology">Radiology</option>
+                <option value="Emergency Medicine">Emergency Medicine</option>
+                <option value="Other">Other (Please specify)</option>
+            </select>
+        </div>
+        
+        <div class="form-group" id="otherSpecializationGroup" style="display: none;">
+            <label><i class="fas fa-pen"></i> Specify Specialization *</label>
+            <input type="text" name="otherSpecialization" placeholder="Enter your specialization">
+        </div>
+        
+        <div class="form-group">
+            <label><i class="fas fa-graduation-cap"></i> Qualification *</label>
+            <input type="text" name="qualification" placeholder="e.g., MD, MBBS, PhD" required>
+        </div>
+        
+        <div class="form-group">
+            <label><i class="fas fa-id-card"></i> License Number *</label>
+            <input type="text" name="licenseNumber" placeholder="Medical license number" required>
+        </div>
+
+        <div class="form-group">
+    <label><i class="fas fa-image"></i> License Document *</label>
+    <input type="file" name="licenseImage" accept="image/jpeg,image/png,image/gif" required 
+           onchange="validateFile(this)">
+    <small style="color: var(--gray); font-size: 0.7rem;">Upload scanned copy of your medical license (JPG, PNG, GIF only, Max 5MB)</small>
+    <div id="fileError" style="color: red; font-size: 0.7rem; margin-top: 5px;"></div>
+</div>
+
+        <div class="form-group">
+            <label><i class="fas fa-chart-line"></i> Experience (Years) *</label>
+            <input type="number" name="experienceYears" placeholder="Years of experience" min="0" max="60" required>
+        </div>
+        
+        <div class="form-group">
+            <label><i class="fas fa-money-bill-wave"></i> Consultation Fee (Rs.) *</label>
+            <input type="number" name="consultationFee" placeholder="Fee per consultation" min="0" required>
+        </div>
+        
+        <div class="form-group full-width">
+            <label><i class="fas fa-user-md"></i> Bio / Biography</label>
+            <textarea name="bio" placeholder="Tell us about your experience, expertise, and approach to patient care..."></textarea>
+        </div>
+    </div>
+</div>
                 
                 <button type="submit" class="btn-register-submit">
                     <i class="fas fa-user-plus"></i> Register Account
                 </button>
-                
                 <div class="login-link">
                     Already have an account? <a href="${pageContext.request.contextPath}/login">Login here</a>
                 </div>
@@ -340,6 +357,28 @@
         const patientFields = document.getElementById('patientFields');
         const doctorFields = document.getElementById('doctorFields');
         const userTypeInput = document.getElementById('userType');
+        
+        function validateFile(input) {
+            const file = input.files[0];
+            const errorDiv = document.getElementById('fileError');
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+            const maxSize = 5 * 1024 * 1024; // 5MB
+            
+            if (file) {
+                if (!allowedTypes.includes(file.type)) {
+                    errorDiv.textContent = 'Error: Only JPG, PNG, GIF images are allowed!';
+                    input.value = '';
+                    return false;
+                }
+                if (file.size > maxSize) {
+                    errorDiv.textContent = 'Error: File size must be less than 5MB!';
+                    input.value = '';
+                    return false;
+                }
+                errorDiv.textContent = '';
+            }
+            return true;
+        }
         
         function setUserType(type) {
             if (type === 'patient') {

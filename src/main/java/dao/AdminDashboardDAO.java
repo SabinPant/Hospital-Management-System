@@ -73,7 +73,9 @@ public class AdminDashboardDAO {
             }
             
             // Pending Doctors List
-            String pendingListQuery = "SELECT u.id, u.full_name, u.email, u.phone, dp.specialization, dp.experience_years, dp.qualification, dp.license_number, dp.consultation_fee " +
+         // Pending Doctors List - Add more fields
+            String pendingListQuery = "SELECT u.id, u.full_name, u.email, u.phone, u.address, u.created_at, " +
+                                      "dp.specialization, dp.experience_years, dp.qualification, dp.license_number, dp.consultation_fee, dp.bio, dp.license_image " +
                                       "FROM users u JOIN doctor_profiles dp ON u.id = dp.user_id " +
                                       "WHERE dp.approval_status = 'pending'";
             List<Map<String, Object>> pendingDoctorsList = new ArrayList<>();
@@ -85,11 +87,14 @@ public class AdminDashboardDAO {
                     doctor.put("full_name", rs.getString("full_name"));
                     doctor.put("email", rs.getString("email"));
                     doctor.put("phone", rs.getString("phone"));
+                    doctor.put("address", rs.getString("address"));           
                     doctor.put("specialization", rs.getString("specialization"));
                     doctor.put("experience_years", rs.getInt("experience_years"));
                     doctor.put("qualification", rs.getString("qualification"));
                     doctor.put("license_number", rs.getString("license_number"));
                     doctor.put("consultation_fee", rs.getDouble("consultation_fee"));
+                    doctor.put("bio", rs.getString("bio"));                  
+                    doctor.put("license_image", rs.getString("license_image")); 
                     pendingDoctorsList.add(doctor);
                 }
             }

@@ -22,11 +22,25 @@
             <!-- LEFT SIDEBAR -->
             <div class="dashboard-sidebar">
                 
-                <!-- Profile Card -->
-               <div class="profile-card">
+ <div class="profile-card">
     <div class="profile-avatar">
-        <i class="fas fa-user-circle"></i>
+        <c:choose>
+            <c:when test="${not empty sessionScope.profile_image}">
+                <img src="${pageContext.request.contextPath}/${sessionScope.profile_image}" alt="Profile" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;">
+            </c:when>
+            <c:otherwise>
+                <i class="fas fa-user-circle"></i>
+            </c:otherwise>
+        </c:choose>
     </div>
+
+    <form action="${pageContext.request.contextPath}/upload-image" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="imageType" value="profile">
+        <input type="file" name="image" accept="image/jpeg,image/png,image/gif" required>
+        <button type="submit" class="btn-upload">Upload Photo</button>
+        <small>Max size: 5MB | JPG, PNG, GIF only</small>
+    </form>
+
     <h3>${sessionScope.full_name}</h3>
     <p class="patient-id">Patient ID: ${sessionScope.user_id_display}</p>
     
