@@ -37,7 +37,6 @@ public class User {
     public String getEmail() { return email; }
     public String getPassword() { return password; }
     public String getFullName() { return fullName; }
- // Getter and Setter
     public String getGender() { return gender; }
     public String getPhone() { return phone; }
     public String getAddress() { return address; }
