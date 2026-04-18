@@ -659,6 +659,78 @@ public class AppointmentDAO {
         }
     }
     
+ // Get all patients for a doctor (patients with completed appointments)
+    public List<Map<String, Object>> getDoctorPatients(int doctorId) {
+        List<Map<String, Object>> patients = new ArrayList<>();
+        String query = "SELECT DISTINCT u.id, u.user_id, u.full_name, u.email, u.phone, " +
+                       "COUNT(a.id) as total_visits, " +
+                       "MAX(a.appointment_date) as last_visit " +
+                       "FROM appointments a " +
+                       "JOIN users u ON a.patient_id = u.id " +
+                       "WHERE a.doctor_id = ? AND a.status = 'completed' " +
+                       "GROUP BY u.id " +
+                       "ORDER BY last_visit DESC";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, doctorId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                Map<String, Object> patient = new HashMap<>();
+                patient.put("id", rs.getInt("id"));
+                patient.put("user_id", rs.getString("user_id"));
+                patient.put("full_name", rs.getString("full_name"));
+                patient.put("email", rs.getString("email"));
+                patient.put("phone", rs.getString("phone"));
+                patient.put("total_visits", rs.getInt("total_visits"));
+                patient.put("last_visit", rs.getDate("last_visit"));
+                patients.add(patient);
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error getting doctor patients: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return patients;
+    }
+
+    // Get patient medical history for a specific doctor-patient relationship
+    public List<Map<String, Object>> getPatientMedicalHistory(int doctorId, int patientId) {
+        List<Map<String, Object>> history = new ArrayList<>();
+        String query = "SELECT a.appointment_id, a.appointment_date, a.diagnosis, a.prescription, a.notes, a.status " +
+                       "FROM appointments a " +
+                       "WHERE a.doctor_id = ? AND a.patient_id = ? " +
+                       "ORDER BY a.appointment_date DESC";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, doctorId);
+            pstmt.setInt(2, patientId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                Map<String, Object> record = new HashMap<>();
+                record.put("appointment_id", rs.getString("appointment_id"));
+                record.put("appointment_date", rs.getDate("appointment_date"));
+                record.put("diagnosis", rs.getString("diagnosis"));
+                record.put("prescription", rs.getString("prescription"));
+                record.put("notes", rs.getString("notes"));
+                record.put("status", rs.getString("status"));
+                history.add(record);
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error getting patient medical history: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return history;
+    }
+    
     // Helper method to extract appointment from ResultSet
     private Appointment extractAppointmentFromResultSet(ResultSet rs) throws SQLException {
         Appointment apt = new Appointment();

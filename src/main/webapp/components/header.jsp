@@ -1,28 +1,25 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="jakarta.servlet.http.HttpSession" %>
-<%@ page import="dao.NotificationDAO" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 
+<c:set var="contextPath" value="${pageContext.request.contextPath}" />
+<c:set var="isLoggedIn" value="${not empty sessionScope.user_id}" />
+<c:set var="userRole" value="${sessionScope.user_type}" />
+<c:set var="firstName" value="${sessionScope.full_name != null ? sessionScope.full_name : ''}" />
+
+<%-- Scriptlet only for DAO call (JSTL cannot call Java methods directly) --%>
 <%
-    // Check if user is logged in
-    HttpSession userSession = request.getSession(false);
-    boolean isLoggedIn = (userSession != null && userSession.getAttribute("user_id") != null);
-    String userRole = isLoggedIn ? (String) userSession.getAttribute("user_type") : null;
-    String firstName = isLoggedIn ? (String) userSession.getAttribute("full_name") : null;
-    
-    // Handle null values
-    if (firstName == null) firstName = "";
-    if (userRole == null) userRole = "";
-    
-    // Get context path for proper URL building
-    String contextPath = request.getContextPath();
-    
-    // Get unread notification count for logged in users
     int unreadCount = 0;
-    if (isLoggedIn) {
-        NotificationDAO notifDAO = new NotificationDAO();
-        int userId = (int) userSession.getAttribute("user_id");
-        unreadCount = notifDAO.getUnreadCount(userId);
+    if (session.getAttribute("user_id") != null) {
+        try {
+            dao.NotificationDAO notifDAO = new dao.NotificationDAO();
+            int userId = (int) session.getAttribute("user_id");
+            unreadCount = notifDAO.getUnreadCount(userId);
+        } catch (Exception e) {
+            unreadCount = 0;
+        }
     }
+    pageContext.setAttribute("unreadCount", unreadCount);
 %>
 
 <!-- ==================== TOP EMERGENCY BAR ==================== -->
@@ -52,39 +49,46 @@
         </div>
         <nav>
             <ul class="nav-links">
-               <% if (isLoggedIn && "patient".equals(userRole)) { %>
-                    <li><a href="<%= contextPath %>/patient/dashboard">Dashboard</a></li>
-                    <li><a href="<%= contextPath %>/patient/book-appointment">Book Appointment</a></li>
-                    <li><a href="<%= contextPath %>/patient/appointments">My Appointments</a></li>
-                    <li><a href="<%= contextPath %>/contact">Contact Us</a></li>
-                <% } else if (isLoggedIn && "doctor".equals(userRole)) { %>
-                    <li><a href="<%= contextPath %>/doctor/dashboard">Dashboard</a></li>
-                    <li><a href="<%= contextPath %>/contact">Contact Us</a></li>
-                <% } else { %>
-                    <li><a href="<%= contextPath %>/">Home</a></li>
-                    <li><a href="<%= contextPath %>/about_us">About Us</a></li>
-                    <li><a href="<%= contextPath %>/research">Research</a></li>
-                    <li><a href="<%= contextPath %>/contact">Contact Us</a></li>
-                    <li><a href="<%= contextPath %>/blog">News</a></li>
-                <% } %>
+                <c:choose>
+                    <c:when test="${isLoggedIn and userRole == 'patient'}">
+                        <li><a href="${contextPath}/patient/dashboard">Dashboard</a></li>
+                        <li><a href="${contextPath}/patient/book-appointment">Book Appointment</a></li>
+                        <li><a href="${contextPath}/patient/appointments">My Appointments</a></li>
+                        <li><a href="${contextPath}/contact">Contact Us</a></li>
+                    </c:when>
+                    <c:when test="${isLoggedIn and userRole == 'doctor'}">
+                        <li><a href="${contextPath}/doctor/dashboard">Dashboard</a></li>
+                        <li><a href="${contextPath}/doctor/patients">My Patients</a></li>
+                        <li><a href="${pageContext.request.contextPath}/doctor/profile"> My Profile</a></li>
+                        <li><a href="${contextPath}/contact">Contact Us</a></li>
+                    </c:when>
+                    <c:otherwise>
+                        <li><a href="${contextPath}/">Home</a></li>
+                        <li><a href="${contextPath}/about_us">About Us</a></li>
+                        <li><a href="${contextPath}/research">Research</a></li>
+                        <li><a href="${contextPath}/contact">Contact Us</a></li>
+                        <li><a href="${contextPath}/blog">News</a></li>
+                    </c:otherwise>
+                </c:choose>
             </ul>
         </nav>
-       <div class="nav-buttons">
-    <% if (isLoggedIn) { %>
-        <!-- Notification Bell -->
-        <a href="<%= contextPath %>/notifications" class="notification-bell-link">
-            <i class="fas fa-bell"></i>
-            <% if (unreadCount > 0) { %>
-                <span class="notification-badge"><%= unreadCount %></span>
-            <% } %>
-        </a>
-        
-        <span class="welcome-text">Welcome, <%= firstName %></span>
-        <a href="<%= contextPath %>/logout" class="btn-logout"><i class="fas fa-sign-out-alt"></i> LOGOUT</a>
-    <% } else { %>
-        <a href="<%= contextPath %>/login" class="btn-login"><i class="fas fa-sign-in-alt"></i> LOGIN</a>
-        <a href="<%= contextPath %>/register" class="btn-register"><i class="fas fa-user-plus"></i> REGISTER</a>
-    <% } %>
-</div>
+        <div class="nav-buttons">
+            <c:choose>
+                <c:when test="${isLoggedIn}">
+                    <a href="${contextPath}/notifications" class="notification-bell-link">
+                        <i class="fas fa-bell"></i>
+                        <c:if test="${unreadCount > 0}">
+                            <span class="notification-badge">${unreadCount}</span>
+                        </c:if>
+                    </a>
+                    <span class="welcome-text">Welcome, ${firstName}</span>
+                    <a href="${contextPath}/logout" class="btn-logout"><i class="fas fa-sign-out-alt"></i> LOGOUT</a>
+                </c:when>
+                <c:otherwise>
+                    <a href="${contextPath}/login" class="btn-login"><i class="fas fa-sign-in-alt"></i> LOGIN</a>
+                    <a href="${contextPath}/register" class="btn-register"><i class="fas fa-user-plus"></i> REGISTER</a>
+                </c:otherwise>
+            </c:choose>
+        </div>
     </div>
 </header>

@@ -57,6 +57,7 @@ public class ImageUploadServlet extends HttpServlet {
         String result = userService.handleImageUpload(userId, userType, imageType, filePart, appPath);
         
         if (result != null) {
+            session.setAttribute("profile_image", result);  // ← ADD THIS LINE
             session.setAttribute("success", "Image uploaded successfully");
         } else {
             session.setAttribute("error", "Failed to upload image. Only JPG, PNG, GIF allowed");

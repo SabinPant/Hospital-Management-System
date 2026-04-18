@@ -6,7 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import models.DoctorProfile;
@@ -171,4 +173,113 @@ public class DoctorDAO {
             System.err.println("Error updating license image: " + e.getMessage());
         }
     }
+    
+ // Get doctor profile by user ID
+    public Map<String, Object> getDoctorProfile(int userId) {
+        Map<String, Object> profile = new HashMap<>();
+        String query = "SELECT u.user_id, u.username, u.email, u.full_name, u.phone, u.address, u.gender, u.created_at, " +
+                       "dp.specialization, dp.qualification, dp.license_number, dp.experience_years, dp.consultation_fee, dp.bio, dp.license_image " +
+                       "FROM users u " +
+                       "JOIN doctor_profiles dp ON u.id = dp.user_id " +
+                       "WHERE u.id = ?";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                profile.put("user_id", rs.getString("user_id"));
+                profile.put("username", rs.getString("username"));
+                profile.put("email", rs.getString("email"));
+                profile.put("full_name", rs.getString("full_name"));
+                profile.put("phone", rs.getString("phone"));
+                profile.put("address", rs.getString("address"));
+                profile.put("gender", rs.getString("gender"));
+                profile.put("created_at", rs.getTimestamp("created_at"));
+                profile.put("specialization", rs.getString("specialization"));
+                profile.put("qualification", rs.getString("qualification"));
+                profile.put("license_number", rs.getString("license_number"));
+                profile.put("experience_years", rs.getInt("experience_years"));
+                profile.put("consultation_fee", rs.getDouble("consultation_fee"));
+                profile.put("bio", rs.getString("bio"));
+                profile.put("license_image", rs.getString("license_image"));
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error getting doctor profile: " + e.getMessage());
+        }
+        
+        return profile;
+    }
+
+    // Get doctor earnings summary
+    public Map<String, Object> getDoctorEarnings(int doctorId) {
+        Map<String, Object> earnings = new HashMap<>();
+        String query = "SELECT " +
+                       "COUNT(DISTINCT patient_id) as total_patients, " +
+                       "COUNT(*) as total_appointments, " +
+                       "SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed_appointments, " +
+                       "SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending_appointments, " +
+                       "(SELECT SUM(amount) FROM billings WHERE doctor_id = ?) as total_earnings " +
+                       "FROM appointments WHERE doctor_id = ?";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, doctorId);
+            pstmt.setInt(2, doctorId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                double totalEarnings = rs.getDouble("total_earnings");
+                int completed = rs.getInt("completed_appointments");
+                
+                earnings.put("total_patients", rs.getInt("total_patients"));
+                earnings.put("total_appointments", rs.getInt("total_appointments"));
+                earnings.put("completed_appointments", completed);
+                earnings.put("pending_appointments", rs.getInt("pending_appointments"));
+                earnings.put("total_earnings", totalEarnings);
+                earnings.put("avg_per_visit", completed > 0 ? totalEarnings / completed : 0);
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error getting doctor earnings: " + e.getMessage());
+        }
+        
+        return earnings;
+    }
+
+    // Get monthly earnings for doctor
+    public List<Map<String, Object>> getMonthlyEarnings(int doctorId) {
+        List<Map<String, Object>> monthly = new ArrayList<>();
+        String query = "SELECT DATE_FORMAT(b.payment_date, '%b %Y') as month, " +
+                       "COUNT(b.id) as appointments, SUM(b.amount) as revenue " +
+                       "FROM billings b " +
+                       "WHERE b.doctor_id = ? " +
+                       "GROUP BY DATE_FORMAT(b.payment_date, '%Y-%m') " +
+                       "ORDER BY b.payment_date DESC LIMIT 6";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, doctorId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                Map<String, Object> month = new HashMap<>();
+                month.put("month", rs.getString("month"));
+                month.put("appointments", rs.getInt("appointments"));
+                month.put("revenue", rs.getDouble("revenue"));
+                monthly.add(month);
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error getting monthly earnings: " + e.getMessage());
+        }
+        
+        return monthly;
+    }
+    
 }

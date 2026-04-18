@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="CSS/global.css">
     <link rel="stylesheet" href="CSS/index.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 
@@ -24,8 +25,8 @@
                 <h1>A Brighter <span class="highlight">Healthcare</span> Experience</h1>
                 <p>Providing compassionate, world-class medical care with advanced technology and a patient-first approach. Your health is our priority, 24/7.</p>
                 <div class="hero-buttons">
-                    <a href="${pageContext.request.contextPath}/login" class="btn-primary">BOOK APPOINTMENT <i class="fas fa-calendar-check"></i></a>
-                </div>
+    <a href="#" class="btn-primary" onclick="checkLoginAndRedirect(event)">BOOK APPOINTMENT <i class="fas fa-calendar-check"></i></a>
+</div>
                 <div class="stats">
                     <div><span>25+</span> Years of Excellence</div>
                     <div><span>500+</span> Expert Doctors</div>
@@ -161,6 +162,34 @@
 
     <!-- Include Footer Component -->
     <jsp:include page="components/footer.jsp" />
+
+<script>
+    function checkLoginAndRedirect(event) {
+        event.preventDefault();
+        var isLoggedIn = ${not empty sessionScope.user_id};
+        
+        if (isLoggedIn) {
+            window.location.href = '${pageContext.request.contextPath}/patient/book-appointment';
+        } else {
+            Swal.fire({
+                title: 'Login Required',
+                text: 'Please login or create an account to book an appointment.',
+                icon: 'info',
+                confirmButtonColor: '#0a5c8e',
+                confirmButtonText: 'Go to Login',
+                showCancelButton: true,
+                cancelButtonText: 'Register',
+                cancelButtonColor: '#10b981'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '${pageContext.request.contextPath}/login';
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    window.location.href = '${pageContext.request.contextPath}/register';
+                }
+            });
+        }
+    }
+</script>
 
 </body>
 </html>
