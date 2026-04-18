@@ -31,7 +31,9 @@ CREATE TABLE users (
     email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     full_name VARCHAR(100) NOT NULL,
+    gender ENUM('Male', 'Female', 'Other') DEFAULT NULL,
     phone VARCHAR(20) NOT NULL,
+    profile_image VARCHAR(255) DEFAULT NULL,
     address TEXT,
     user_type ENUM('patient', 'doctor') NOT NULL,
     status ENUM('active', 'locked', 'inactive') DEFAULT 'active',
@@ -51,6 +53,7 @@ CREATE TABLE doctor_profiles (
     specialization VARCHAR(100) NOT NULL,
     qualification VARCHAR(200) NOT NULL,
     license_number VARCHAR(50) NOT NULL UNIQUE,
+    license_image VARCHAR(255) DEFAULT NULL,
     experience_years INT DEFAULT 0,
     consultation_fee DECIMAL(10,2) DEFAULT 0.00,
     bio TEXT,
@@ -202,11 +205,3 @@ INSERT INTO departments (dept_code, name, description) VALUES
 ('GYN', 'Gynecology', 'Women''s reproductive health'),
 ('OPH', 'Ophthalmology', 'Eye care and vision services'),
 ('DENT', 'Dentistry', 'Dental and oral healthcare');
-
-
--- updates
--- Add gender to users table
-ALTER TABLE users ADD COLUMN gender ENUM('Male', 'Female', 'Other') AFTER full_name;
-
--- Add license_image to doctor_profiles
-ALTER TABLE doctor_profiles ADD COLUMN license_image VARCHAR(255) AFTER license_number;
