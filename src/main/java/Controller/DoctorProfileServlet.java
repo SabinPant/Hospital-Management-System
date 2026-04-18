@@ -11,17 +11,18 @@ import java.util.List;
 import java.util.Map;
 
 import dao.DoctorDAO;
-import dao.UserDAO;
 
 @WebServlet("/doctor/profile")
 public class DoctorProfileServlet extends HttpServlet {
-    private DoctorDAO doctorDAO;
-    private UserDAO userDAO;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private DoctorDAO doctorDAO;
     
     @Override
     public void init() throws ServletException {
         doctorDAO = new DoctorDAO();
-        userDAO = new UserDAO();
     }
     
     @Override
@@ -41,12 +42,6 @@ public class DoctorProfileServlet extends HttpServlet {
         }
         
         int doctorId = (int) session.getAttribute("user_id");
-        
-        // Fetch profile image from database and update session
-        String profileImage = userDAO.getProfileImage(doctorId);
-        if (profileImage != null) {
-            session.setAttribute("profile_image", profileImage);
-        }
         
         Map<String, Object> profile = doctorDAO.getDoctorProfile(doctorId);
         Map<String, Object> earnings = doctorDAO.getDoctorEarnings(doctorId);

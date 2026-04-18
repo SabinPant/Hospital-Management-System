@@ -43,12 +43,10 @@
 <!-- ==================== NAVBAR ==================== -->
 <header>
     <div class="container nav-container">
-       <a href="${contextPath}/" class="logo-link">
-    <div class="logo">
-        <h1><i class="fas fa-hospital-user"></i> MediLife</h1>
-        <span>Hospital & Research Center</span>
-    </div>
-</a>
+        <div class="logo">
+            <h1><i class="fas fa-hospital-user"></i> MediLife</h1>
+            <span>Hospital & Research Center</span>
+        </div>
         <nav>
             <ul class="nav-links">
                 <c:choose>
@@ -56,7 +54,6 @@
                         <li><a href="${contextPath}/patient/dashboard">Dashboard</a></li>
                         <li><a href="${contextPath}/patient/book-appointment">Book Appointment</a></li>
                         <li><a href="${contextPath}/patient/appointments">My Appointments</a></li>
-                        <li><a href="${pageContext.request.contextPath}/patient/profile"> My Profile</a></li>
                         <li><a href="${contextPath}/contact">Contact Us</a></li>
                     </c:when>
                     <c:when test="${isLoggedIn and userRole == 'doctor'}">
@@ -70,7 +67,7 @@
                         <li><a href="${contextPath}/about_us">About Us</a></li>
                         <li><a href="${contextPath}/research">Research</a></li>
                         <li><a href="${contextPath}/contact">Contact Us</a></li>
-                        <li><a href="${contextPath}/News">News</a></li>
+                        <li><a href="${contextPath}/blog">News</a></li>
                     </c:otherwise>
                 </c:choose>
             </ul>
