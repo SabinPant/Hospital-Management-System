@@ -91,8 +91,7 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
         
-     
-     // Register user
+        // Register user
         User user = userService.registerUser(username, email, password, fullName, gender, phone, address, userType);
         
         if (user == null) {
@@ -108,6 +107,22 @@ public class RegisterServlet extends HttpServlet {
             String emergencyContact = request.getParameter("emergencyContact");
             String medicalHistory = request.getParameter("medicalHistory");
             String allergies = request.getParameter("allergies");
+            
+            // Handle profile image upload for patient
+            Part profileImagePart = request.getPart("profileImage");
+            String appPath = getServletContext().getRealPath("");
+            String profileImagePath = null;
+            
+            if (profileImagePart != null && profileImagePart.getSize() > 0) {
+                if (utils.FileUploadUtil.isValidImage(profileImagePart)) {
+                    try {
+                        profileImagePath = utils.FileUploadUtil.saveFile(profileImagePart, "profile_" + user.getId(), appPath);
+                        userService.updateProfileImage(user.getId(), profileImagePath);
+                    } catch (IOException e) {
+                        System.err.println("Error saving profile image: " + e.getMessage());
+                    }
+                }
+            }
             
             boolean profileSaved = userService.registerPatientProfile(user.getId(), dob, bloodGroup, 
                                                                        emergencyContact, medicalHistory, allergies);
@@ -127,7 +142,7 @@ public class RegisterServlet extends HttpServlet {
             String consultationFee = request.getParameter("consultationFee");
             String bio = request.getParameter("bio");
             
-            // Get the file part
+            // Get the file part for license image
             Part licenseImagePart = request.getPart("licenseImage");
             String appPath = getServletContext().getRealPath("");
             

@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 
 import models.PatientProfile;
 import utils.DBConnection;
@@ -80,4 +82,33 @@ public class PatientDAO {
         
         return null;
     }
+    
+ // Get patient profile details
+    public Map<String, Object> getPatientProfileDetails(int userId) {
+        Map<String, Object> details = new HashMap<>();
+        String query = "SELECT u.address, pp.emergency_contact, pp.medical_history, pp.allergies " +
+                       "FROM users u " +
+                       "LEFT JOIN patient_profiles pp ON u.id = pp.user_id " +
+                       "WHERE u.id = ?";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                details.put("address", rs.getString("address"));
+                details.put("emergency_contact", rs.getString("emergency_contact"));
+                details.put("medical_history", rs.getString("medical_history"));
+                details.put("allergies", rs.getString("allergies"));
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error getting patient profile: " + e.getMessage());
+        }
+        
+        return details;
+    }
+    
 }

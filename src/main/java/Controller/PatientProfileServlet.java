@@ -7,21 +7,24 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
-import dao.DoctorDAO;
+import dao.PatientDAO;
 import dao.UserDAO;
 
-@WebServlet("/doctor/profile")
-public class DoctorProfileServlet extends HttpServlet {
-    private DoctorDAO doctorDAO;
-    private UserDAO userDAO;
+@WebServlet("/patient/profile")
+public class PatientProfileServlet extends HttpServlet {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private UserDAO userDAO;
+    private PatientDAO patientDAO;
     
     @Override
     public void init() throws ServletException {
-        doctorDAO = new DoctorDAO();
         userDAO = new UserDAO();
+        patientDAO = new PatientDAO();
     }
     
     @Override
@@ -35,28 +38,29 @@ public class DoctorProfileServlet extends HttpServlet {
         }
         
         String userType = (String) session.getAttribute("user_type");
-        if (!"doctor".equals(userType)) {
+        if (!"patient".equals(userType)) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
         
-        int doctorId = (int) session.getAttribute("user_id");
+        int userId = (int) session.getAttribute("user_id");
         
-        // Fetch profile image from database and update session
-        String profileImage = userDAO.getProfileImage(doctorId);
+        // Load profile image into session
+        String profileImage = userDAO.getProfileImage(userId);
         if (profileImage != null) {
             session.setAttribute("profile_image", profileImage);
         }
         
-        Map<String, Object> profile = doctorDAO.getDoctorProfile(doctorId);
-        Map<String, Object> earnings = doctorDAO.getDoctorEarnings(doctorId);
-        List<Map<String, Object>> monthlyEarnings = doctorDAO.getMonthlyEarnings(doctorId);
+        // Load patient profile details into session
+        Map<String, Object> patientProfile = patientDAO.getPatientProfileDetails(userId);
+        if (patientProfile != null) {
+            session.setAttribute("emergency_contact", patientProfile.get("emergency_contact"));
+            session.setAttribute("medical_history", patientProfile.get("medical_history"));
+            session.setAttribute("allergies", patientProfile.get("allergies"));
+            session.setAttribute("address", patientProfile.get("address"));
+        }
         
-        request.setAttribute("profile", profile);
-        request.setAttribute("earnings", earnings);
-        request.setAttribute("monthlyEarnings", monthlyEarnings);
-        
-        request.getRequestDispatcher("/WEB-INF/views/doctor/profile.jsp")
+        request.getRequestDispatcher("/WEB-INF/views/patient/profile.jsp")
                .forward(request, response);
     }
 }

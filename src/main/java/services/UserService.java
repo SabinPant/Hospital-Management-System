@@ -230,6 +230,11 @@ return doctorDAO.saveDoctorProfile(profile);
             return null;
         }
     }
+    
+ // Update profile image by path (for registration)
+    public void updateProfileImage(int userId, String imagePath) {
+        userDAO.updateProfileImage(userId, imagePath);
+    }
 
     // Business logic: Update doctor license image
     public String updateLicenseImage(int userId, Part filePart, String appPath) {

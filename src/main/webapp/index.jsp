@@ -25,8 +25,8 @@
                 <h1>A Brighter <span class="highlight">Healthcare</span> Experience</h1>
                 <p>Providing compassionate, world-class medical care with advanced technology and a patient-first approach. Your health is our priority, 24/7.</p>
                 <div class="hero-buttons">
-    <a href="#" class="btn-primary" onclick="checkLoginAndRedirect(event)">BOOK APPOINTMENT <i class="fas fa-calendar-check"></i></a>
-</div>
+                <a href="#" class="btn-primary" onclick="checkLoginAndRedirect(event)">BOOK APPOINTMENT <i class="fas fa-calendar-check"></i></a>
+             </div>
                 <div class="stats">
                     <div><span>25+</span> Years of Excellence</div>
                     <div><span>500+</span> Expert Doctors</div>

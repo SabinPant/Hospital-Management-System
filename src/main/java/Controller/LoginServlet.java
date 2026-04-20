@@ -8,18 +8,23 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
+import dao.UserDAO;
+import dao.PatientDAO;
 import models.User;
-import services.UserService;
+import models.PatientProfile;
+import utils.PasswordUtil;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private UserService userService;
+    private UserDAO userDAO;
+    private PatientDAO patientDAO;
     
     @Override
     public void init() throws ServletException {
         super.init();
-        userService = new UserService();
+        userDAO = new UserDAO();
+        patientDAO = new PatientDAO();
     }
     
     @Override
@@ -28,7 +33,7 @@ public class LoginServlet extends HttpServlet {
         
         HttpSession session = request.getSession(false);
         
-        // If already logged in, redirect to dashboard
+        // If already logged in as user, redirect to appropriate dashboard
         if (session != null && session.getAttribute("user_id") != null) {
             String userType = (String) session.getAttribute("user_type");
             if ("patient".equals(userType)) {
@@ -67,8 +72,8 @@ public class LoginServlet extends HttpServlet {
             return;
         }
         
-        // Authenticate user
-        User user = userService.authenticate(email, password);
+        // Get user by email
+        User user = userDAO.getUserByEmail(email);
         
         if (user == null) {
             request.setAttribute("error", "Invalid email or password");
@@ -99,11 +104,21 @@ public class LoginServlet extends HttpServlet {
             return;
         }
         
+        // Verify password
+        boolean passwordValid = PasswordUtil.verifyPassword(password, user.getPassword());
+        
+        if (!passwordValid) {
+            request.setAttribute("error", "Invalid email or password");
+            request.getRequestDispatcher("/WEB-INF/views/login.jsp")
+                   .forward(request, response);
+            return;
+        }
+        
         // Doctor approval check
         if ("doctor".equals(user.getUserType())) {
-            String approvalStatus = userService.checkDoctorApproval(user.getId());
+            String approvalStatus = userDAO.getDoctorApprovalStatus(user.getId());
             
-            if ("not_found".equals(approvalStatus)) {
+            if (approvalStatus == null) {
                 request.setAttribute("error", "Doctor profile not found. Please contact admin.");
                 request.getRequestDispatcher("/WEB-INF/views/login.jsp")
                        .forward(request, response);
@@ -118,7 +133,7 @@ public class LoginServlet extends HttpServlet {
             }
             
             if ("rejected".equals(approvalStatus)) {
-                String rejectionReason = userService.getDoctorRejectionReason(user.getId());
+                String rejectionReason = userDAO.getDoctorRejectionReason(user.getId());
                 String message = "Your doctor application has been rejected.";
                 if (rejectionReason != null && !rejectionReason.isEmpty()) {
                     message += " Reason: " + rejectionReason;
@@ -130,7 +145,7 @@ public class LoginServlet extends HttpServlet {
             }
         }
         
-        // Create session
+        // ========== CREATE SESSION ==========
         HttpSession session = request.getSession();
         session.setAttribute("user_id", user.getId());
         session.setAttribute("user_id_display", user.getUserId());
@@ -141,10 +156,23 @@ public class LoginServlet extends HttpServlet {
         session.setAttribute("status", user.getStatus());
         session.setAttribute("joined_date", user.getCreatedAt());
         
-        // Set blood group for patients
-        if ("patient".equals(user.getUserType())) {
-            userService.setPatientBloodGroup(session, user.getId());
+        // Load profile image into session
+        String profileImage = userDAO.getProfileImage(user.getId());
+        if (profileImage != null && !profileImage.isEmpty()) {
+            session.setAttribute("profile_image", profileImage);
         }
+        
+        // ========== ADD BLOOD GROUP FOR PATIENTS ==========
+        if ("patient".equals(user.getUserType())) {
+            PatientProfile profile = patientDAO.getPatientProfileByUserId(user.getId());
+            if (profile != null && profile.getBloodGroup() != null) {
+                session.setAttribute("blood_group", profile.getBloodGroup());
+            } else {
+                session.setAttribute("blood_group", "Not specified");
+            }
+        }
+        
+        System.out.println("User logged in: " + user.getEmail() + " (" + user.getUserType() + ")");
         
         // Redirect based on user type
         if ("patient".equals(user.getUserType())) {

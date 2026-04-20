@@ -34,12 +34,7 @@
         </c:choose>
     </div>
 
-    <form action="${pageContext.request.contextPath}/upload-image" method="post" enctype="multipart/form-data">
-        <input type="hidden" name="imageType" value="profile">
-        <input type="file" name="image" accept="image/jpeg,image/png,image/gif" required>
-        <button type="submit" class="btn-upload">Upload Photo</button>
-        <small>Max size: 5MB | JPG, PNG, GIF only</small>
-    </form>
+
 
     <h3>${sessionScope.full_name}</h3>
     <p class="patient-id">Patient ID: ${sessionScope.user_id_display}</p>

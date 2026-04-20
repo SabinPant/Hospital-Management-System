@@ -15,6 +15,7 @@ public class User {
     private String userType;
     private String status;
     private String lockReason;
+    private String profileImage; // ← ADDED
     private Timestamp lockedAt;
     private Timestamp createdAt;
     private Timestamp updatedAt;
@@ -43,6 +44,7 @@ public class User {
     public String getUserType() { return userType; }
     public String getStatus() { return status; }
     public String getLockReason() { return lockReason; }
+    public String getProfileImage() { return profileImage; } // ← ADDED
     public Timestamp getLockedAt() { return lockedAt; }
     public Timestamp getCreatedAt() { return createdAt; }
     public Timestamp getUpdatedAt() { return updatedAt; }
@@ -60,6 +62,7 @@ public class User {
     public void setUserType(String userType) { this.userType = userType; }
     public void setStatus(String status) { this.status = status; }
     public void setLockReason(String lockReason) { this.lockReason = lockReason; }
+    public void setProfileImage(String profileImage) { this.profileImage = profileImage; } // ← ADDED
     public void setLockedAt(Timestamp lockedAt) { this.lockedAt = lockedAt; }
     public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
     public void setUpdatedAt(Timestamp updatedAt) { this.updatedAt = updatedAt; }
