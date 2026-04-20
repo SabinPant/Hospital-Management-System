@@ -2,6 +2,20 @@
    Admin Dashboard Styles
    ============================================ */
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, 'Segoe UI', sans-serif;
+    background-color: var(--white);
+    color: var(--gray-dark);
+    line-height: 1.5;
+    overflow-x: clip;
+}
+
 /* Admin Container */
 .admin-container {
     display: flex;
