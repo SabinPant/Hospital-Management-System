@@ -5,8 +5,11 @@
      Admin Sidebar Navigation Component
      Included in all admin panel pages via JSP include.
      Active nav item is determined by the "page" request
+
      parameter passed from each admin servlet/page.
-     ============================================= -->
+=======
+     parameter passed from each admin servlet/pages.
+     Testing demo 
 
 <!-- Sidebar Container -->
 <div class="admin-sidebar">
