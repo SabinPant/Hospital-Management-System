@@ -13,47 +13,49 @@ import utils.DBConnection;
 
 public class ContactDAO {
     
-    // Save contact message to database
-    public boolean saveMessage(ContactMessage message) {
-        String query = "INSERT INTO contact_messages (name, email, phone, subject, message) VALUES (?, ?, ?, ?, ?)";
-        
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            
-            pstmt.setString(1, message.getName());
-            pstmt.setString(2, message.getEmail());
-            pstmt.setString(3, message.getPhone());
-            pstmt.setString(4, message.getSubject());
-            pstmt.setString(5, message.getMessage());
-            
-            int rowsAffected = pstmt.executeUpdate();
-            
-            if (rowsAffected > 0) {
-                try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        message.setId(generatedKeys.getInt(1));
-                    }
-                }
-                System.out.println("Contact message saved successfully!");
-                return true;
-            }
-            
-        } catch (SQLException e) {
-            System.err.println("Error saving contact message: " + e.getMessage());
-            e.printStackTrace();
-        }
-        
-        return false;
-    }
+	public boolean saveMessage(ContactMessage message) {
+	    String query = "INSERT INTO contact_messages (name, email, phone, subject, message) VALUES (?, ?, ?, ?, ?)";
+	    
+	    try (Connection conn = DBConnection.getConnection();
+	         PreparedStatement pstmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+	        
+	        pstmt.setString(1, message.getName());
+	        pstmt.setString(2, message.getEmail());
+	        pstmt.setString(3, message.getPhone());
+	        pstmt.setString(4, message.getSubject());
+	        pstmt.setString(5, message.getMessage());
+	        
+	        int rowsAffected = pstmt.executeUpdate();
+	        System.out.println("saveMessage - Rows affected: " + rowsAffected); // Debug
+	        
+	        if (rowsAffected > 0) {
+	            try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+	                if (generatedKeys.next()) {
+	                    message.setId(generatedKeys.getInt(1));
+	                }
+	            }
+	            return true;
+	        }
+	        
+	    } catch (SQLException e) {
+	        System.err.println("Error saving contact message: " + e.getMessage());
+	        e.printStackTrace();
+	    }
+	    
+	    return false;
+	}
     
     // Get all contact messages (NEW METHOD - ADD THIS)
-    public List<ContactMessage> getAllMessages() {
+    public List<ContactMessage> getAllMessages(int offset, int limit) {
         List<ContactMessage> messages = new ArrayList<>();
-        String query = "SELECT * FROM contact_messages ORDER BY created_at DESC";
+        String query = "SELECT * FROM contact_messages ORDER BY created_at DESC LIMIT ? OFFSET ?";
         
         try (Connection conn = DBConnection.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, limit);
+            pstmt.setInt(2, offset);
+            ResultSet rs = pstmt.executeQuery();
             
             while (rs.next()) {
                 ContactMessage message = new ContactMessage();
@@ -104,6 +106,41 @@ public class ContactDAO {
         }
         
         return messages;
+    }
+    
+    public boolean deleteMessage(int id) {
+        String query = "DELETE FROM contact_messages WHERE id = ?";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, id);
+            return pstmt.executeUpdate() > 0;
+            
+        } catch (SQLException e) {
+            System.err.println("Error deleting message: " + e.getMessage());
+            return false;
+        }
+    }
+    
+ // Get total count of messages (for pagination)
+    public int getTotalCount() {
+        String query = "SELECT COUNT(*) FROM contact_messages";
+        
+        try (Connection conn = DBConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error getting total count: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return 0;
     }
     
     // Get unread messages count

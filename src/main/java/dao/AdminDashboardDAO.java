@@ -54,7 +54,8 @@ public class AdminDashboardDAO {
             }
             
          // Total Revenue from billings
-            String revenueQuery = "SELECT SUM(amount) FROM billings WHERE payment_status = 'paid'";
+         // Total Revenue from billings - handle null
+            String revenueQuery = "SELECT COALESCE(SUM(amount), 0) FROM billings WHERE payment_status = 'paid'";
             try (PreparedStatement stmt = conn.prepareStatement(revenueQuery);
                  ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) data.setTotalRevenue(rs.getDouble(1));

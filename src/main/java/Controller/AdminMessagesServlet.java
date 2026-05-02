@@ -34,9 +34,25 @@ public class AdminMessagesServlet extends HttpServlet {
             return;
         }
         
-        // Get all messages
-        List<ContactMessage> messages = contactDAO.getAllMessages();
+        // Pagination parameters
+        int page = 1;
+        int recordsPerPage = 10;
+        
+        if (request.getParameter("page") != null) {
+            page = Integer.parseInt(request.getParameter("page"));
+        }
+        
+        int offset = (page - 1) * recordsPerPage;
+        
+        // Get paginated messages
+        List<ContactMessage> messages = contactDAO.getAllMessages(offset, recordsPerPage);
+        int totalRecords = contactDAO.getTotalCount();
+        int totalPages = (int) Math.ceil(totalRecords * 1.0 / recordsPerPage);
+        
         request.setAttribute("messages", messages);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("totalRecords", totalRecords);
         
         request.getRequestDispatcher("/WEB-INF/views/admin/admin-messages.jsp")
                .forward(request, response);

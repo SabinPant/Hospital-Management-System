@@ -133,7 +133,9 @@ public class AppointmentDAO {
                 apt.put("appointment_time", rs.getString("appointment_time"));
                 apt.put("status", rs.getString("status"));
                 apt.put("symptoms", rs.getString("symptoms"));
-                apt.put("diagnosis", rs.getString("diagnosis"));
+             // To prevent null in results
+                apt.put("diagnosis", rs.getString("diagnosis") != null ? rs.getString("diagnosis") : "—");
+                
                 apt.put("prescription", rs.getString("prescription"));
                 apt.put("cancellation_reason", rs.getString("cancellation_reason"));
                 apt.put("patient_name", rs.getString("patient_name"));

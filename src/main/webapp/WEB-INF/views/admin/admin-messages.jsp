@@ -100,6 +100,47 @@
         .close-modal:hover {
             color: #ef4444;
         }
+        
+        .pagination {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.pagination a, .pagination span {
+    padding: 6px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #0a5c8e;
+    font-size: 0.85rem;
+}
+
+.pagination a:hover {
+    background: #0a5c8e;
+    color: white;
+}
+
+.pagination .active {
+    background: #0a5c8e;
+    color: white;
+    border-color: #0a5c8e;
+}
+
+.pagination .disabled {
+    color: #94a3b8;
+    cursor: not-allowed;
+}
+
+.record-info {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 0.8rem;
+    color: #64748b;
+}
+
     </style>
 </head>
 <body>
@@ -123,59 +164,92 @@
             </div>
         </div>
 
-        <!-- Messages Table -->
+               <!-- Messages Table -->
         <div class="dashboard-card">
             <h3><i class="fas fa-list"></i> All Messages</h3>
             
             <c:choose>
                 <c:when test="${not empty messages}">
-                    <table class="messages-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Subject</th>
-                                <th>Message</th>
-                                <th>Date</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <c:forEach var="msg" items="${messages}">
-                                <tr>
-                                    <td>${msg.id}</td>
-                                    <td>${msg.name}</td>
-                                    <td>${msg.email}</td>
-                                    <td>${msg.subject}</td>
-                                    <td class="message-preview">
-                                        <c:choose>
-                                            <c:when test="${msg.message.length() > 50}">
-                                                ${msg.message.substring(0, 50)}...
-                                            </c:when>
-                                            <c:otherwise>
-                                                ${msg.message}
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                    <td><fmt:formatDate value="${msg.createdAt}" pattern="yyyy-MM-dd HH:mm"/></td>
-                                    <td>
-                                        <button class="view-btn" onclick='viewMessage(${msg.id}, "${msg.name}", "${msg.email}", "${msg.subject}", "${msg.message.replace("\"", "&quot;")}", "${msg.createdAt}")'>
-                                            <i class="fas fa-eye"></i> View
-                                        </button>
-                                    </td>
-                                </tr>
-                            </c:forEach>
-                        </tbody>
-                    </table>
+    <table class="messages-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Subject</th>
+                <th>Message</th>
+                <th>Date</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+           <c:forEach var="msg" items="${messages}">
+    <tr>
+        <td>${msg.id}</td>
+        <td>${msg.name}</td>
+        <td>${msg.email}</td>
+        <td>${msg.subject}</td>
+        <td class="message-preview">
+            <c:choose>
+                <c:when test="${msg.message.length() > 50}">
+                    ${msg.message.substring(0, 50)}...
                 </c:when>
                 <c:otherwise>
+                    ${msg.message}
+                </c:otherwise>
+            </c:choose>
+        </td> <!-- FIXED: Added missing > -->
+        <td><fmt:formatDate value="${msg.createdAt}" pattern="yyyy-MM-dd HH:mm"/> </td> <!-- FIXED: Added missing > -->
+        <td>
+            <button class="view-btn" onclick='viewMessage(${msg.id}, "${msg.name}", "${msg.email}", "${msg.subject}", "${msg.message.replace("\"", "&quot;")}", "${msg.createdAt}")'>
+                <i class="fas fa-eye"></i> View
+            </button>
+         </td> <!-- FIXED: Added missing > -->
+    </tr>
+</c:forEach>
+        </tbody>
+    </table>
+</c:when>
+                <c:otherwise>
                     <div class="empty-state">
-                        <i class="fas fa-inbox" style="font-size: 2rem; color: #cbd5e1; margin-bottom: 10px; display: block;"></i>
+                        <i class="fas fa-inbox"></i>
                         <p>No messages yet</p>
                     </div>
                 </c:otherwise>
             </c:choose>
+            
+            <!-- PAGINATION -->
+            <c:if test="${totalPages > 1}">
+                <div class="pagination">
+                    <c:if test="${currentPage > 1}">
+                        <a href="?page=${currentPage - 1}">&laquo; Previous</a>
+                    </c:if>
+                    <c:if test="${currentPage <= 1}">
+                        <span class="disabled">&laquo; Previous</span>
+                    </c:if>
+
+                    <c:forEach begin="1" end="${totalPages}" var="i">
+                        <c:choose>
+                            <c:when test="${i == currentPage}">
+                                <span class="active">${i}</span>
+                            </c:when>
+                            <c:otherwise>
+                                <a href="?page=${i}">${i}</a>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:forEach>
+
+                    <c:if test="${currentPage < totalPages}">
+                        <a href="?page=${currentPage + 1}">Next &raquo;</a>
+                    </c:if>
+                    <c:if test="${currentPage >= totalPages}">
+                        <span class="disabled">Next &raquo;</span>
+                    </c:if>
+                </div>
+                <div class="record-info">
+                    Showing page ${currentPage} of ${totalPages} (${totalRecords} total records)
+                </div>
+            </c:if>
         </div>
     </div>
 </div>

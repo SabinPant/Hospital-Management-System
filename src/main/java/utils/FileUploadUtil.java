@@ -14,6 +14,10 @@ public class FileUploadUtil {
     private static final List<String> ALLOWED_MIME_TYPES = Arrays.asList("image/jpeg", "image/png", "image/gif", "image/webp");
     private static final long MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
+    // ===== YOUR ACTUAL PROJECT WEBAPP PATH =====
+    private static final String PROJECT_WEBAPP_PATH = 
+        "C:\\Users\\Acer\\eclipse-workspace\\Hospital-Management-System\\src\\main\\webapp";
+
     // Validate if file is a valid image
     public static boolean isValidImage(Part filePart) {
         if (filePart == null || filePart.getSize() == 0) {
@@ -47,14 +51,24 @@ public class FileUploadUtil {
         return dotIndex > 0 ? fileName.substring(dotIndex).toLowerCase() : "";
     }
 
-    // BUG FIX: removed hardcoded path — now uses appPath passed from servlet
+    // Get the project webapp path (used by FileServlet)
+    public static String getProjectWebappPath(String appPath) {
+        File webappDir = new File(PROJECT_WEBAPP_PATH);
+        if (webappDir.exists() && webappDir.isDirectory()) {
+            return PROJECT_WEBAPP_PATH;
+        }
+        // Fallback to deployed path
+        return appPath;
+    }
+
+    // Save file to the REAL project webapp folder
     public static String saveFile(Part filePart, String uniqueName, String appPath) throws IOException {
-        // Build upload directory from the app's real path (works on any machine/server)
-        String uploadPath = appPath + File.separator + UPLOAD_DIR.replace("/", File.separator);
+        String uploadPath = PROJECT_WEBAPP_PATH + File.separator + UPLOAD_DIR.replace("/", File.separator);
 
         File uploadDir = new File(uploadPath);
         if (!uploadDir.exists()) {
-            uploadDir.mkdirs();
+            boolean created = uploadDir.mkdirs();
+            System.out.println("Creating upload directory: " + uploadPath + " - Success: " + created);
         }
 
         String extension = getFileExtension(filePart);
