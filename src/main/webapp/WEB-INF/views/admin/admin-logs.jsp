@@ -78,11 +78,6 @@
                     </div>
 
                     <div class="filter-group">
-                        <button type="submit"><i class="fas fa-filter"></i> Apply Filters</button>
-                        <a href="${pageContext.request.contextPath}/admin/logs" class="btn-reset">Reset</a>
-                    </div>
-
-                    <div class="filter-group">
                         <a href="${pageContext.request.contextPath}/admin/export-logs" class="btn-export">
                             <i class="fas fa-file-excel"></i> Export CSV
                         </a>

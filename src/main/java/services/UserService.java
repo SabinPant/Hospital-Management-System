@@ -287,4 +287,20 @@ return doctorDAO.saveDoctorProfile(profile);
         
         return null;
     }
+    
+ // Business logic: Get user by ID with full details
+    public User getUserById(int userId) {
+        return userDAO.getUserById(userId);
+    }
+
+    // Business logic: Get patient profile for session
+    public PatientProfile getPatientProfile(int userId) {
+        return patientDAO.getPatientProfileByUserId(userId);
+    }
+
+    // Business logic: Get profile image for session
+    public String getProfileImage(int userId) {
+        return userDAO.getProfileImage(userId);
+    }
+    
 }

@@ -7,6 +7,7 @@ import models.Appointment;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
+import java.time.LocalDate;
 
 public class AppointmentService {
     private AppointmentDAO appointmentDAO;
@@ -115,11 +116,14 @@ public class AppointmentService {
         return completed;
     }
     
- // Business logic: Book a new appointment
     public boolean bookAppointment(int patientId, int doctorId, Date appointmentDate, Time appointmentTime, String symptoms) {
-        // Business rule: Cannot book appointment in the past
-        Date today = new Date(System.currentTimeMillis());
-        if (appointmentDate.before(today)) {
+        // Convert to LocalDate for proper date-only comparison
+        LocalDate today = LocalDate.now();
+        LocalDate appointmentLocalDate = appointmentDate.toLocalDate();
+        
+        // Business rule: Cannot book appointment for past dates (allow today and future)
+        if (appointmentLocalDate.isBefore(today)) {
+            System.out.println("Cannot book appointment for past dates");
             return false;
         }
         
@@ -130,7 +134,6 @@ public class AppointmentService {
         boolean saved = appointmentDAO.saveAppointment(appointment);
         
         if (saved) {
-            // Add notification
             String doctorName = appointmentDAO.getDoctorNameByAppointmentId(appointment.getId());
             notificationDAO.addNotification(patientId, "Appointment Booked", 
                 "Your appointment with Dr. " + doctorName + " on " + appointmentDate + " at " + appointmentTime + " has been booked. Awaiting confirmation.", "info");

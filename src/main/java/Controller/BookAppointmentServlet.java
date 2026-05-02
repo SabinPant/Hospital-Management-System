@@ -1,7 +1,6 @@
 package Controller;
 
 import jakarta.servlet.ServletException;
-import dao.NotificationDAO;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,15 +10,18 @@ import java.io.IOException;
 import java.sql.Date;
 import java.sql.Time;
 
+import services.AppointmentService;
 import dao.AppointmentDAO;
-import models.Appointment;
+
 @WebServlet("/patient/book-appointment")
 public class BookAppointmentServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
+    private AppointmentService appointmentService;
     private AppointmentDAO appointmentDAO;
     
     @Override
     public void init() throws ServletException {
+        appointmentService = new AppointmentService();
         appointmentDAO = new AppointmentDAO();
     }
     
@@ -34,7 +36,7 @@ public class BookAppointmentServlet extends HttpServlet {
             return;
         }
         
-        // Get list of approved doctors
+        // Get list of approved doctors (using DAO directly - this is fine as it's just data retrieval)
         request.setAttribute("doctors", appointmentDAO.getAllDoctors());
         request.getRequestDispatcher("/WEB-INF/views/patient/book-appointment.jsp")
                .forward(request, response);
@@ -66,23 +68,12 @@ public class BookAppointmentServlet extends HttpServlet {
                 return;
             }
             
-            // Create appointment
-            Appointment appointment = new Appointment(patientId, doctorId, appointmentDate, appointmentTime, symptoms);
-            appointment.setAppointmentId(appointmentDAO.generateAppointmentId());
+            boolean saved = appointmentService.bookAppointment(patientId, doctorId, appointmentDate, appointmentTime, symptoms);
             
-            boolean saved = appointmentDAO.saveAppointment(appointment);
             if (saved) {
-                // Get doctor name
-                String doctorName = appointmentDAO.getDoctorNameByAppointmentId(appointment.getId());
-                
-                // Add notification for the patient
-                NotificationDAO notifDAO = new NotificationDAO();
-                notifDAO.addNotification(patientId, "Appointment Booked", 
-                    "Your appointment with Dr. " + doctorName + " on " + appointmentDate + " at " + appointmentTime + " has been booked. Awaiting confirmation.", "info");
-                
-                session.setAttribute("bookingSuccess", "Appointment booked successfully! ID: " + appointment.getAppointmentId());
+                session.setAttribute("bookingSuccess", "Appointment booked successfully!");
                 response.sendRedirect(request.getContextPath() + "/patient/appointments");
-            }else {
+            } else {
                 session.setAttribute("bookingError", "Failed to book appointment. Please try again.");
                 response.sendRedirect(request.getContextPath() + "/patient/book-appointment");
             }

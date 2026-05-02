@@ -8,23 +8,19 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
-import dao.UserDAO;
-import dao.PatientDAO;
 import models.User;
 import models.PatientProfile;
-import utils.PasswordUtil;
+import services.UserService;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private UserDAO userDAO;
-    private PatientDAO patientDAO;
+    private UserService userService;
     
     @Override
     public void init() throws ServletException {
         super.init();
-        userDAO = new UserDAO();
-        patientDAO = new PatientDAO();
+        userService = new UserService();
     }
     
     @Override
@@ -33,7 +29,7 @@ public class LoginServlet extends HttpServlet {
         
         HttpSession session = request.getSession(false);
         
-        // If already logged in as user, redirect to appropriate dashboard
+        // If already logged in, redirect to appropriate dashboard
         if (session != null && session.getAttribute("user_id") != null) {
             String userType = (String) session.getAttribute("user_type");
             if ("patient".equals(userType)) {
@@ -72,8 +68,8 @@ public class LoginServlet extends HttpServlet {
             return;
         }
         
-        // Get user by email
-        User user = userDAO.getUserByEmail(email);
+        // ========== BUSINESS LOGIC MOVED TO SERVICE ==========
+        User user = userService.authenticate(email, password);
         
         if (user == null) {
             request.setAttribute("error", "Invalid email or password");
@@ -82,7 +78,7 @@ public class LoginServlet extends HttpServlet {
             return;
         }
         
-        // Check if account is locked
+        // Check if account is locked (additional check from service)
         if ("locked".equals(user.getStatus())) {
             String lockReason = user.getLockReason();
             String message = "Your account has been locked.";
@@ -104,21 +100,11 @@ public class LoginServlet extends HttpServlet {
             return;
         }
         
-        // Verify password
-        boolean passwordValid = PasswordUtil.verifyPassword(password, user.getPassword());
-        
-        if (!passwordValid) {
-            request.setAttribute("error", "Invalid email or password");
-            request.getRequestDispatcher("/WEB-INF/views/login.jsp")
-                   .forward(request, response);
-            return;
-        }
-        
         // Doctor approval check
         if ("doctor".equals(user.getUserType())) {
-            String approvalStatus = userDAO.getDoctorApprovalStatus(user.getId());
+            String approvalStatus = userService.checkDoctorApproval(user.getId());
             
-            if (approvalStatus == null) {
+            if ("not_found".equals(approvalStatus)) {
                 request.setAttribute("error", "Doctor profile not found. Please contact admin.");
                 request.getRequestDispatcher("/WEB-INF/views/login.jsp")
                        .forward(request, response);
@@ -133,7 +119,7 @@ public class LoginServlet extends HttpServlet {
             }
             
             if ("rejected".equals(approvalStatus)) {
-                String rejectionReason = userDAO.getDoctorRejectionReason(user.getId());
+                String rejectionReason = userService.getDoctorRejectionReason(user.getId());
                 String message = "Your doctor application has been rejected.";
                 if (rejectionReason != null && !rejectionReason.isEmpty()) {
                     message += " Reason: " + rejectionReason;
@@ -157,14 +143,14 @@ public class LoginServlet extends HttpServlet {
         session.setAttribute("joined_date", user.getCreatedAt());
         
         // Load profile image into session
-        String profileImage = userDAO.getProfileImage(user.getId());
+        String profileImage = userService.getProfileImage(user.getId());
         if (profileImage != null && !profileImage.isEmpty()) {
             session.setAttribute("profile_image", profileImage);
         }
         
-        // ========== ADD BLOOD GROUP FOR PATIENTS ==========
+        // Load blood group for patients
         if ("patient".equals(user.getUserType())) {
-            PatientProfile profile = patientDAO.getPatientProfileByUserId(user.getId());
+            PatientProfile profile = userService.getPatientProfile(user.getId());
             if (profile != null && profile.getBloodGroup() != null) {
                 session.setAttribute("blood_group", profile.getBloodGroup());
             } else {
