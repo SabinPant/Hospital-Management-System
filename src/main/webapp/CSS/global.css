@@ -625,3 +625,17 @@ footer {
         width: 100%;
     }
 }
+
+/* Logo link */
+.logo-link {
+    text-decoration: none;
+    display: inline-block;
+}
+
+.logo-link:hover .logo h1 {
+    color: var(--primary-dark);
+}
+
+.logo-link:hover .logo span {
+    color: var(--gray-dark);
+}

@@ -145,6 +145,75 @@
     </div>
 </section>
 
+<!-- ==================== WHY CHOOSE US ==================== -->
+<section class="why-us">
+    <div class="container">
+        <div class="section-header">
+            <span class="subtitle">Why MediLife</span>
+            <h2>What Makes Us <span class="highlight">Different</span></h2>
+            <p>We combine advanced technology with compassionate care to deliver the best patient experience.</p>
+        </div>
+        
+        <div class="why-us-grid">
+            <div class="why-us-card">
+                <div class="why-us-icon blue">
+                    <i class="fas fa-user-md"></i>
+                </div>
+                <h3>Expert Medical Team</h3>
+                <p>500+ highly qualified doctors, surgeons, and specialists with international training and decades of experience.</p>
+            </div>
+            
+            <div class="why-us-card">
+                <div class="why-us-icon green">
+                    <i class="fas fa-microchip"></i>
+                </div>
+                <h3>Advanced Technology</h3>
+                <p>State-of-the-art imaging, robotic surgery, and diagnostic labs equipped with the latest medical technology.</p>
+            </div>
+            
+            <div class="why-us-card">
+                <div class="why-us-icon amber">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <h3>Patient-Centered Care</h3>
+                <p>Every treatment plan is personalized. We treat patients like family with dignity, respect, and empathy.</p>
+            </div>
+            
+            <div class="why-us-card">
+                <div class="why-us-icon purple">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Accredited & Certified</h3>
+                <p>NABH accredited hospital following international healthcare quality and patient safety standards.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== STATS COUNTER ==================== -->
+<section class="stats-counter">
+    <div class="container">
+        <div class="stats-counter-grid">
+            <div class="stat-item">
+                <div class="stat-number">25+</div>
+                <p>Years of Excellence</p>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">500+</div>
+                <p>Expert Doctors</p>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">50,000+</div>
+                <p>Happy Patients</p>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">15,000+</div>
+                <p>Successful Surgeries</p>
+            </div>
+        </div>
+    </div>
+</section>
+
     <!-- ================= DOCTORS SECTION ================= -->
     <!-- Displays list of doctors (currently static, can be dynamic later) -->
     <section class="doctors">
@@ -204,6 +273,55 @@
     </div>
 </section>
 
+<!-- ==================== NEWS / HEALTH TIPS ==================== -->
+<section class="news-section">
+    <div class="container">
+        <div class="section-header">
+            <span class="subtitle">Health Hub</span>
+            <h2>Latest <span class="highlight">Health Updates</span></h2>
+            <p>Stay informed with tips, news, and insights from our medical experts.</p>
+        </div>
+        
+        <div class="news-grid">
+            <div class="news-card">
+                <div class="news-img">
+                    <img src="Public/Hospital/Research.png" alt="Heart Health" onerror="this.src='https://placehold.co/600x400/e2e8f0/0a5c8e?text=Heart+Health'">
+                </div>
+                <div class="news-body">
+                    <span class="news-category">Cardiology</span>
+                    <h3>5 Daily Habits for a Healthy Heart</h3>
+                    <p>Simple lifestyle changes that can significantly reduce your risk of heart disease.</p>
+                    <a href="${pageContext.request.contextPath}/research" class="news-link">Read More <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+            
+            <div class="news-card">
+                <div class="news-img">
+                    <img src="Public/Hospital/Diagnostic Services.jpeg" alt="Diagnostics" onerror="this.src='https://placehold.co/600x400/e2e8f0/0a5c8e?text=Diagnostics'">
+                </div>
+                <div class="news-body">
+                    <span class="news-category">Wellness</span>
+                    <h3>Why Regular Health Checkups Matter</h3>
+                    <p>Early detection saves lives. Learn which screenings you need at every age.</p>
+                    <a href="${pageContext.request.contextPath}/research" class="news-link">Read More <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+            
+            <div class="news-card">
+                <div class="news-img">
+                    <img src="Public/Hospital/Maternity and Child Care department.jpeg" alt="Maternity" onerror="this.src='https://placehold.co/600x400/e2e8f0/0a5c8e?text=Maternity+Care'">
+                </div>
+                <div class="news-body">
+                    <span class="news-category">Maternity</span>
+                    <h3>A Complete Guide to Prenatal Care</h3>
+                    <p>Everything expecting mothers need to know for a healthy pregnancy journey.</p>
+                    <a href="${pageContext.request.contextPath}/research" class="news-link">Read More <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
     <!-- ==================== TESTIMONIAL SECTION ==================== -->
 <section class="testimonial">
     <div class="container testimonial-wrapper">
@@ -224,6 +342,19 @@
         </div>
         <div class="testimonial-img">
             <img src="Public/Hospital/PatientCare.png" alt="Happy patient receiving care" onerror="this.src='https://placehold.co/600x500/e2e8f0/2563eb?text=Happy+Patient'">
+        </div>
+    </div>
+</section>
+
+<!-- ==================== CTA BANNER ==================== -->
+<section class="cta-banner">
+    <div class="container">
+        <div class="cta-banner-inner">
+            <h2>Ready to Experience the Best in Healthcare?</h2>
+            <p>Book your appointment today and take the first step towards better health with MediLife's expert medical team.</p>
+            <a href="#" class="btn-primary" onclick="checkLoginAndRedirect(event)">
+                Book Appointment <i class="fas fa-arrow-right"></i>
+            </a>
         </div>
     </div>
 </section>

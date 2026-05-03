@@ -43,10 +43,12 @@
 <!-- ==================== NAVBAR ==================== -->
 <header>
     <div class="container nav-container">
-        <div class="logo">
-            <h1><i class="fas fa-hospital-user"></i> MediLife</h1>
-            <span>Hospital & Research Center</span>
-        </div>
+       <a href="${contextPath}/" class="logo-link">
+    <div class="logo">
+        <h1><i class="fas fa-hospital-user"></i> MediLife</h1>
+        <span>Hospital & Research Center</span>
+    </div>
+</a>
         <nav>
             <ul class="nav-links">
                 <c:choose>

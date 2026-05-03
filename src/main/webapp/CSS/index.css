@@ -391,6 +391,406 @@
     box-shadow: 0 12px 24px rgba(0,0,0,0.1);
 }
 
+/* ============================================
+   Why Choose Us Section
+   ============================================ */
+.why-us {
+    padding: 80px 0;
+    background: #f8fafc;
+}
+
+.why-us-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+}
+
+.why-us-card {
+    background: white;
+    padding: 32px 24px;
+    border-radius: 20px;
+    text-align: center;
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.why-us-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+    border-color: #0a5c8e;
+}
+
+.why-us-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.why-us-icon.blue   { background: #e0f2fe; color: #0ea5e9; }
+.why-us-icon.green  { background: #dcfce7; color: #10b981; }
+.why-us-icon.amber  { background: #fef3c7; color: #f59e0b; }
+.why-us-icon.purple { background: #f3e8ff; color: #a855f7; }
+
+.why-us-card h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 10px;
+}
+
+.why-us-card p {
+    font-size: 0.85rem;
+    color: #64748b;
+    line-height: 1.6;
+}
+
+/* ============================================
+   Stats Counter Section
+   ============================================ */
+.stats-counter {
+    padding: 80px 0;
+    background: linear-gradient(135deg, #0a5c8e 0%, #074268 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.stats-counter::before {
+    content: '';
+    position: absolute;
+    top: -60px;
+    right: -60px;
+    width: 250px;
+    height: 250px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 50%;
+}
+
+.stats-counter::after {
+    content: '';
+    position: absolute;
+    bottom: -80px;
+    left: -40px;
+    width: 200px;
+    height: 200px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 50%;
+}
+
+.stats-counter-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+    position: relative;
+    z-index: 1;
+}
+
+.stat-item {
+    text-align: center;
+    color: white;
+}
+
+.stat-number {
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: #7ecfff;
+    margin-bottom: 6px;
+    line-height: 1;
+}
+
+.stat-item p {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.8);
+    font-weight: 500;
+}
+
+/* ============================================
+   News / Health Tips Section
+   ============================================ */
+.news-section {
+    padding: 80px 0;
+    background: white;
+}
+
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.news-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.news-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+}
+
+.news-img {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    background: #e2e8f0;
+}
+
+.news-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.news-card:hover .news-img img {
+    transform: scale(1.05);
+}
+
+.news-body {
+    padding: 20px;
+}
+
+.news-category {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #0a5c8e;
+    background: #e0f2fe;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+}
+
+.news-body h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.news-body p {
+    font-size: 0.82rem;
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 14px;
+}
+
+.news-link {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #0a5c8e;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: gap 0.2s;
+}
+
+.news-link:hover {
+    gap: 10px;
+}
+
+/* ============================================
+   Final CTA Banner
+   ============================================ */
+.cta-banner {
+    padding: 80px 0;
+    background: #f8fafc;
+}
+
+.cta-banner-inner {
+    background: linear-gradient(135deg, #0a5c8e 0%, #0284c7 100%);
+    border-radius: 24px;
+    padding: 56px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-banner-inner::before {
+    content: '';
+    position: absolute;
+    top: -80px;
+    right: -80px;
+    width: 280px;
+    height: 280px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 50%;
+}
+
+.cta-banner-inner::after {
+    content: '';
+    position: absolute;
+    bottom: -60px;
+    left: -60px;
+    width: 220px;
+    height: 220px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 50%;
+}
+
+.cta-banner-inner h2 {
+    font-size: 2rem;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 14px;
+    position: relative;
+    z-index: 1;
+}
+
+.cta-banner-inner p {
+    font-size: 1rem;
+    color: rgba(255,255,255,0.85);
+    max-width: 550px;
+    margin: 0 auto 28px;
+    line-height: 1.6;
+    position: relative;
+    z-index: 1;
+}
+
+.cta-banner-inner .btn-primary {
+    background: white;
+    color: #0a5c8e;
+    font-weight: 700;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    position: relative;
+    z-index: 1;
+}
+
+.cta-banner-inner .btn-primary:hover {
+    background: #f0f9ff;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+/* -------------------------------------------- */
+/* Responsive */
+/* -------------------------------------------- */
+@media (max-width: 1200px) {
+    .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .why-us-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .stats-counter-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 40px;
+    }
+    
+    .news-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 1024px) {
+    .hero-content h1 {
+        font-size: 2.8rem;
+    }
+    
+    .testimonial-wrapper {
+        padding: 32px;
+    }
+    
+    .doctors-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .hero {
+        padding: 40px 0 60px;
+    }
+    
+    .hero-content h1 {
+        font-size: 2.2rem;
+    }
+    
+    .hero-content p {
+        max-width: 100%;
+    }
+    
+    .hero-grid {
+        flex-direction: column-reverse;
+        text-align: center;
+    }
+    
+    .hero-buttons {
+        justify-content: center;
+    }
+    
+    .stats {
+        justify-content: center;
+    }
+    
+    .services-grid,
+    .why-us-grid,
+    .news-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats-counter-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 28px;
+    }
+    
+    .stat-number {
+        font-size: 2.2rem;
+    }
+    
+    .doctors-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .testimonial-wrapper {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .trust-badge {
+        justify-content: center;
+    }
+    
+    .cta-banner-inner {
+        padding: 36px 24px;
+    }
+    
+    .cta-banner-inner h2 {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 550px) {
+    .hero-content h1 {
+        font-size: 1.8rem;
+    }
+    
+    .stats {
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+    }
+    
+    .stats-counter-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .btn-primary {
+        padding: 12px 24px;
+    }
+}
+
 /* -------------------------------------------- */
 /* Responsive */
 /* -------------------------------------------- */
