@@ -272,38 +272,43 @@
         .val.medium { color: #f59e0b; }
         .val.strong { color: #10b981; }
 
-        /* ── Password Requirements ── */
-        .pw-requirements {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-            padding: 13px 16px;
-            margin-top: 6px;
-        }
-        .pw-requirements p {
-            font-size: 0.72rem;
-            font-weight: 700;
-            color: #475569;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-            margin-bottom: 10px;
-        }
-        .pw-requirements ul {
-            list-style: none;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 6px;
-        }
-        .pw-requirements li {
-            font-size: 0.72rem;
-            color: #94a3b8;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: color 0.2s;
-        }
-        .pw-requirements li.valid   { color: #10b981; }
-        .pw-requirements li.invalid { color: #ef4444; }
+     
+   /* ── Password Requirements ── */
+.pw-requirements {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-top: 8px;
+}
+.pw-requirements p {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 10px 0;
+}
+.pw-requirements ul {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+    margin: 0;
+    padding: 0;
+}
+.pw-requirements li {
+    font-size: 0.72rem;
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: color 0.2s;
+    line-height: 1.5;
+}
+.pw-requirements li.valid   { color: #10b981; }
+.pw-requirements li.invalid { color: #ef4444; }
+     
 
         /* ── Confirm match ── */
         .confirm-msg {
@@ -404,3 +409,7 @@
             .span-2 { grid-column: span 1; }
             .pw-requirements ul { grid-template-columns: 1fr; }
         }
+        
+        .pw-requirements li.invalid {
+    color: #ef4444 !important;
+}

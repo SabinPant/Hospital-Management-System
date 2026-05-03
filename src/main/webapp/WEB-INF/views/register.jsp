@@ -95,8 +95,7 @@
                                 <span>Password Strength</span>
                                 <span id="strengthText" class="val weak">—</span>
                             </div>
-                            <div class="pw-requirements">
-                                <p>Must contain:</p>
+                               <div class="pw-requirements">                                <p>Must contain:</p>
                                 <ul>
                                     <li id="reqLength"><i class="fas fa-circle"></i> 8+ characters</li>
                                     <li id="reqUpper"><i class="fas fa-circle"></i> Uppercase (A-Z)</li>
@@ -281,143 +280,194 @@
 
     <jsp:include page="../../components/footer.jsp" />
 
-    <script>
-        // ── Toggle Password ──
-        function togglePassword() {
-            const pw = document.getElementById('password');
-            const icon = document.querySelector('.pw-toggle');
-            if (pw.type === 'password') {
-                pw.type = 'text';
-                icon.classList.replace('fa-eye', 'fa-eye-slash');
-            } else {
-                pw.type = 'password';
-                icon.classList.replace('fa-eye-slash', 'fa-eye');
-            }
+   <script>
+    // ── Toggle Password ──
+    function togglePassword() {
+        const pw = document.getElementById('password');
+        const icon = document.querySelector('.pw-toggle');
+        if (pw.type === 'password') {
+            pw.type = 'text';
+            icon.classList.replace('fa-eye', 'fa-eye-slash');
+        } else {
+            pw.type = 'password';
+            icon.classList.replace('fa-eye-slash', 'fa-eye');
         }
+    }
 
-        // ── Password Strength ──
-        const passwordInput  = document.getElementById('password');
-        const confirmInput   = document.getElementById('confirmPassword');
-        const strengthBar    = document.getElementById('strengthBar');
-        const strengthText   = document.getElementById('strengthText');
-        const reqLength      = document.getElementById('reqLength');
-        const reqUpper       = document.getElementById('reqUpper');
-        const reqLower       = document.getElementById('reqLower');
-        const reqNumber      = document.getElementById('reqNumber');
-        const reqSpecial     = document.getElementById('reqSpecial');
+    // ── Password Strength ──
+    const passwordInput  = document.getElementById('password');
+    const confirmInput   = document.getElementById('confirmPassword');
+    const strengthBar    = document.getElementById('strengthBar');
+    const strengthText   = document.getElementById('strengthText');
 
-        function setReq(el, valid, text) {
-            el.innerHTML = `<i class="fas ${valid ? 'fa-check-circle' : 'fa-circle'}"></i> ${text}`;
-            el.className = valid ? 'valid' : '';
-        }
-
-        function checkPasswordStrength(pw) {
-            let score = 0;
-            if (pw.length >= 8)                              { score++; setReq(reqLength,  true,  '8+ characters'); }
-            else                                             {          setReq(reqLength,  false, '8+ characters'); }
-            if (/[A-Z]/.test(pw))                            { score++; setReq(reqUpper,   true,  'Uppercase (A-Z)'); }
-            else                                             {          setReq(reqUpper,   false, 'Uppercase (A-Z)'); }
-            if (/[a-z]/.test(pw))                            { score++; setReq(reqLower,   true,  'Lowercase (a-z)'); }
-            else                                             {          setReq(reqLower,   false, 'Lowercase (a-z)'); }
-            if (/[0-9]/.test(pw))                            { score++; setReq(reqNumber,  true,  'Number (0-9)'); }
-            else                                             {          setReq(reqNumber,  false, 'Number (0-9)'); }
-            if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(pw)) { score++; setReq(reqSpecial, true,  'Special character (!@#$%)'); }
-            else                                             {          setReq(reqSpecial, false, 'Special character (!@#$%)'); }
-
-            if (score >= 5) {
-                strengthBar.className = 'strength-bar strong';
-                strengthText.textContent = 'Strong';
-                strengthText.className = 'val strong';
-            } else if (score >= 3) {
-                strengthBar.className = 'strength-bar medium';
-                strengthText.textContent = 'Medium';
-                strengthText.className = 'val medium';
-            } else {
-                strengthBar.className = 'strength-bar weak';
-                strengthText.textContent = 'Weak';
-                strengthText.className = 'val weak';
-            }
-        }
-
-        function checkConfirmMatch() {
-            const el = document.getElementById('confirmMatch');
-            if (!confirmInput.value) { el.innerHTML = ''; return; }
-            if (confirmInput.value === passwordInput.value) {
-                el.innerHTML = '<i class="fas fa-check-circle" style="color:#10b981"></i> Passwords match';
-                el.style.color = '#10b981';
-            } else {
-                el.innerHTML = '<i class="fas fa-exclamation-circle" style="color:#ef4444"></i> Passwords do not match';
-                el.style.color = '#ef4444';
-            }
-        }
-
-        passwordInput.addEventListener('input', function() {
-            checkPasswordStrength(this.value);
-            checkConfirmMatch();
-        });
-        confirmInput.addEventListener('input', checkConfirmMatch);
-
-        // ── File Select Handler ──
-        function handleFileSelect(input, nameId, errorId) {
-            const file = input.files[0];
-            const errorEl = document.getElementById(errorId);
-            const nameEl  = document.getElementById(nameId);
-            const allowed = ['image/jpeg', 'image/png', 'image/gif'];
-            const maxSize = 5 * 1024 * 1024;
-
-            if (!file) return;
-            if (!allowed.includes(file.type)) {
-                errorEl.textContent = 'Only JPG, PNG, GIF images are allowed.';
-                input.value = ''; return;
-            }
-            if (file.size > maxSize) {
-                errorEl.textContent = 'File size must be under 5MB.';
-                input.value = ''; return;
-            }
-            errorEl.textContent = '';
-            nameEl.textContent = file.name;
-        }
-
-        // ── User Type Toggle ──
-        const patientBtn    = document.querySelector('[data-type="patient"]');
-        const doctorBtn     = document.querySelector('[data-type="doctor"]');
-        const patientFields = document.getElementById('patientFields');
-        const doctorFields  = document.getElementById('doctorFields');
-        const userTypeInput = document.getElementById('userType');
-
-        function setUserType(type) {
-            const isDoctor = type === 'doctor';
-            patientBtn.classList.toggle('active', !isDoctor);
-            doctorBtn.classList.toggle('active',   isDoctor);
-            patientFields.classList.toggle('active', !isDoctor);
-            doctorFields.classList.toggle('active',   isDoctor);
-            userTypeInput.value = type;
-
-            // Toggle required on doctor fields
-            document.querySelectorAll('#doctorFields input, #doctorFields select, #doctorFields textarea').forEach(f => {
-                const required = ['specialization','qualification','licenseNumber','experienceYears','consultationFee'];
-                if (isDoctor && required.includes(f.name)) f.setAttribute('required','required');
-                else f.removeAttribute('required');
+    function checkPasswordStrength(pw) {
+        const reqLength  = document.getElementById('reqLength');
+        const reqUpper   = document.getElementById('reqUpper');
+        const reqLower   = document.getElementById('reqLower');
+        const reqNumber  = document.getElementById('reqNumber');
+        const reqSpecial = document.getElementById('reqSpecial');
+        
+        if (pw.length === 0) {
+            reqLength.innerHTML  = '<i class="fas fa-circle"></i> 8+ characters';
+            reqUpper.innerHTML   = '<i class="fas fa-circle"></i> Uppercase (A-Z)';
+            reqLower.innerHTML   = '<i class="fas fa-circle"></i> Lowercase (a-z)';
+            reqNumber.innerHTML  = '<i class="fas fa-circle"></i> Number (0-9)';
+            reqSpecial.innerHTML = '<i class="fas fa-circle"></i> Special character (!@#$%)';
+            [reqLength, reqUpper, reqLower, reqNumber, reqSpecial].forEach(el => {
+                el.style.color = '#94a3b8';
             });
+            strengthBar.className = 'strength-bar';
+            strengthBar.style.width = '0%';
+            strengthText.textContent = '—';
+            strengthText.style.color = '#94a3b8';
+            return;
         }
+        
+        let score = 0;
+        
+        if (pw.length >= 8) {
+            reqLength.innerHTML = '<i class="fas fa-check-circle"></i> 8+ characters';
+            reqLength.style.color = '#10b981';
+            score++;
+        } else {
+            reqLength.innerHTML = '<i class="fas fa-times-circle"></i> 8+ characters';
+            reqLength.style.color = '#ef4444';
+        }
+        
+        if (/[A-Z]/.test(pw)) {
+            reqUpper.innerHTML = '<i class="fas fa-check-circle"></i> Uppercase (A-Z)';
+            reqUpper.style.color = '#10b981';
+            score++;
+        } else {
+            reqUpper.innerHTML = '<i class="fas fa-times-circle"></i> Uppercase (A-Z)';
+            reqUpper.style.color = '#ef4444';
+        }
+        
+        if (/[a-z]/.test(pw)) {
+            reqLower.innerHTML = '<i class="fas fa-check-circle"></i> Lowercase (a-z)';
+            reqLower.style.color = '#10b981';
+            score++;
+        } else {
+            reqLower.innerHTML = '<i class="fas fa-times-circle"></i> Lowercase (a-z)';
+            reqLower.style.color = '#ef4444';
+        }
+        
+        if (/[0-9]/.test(pw)) {
+            reqNumber.innerHTML = '<i class="fas fa-check-circle"></i> Number (0-9)';
+            reqNumber.style.color = '#10b981';
+            score++;
+        } else {
+            reqNumber.innerHTML = '<i class="fas fa-times-circle"></i> Number (0-9)';
+            reqNumber.style.color = '#ef4444';
+        }
+        
+        if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(pw)) {
+            reqSpecial.innerHTML = '<i class="fas fa-check-circle"></i> Special character (!@#$%)';
+            reqSpecial.style.color = '#10b981';
+            score++;
+        } else {
+            reqSpecial.innerHTML = '<i class="fas fa-times-circle"></i> Special character (!@#$%)';
+            reqSpecial.style.color = '#ef4444';
+        }
+        
+        strengthBar.className = 'strength-bar';
+        if (score >= 5) {
+            strengthBar.classList.add('strong');
+            strengthText.textContent = 'Strong';
+            strengthText.style.color = '#10b981';
+        } else if (score >= 3) {
+            strengthBar.classList.add('medium');
+            strengthText.textContent = 'Medium';
+            strengthText.style.color = '#f59e0b';
+        } else {
+            strengthBar.classList.add('weak');
+            strengthText.textContent = 'Weak';
+            strengthText.style.color = '#ef4444';
+        }
+    }
 
-        patientBtn.addEventListener('click', () => setUserType('patient'));
-        doctorBtn.addEventListener('click',  () => setUserType('doctor'));
+    // ── Confirm Password Match ──
+    function checkConfirmMatch() {
+        const el = document.getElementById('confirmMatch');
+        if (!confirmInput.value) {
+            el.innerHTML = '';
+            return;
+        }
+        if (confirmInput.value === passwordInput.value) {
+            el.innerHTML = '<i class="fas fa-check-circle" style="color:#10b981"></i> Passwords match';
+            el.style.color = '#10b981';
+        } else {
+            el.innerHTML = '<i class="fas fa-exclamation-circle" style="color:#ef4444"></i> Passwords do not match';
+            el.style.color = '#ef4444';
+        }
+    }
 
-        // ── Specialization "Other" ──
-        document.getElementById('specialization').addEventListener('change', function() {
-            const group = document.getElementById('otherSpecializationGroup');
-            const input = document.querySelector('input[name="otherSpecialization"]');
-            if (this.value === 'Other') {
-                group.style.display = 'flex';
-                input.setAttribute('required','required');
-            } else {
-                group.style.display = 'none';
-                input.removeAttribute('required');
-            }
+    passwordInput.addEventListener('input', function() {
+        checkPasswordStrength(this.value);
+        checkConfirmMatch();
+    });
+    confirmInput.addEventListener('input', checkConfirmMatch);
+
+    // ── File Select Handler ──
+    function handleFileSelect(input, nameId, errorId) {
+        const file = input.files[0];
+        const errorEl = document.getElementById(errorId);
+        const nameEl  = document.getElementById(nameId);
+        const allowed = ['image/jpeg', 'image/png', 'image/gif'];
+        const maxSize = 5 * 1024 * 1024;
+
+        if (!file) return;
+        if (!allowed.includes(file.type)) {
+            errorEl.textContent = 'Only JPG, PNG, GIF images are allowed.';
+            input.value = ''; return;
+        }
+        if (file.size > maxSize) {
+            errorEl.textContent = 'File size must be under 5MB.';
+            input.value = ''; return;
+        }
+        errorEl.textContent = '';
+        nameEl.textContent = file.name;
+    }
+
+    // ── User Type Toggle ──
+    const patientBtn    = document.querySelector('[data-type="patient"]');
+    const doctorBtn     = document.querySelector('[data-type="doctor"]');
+    const patientFields = document.getElementById('patientFields');
+    const doctorFields  = document.getElementById('doctorFields');
+    const userTypeInput = document.getElementById('userType');
+
+    function setUserType(type) {
+        const isDoctor = type === 'doctor';
+        patientBtn.classList.toggle('active', !isDoctor);
+        doctorBtn.classList.toggle('active',   isDoctor);
+        patientFields.classList.toggle('active', !isDoctor);
+        doctorFields.classList.toggle('active',   isDoctor);
+        userTypeInput.value = type;
+
+        document.querySelectorAll('#doctorFields input, #doctorFields select, #doctorFields textarea').forEach(f => {
+            const required = ['specialization','qualification','licenseNumber','experienceYears','consultationFee'];
+            if (isDoctor && required.includes(f.name)) f.setAttribute('required','required');
+            else f.removeAttribute('required');
         });
+    }
 
-        setUserType('patient');
-    </script>
+    patientBtn.addEventListener('click', () => setUserType('patient'));
+    doctorBtn.addEventListener('click',  () => setUserType('doctor'));
+
+    // ── Specialization "Other" ──
+    document.getElementById('specialization').addEventListener('change', function() {
+        const group = document.getElementById('otherSpecializationGroup');
+        const input = document.querySelector('input[name="otherSpecialization"]');
+        if (this.value === 'Other') {
+            group.style.display = 'flex';
+            input.setAttribute('required','required');
+        } else {
+            group.style.display = 'none';
+            input.removeAttribute('required');
+        }
+    });
+
+    setUserType('patient');
+</script>
 </body>
 </html>
