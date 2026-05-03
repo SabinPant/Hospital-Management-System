@@ -1,8 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
-<%
-    String contextPath = request.getContextPath();
-%>
+<c:set var="contextPath" value="${pageContext.request.contextPath}" />
 
 <!-- ==================== FOOTER ==================== -->
 <footer>
@@ -20,10 +19,11 @@
         <div class="footer-col">
             <h4>Quick Links</h4>
             <ul>
-                <li><a href="<%= contextPath %>/">Home</a></li>
-                <li><a href="<%= contextPath %>/about.jsp">About Us</a></li>
-                <li><a href="<%= contextPath %>/blog.jsp">Blog</a></li>
-                <li><a href="${pageContext.request.contextPath}/contact">Contact Us</a></li>
+                <li><a href="${contextPath}/">Home</a></li>
+                <li><a href="${contextPath}/about_us">About Us</a></li>
+                <li><a href="${contextPath}/research">Research</a></li>
+                <li><a href="${contextPath}/contact">Contact Us</a></li>
+                <li><a href="${contextPath}/News">News</a></li>
             </ul>
         </div>
         <div class="footer-col">
