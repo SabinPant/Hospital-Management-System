@@ -8,19 +8,27 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
+import dao.UserDAO;
+import dao.PatientDAO;
 import models.User;
 import models.PatientProfile;
+<<<<<<< HEAD
 import services.UserService;
+=======
+import utils.PasswordUtil;
+>>>>>>> 0ae8e6a (feat: Add Patient Profile with picture upload & enhance registration)
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private UserService userService;
+    private UserDAO userDAO;
+    private PatientDAO patientDAO;
     
     @Override
     public void init() throws ServletException {
         super.init();
-        userService = new UserService();
+        userDAO = new UserDAO();
+        patientDAO = new PatientDAO();
     }
     
     @Override
@@ -29,7 +37,11 @@ public class LoginServlet extends HttpServlet {
         
         HttpSession session = request.getSession(false);
         
+<<<<<<< HEAD
         // If already logged in, redirect to appropriate dashboard
+=======
+        // If already logged in as user, redirect to appropriate dashboard
+>>>>>>> 0ae8e6a (feat: Add Patient Profile with picture upload & enhance registration)
         if (session != null && session.getAttribute("user_id") != null) {
             String userType = (String) session.getAttribute("user_type");
             if ("patient".equals(userType)) {
@@ -68,8 +80,13 @@ public class LoginServlet extends HttpServlet {
             return;
         }
         
+<<<<<<< HEAD
         // ========== BUSINESS LOGIC MOVED TO SERVICE ==========
         User user = userService.authenticate(email, password);
+=======
+        // Get user by email
+        User user = userDAO.getUserByEmail(email);
+>>>>>>> 0ae8e6a (feat: Add Patient Profile with picture upload & enhance registration)
         
         if (user == null) {
             request.setAttribute("error", "Invalid email or password");
@@ -100,11 +117,21 @@ public class LoginServlet extends HttpServlet {
             return;
         }
         
+        // Verify password
+        boolean passwordValid = PasswordUtil.verifyPassword(password, user.getPassword());
+        
+        if (!passwordValid) {
+            request.setAttribute("error", "Invalid email or password");
+            request.getRequestDispatcher("/WEB-INF/views/login.jsp")
+                   .forward(request, response);
+            return;
+        }
+        
         // Doctor approval check
         if ("doctor".equals(user.getUserType())) {
-            String approvalStatus = userService.checkDoctorApproval(user.getId());
+            String approvalStatus = userDAO.getDoctorApprovalStatus(user.getId());
             
-            if ("not_found".equals(approvalStatus)) {
+            if (approvalStatus == null) {
                 request.setAttribute("error", "Doctor profile not found. Please contact admin.");
                 request.getRequestDispatcher("/WEB-INF/views/login.jsp")
                        .forward(request, response);
@@ -119,7 +146,7 @@ public class LoginServlet extends HttpServlet {
             }
             
             if ("rejected".equals(approvalStatus)) {
-                String rejectionReason = userService.getDoctorRejectionReason(user.getId());
+                String rejectionReason = userDAO.getDoctorRejectionReason(user.getId());
                 String message = "Your doctor application has been rejected.";
                 if (rejectionReason != null && !rejectionReason.isEmpty()) {
                     message += " Reason: " + rejectionReason;
@@ -143,14 +170,24 @@ public class LoginServlet extends HttpServlet {
         session.setAttribute("joined_date", user.getCreatedAt());
         
         // Load profile image into session
+<<<<<<< HEAD
         String profileImage = userService.getProfileImage(user.getId());
+=======
+        String profileImage = userDAO.getProfileImage(user.getId());
+>>>>>>> 0ae8e6a (feat: Add Patient Profile with picture upload & enhance registration)
         if (profileImage != null && !profileImage.isEmpty()) {
             session.setAttribute("profile_image", profileImage);
         }
         
+<<<<<<< HEAD
         // Load blood group for patients
         if ("patient".equals(user.getUserType())) {
             PatientProfile profile = userService.getPatientProfile(user.getId());
+=======
+        // ========== ADD BLOOD GROUP FOR PATIENTS ==========
+        if ("patient".equals(user.getUserType())) {
+            PatientProfile profile = patientDAO.getPatientProfileByUserId(user.getId());
+>>>>>>> 0ae8e6a (feat: Add Patient Profile with picture upload & enhance registration)
             if (profile != null && profile.getBloodGroup() != null) {
                 session.setAttribute("blood_group", profile.getBloodGroup());
             } else {

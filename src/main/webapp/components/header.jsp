@@ -54,6 +54,7 @@
                         <li><a href="${contextPath}/patient/dashboard">Dashboard</a></li>
                         <li><a href="${contextPath}/patient/book-appointment">Book Appointment</a></li>
                         <li><a href="${contextPath}/patient/appointments">My Appointments</a></li>
+                        <li><a href="${pageContext.request.contextPath}/patient/profile"> My Profile</a></li>
                         <li><a href="${contextPath}/contact">Contact Us</a></li>
                     </c:when>
                     <c:when test="${isLoggedIn and userRole == 'doctor'}">

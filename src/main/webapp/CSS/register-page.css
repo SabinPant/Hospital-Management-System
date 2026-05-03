@@ -272,6 +272,7 @@
         .val.medium { color: #f59e0b; }
         .val.strong { color: #10b981; }
 
+<<<<<<< HEAD
      
    /* ── Password Requirements ── */
 .pw-requirements {
@@ -309,6 +310,40 @@
 .pw-requirements li.valid   { color: #10b981; }
 .pw-requirements li.invalid { color: #ef4444; }
      
+=======
+        /* ── Password Requirements ── */
+        .pw-requirements {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 13px 16px;
+            margin-top: 6px;
+        }
+        .pw-requirements p {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 10px;
+        }
+        .pw-requirements ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+        .pw-requirements li {
+            font-size: 0.72rem;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.2s;
+        }
+        .pw-requirements li.valid   { color: #10b981; }
+        .pw-requirements li.invalid { color: #ef4444; }
+>>>>>>> 0ae8e6a (feat: Add Patient Profile with picture upload & enhance registration)
 
         /* ── Confirm match ── */
         .confirm-msg {
@@ -408,8 +443,12 @@
             .form-grid { grid-template-columns: 1fr; }
             .span-2 { grid-column: span 1; }
             .pw-requirements ul { grid-template-columns: 1fr; }
+<<<<<<< HEAD
         }
         
         .pw-requirements li.invalid {
     color: #ef4444 !important;
 }
+=======
+        }
+>>>>>>> 0ae8e6a (feat: Add Patient Profile with picture upload & enhance registration)
