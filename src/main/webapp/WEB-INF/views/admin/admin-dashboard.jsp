@@ -277,8 +277,7 @@
         if (licenseImage && licenseImage !== 'null' && licenseImage !== '') {
             imageHtml = '<div class="modern-detail-box full-width">' +
                 '<div class="modern-detail-label">License Document</div>' +
-                '<img src="${pageContext.request.contextPath}/' + licenseImage + '" style="max-width:100%; max-height:250px; margin-top:8px; border-radius:8px; border: 1px solid #e2e8f0; padding: 4px;">' +
-            '</div>';
+                '<img src="${pageContext.request.contextPath}/uploads/' + licenseImage + '" style="max-width:100%; max-height:250px; margin-top:8px; border-radius:8px; border: 1px solid #e2e8f0; padding: 4px;">' +            '</div>';
         } else {
             imageHtml = '<div class="modern-detail-box full-width">' +
                 '<div class="modern-detail-label">License Document</div>' +

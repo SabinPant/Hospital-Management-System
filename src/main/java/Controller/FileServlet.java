@@ -10,12 +10,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-@WebServlet("/Public/uploads/*")
+@WebServlet("/uploads/*")
 public class FileServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    
-    private static final String PROJECT_WEBAPP_PATH = 
-        "C:\\Users\\Acer\\eclipse-workspace\\Hospital-Management-System\\src\\main\\webapp";
     
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
@@ -28,14 +25,21 @@ public class FileServlet extends HttpServlet {
             return;
         }
         
-        // Build file path
-        String filePath = PROJECT_WEBAPP_PATH + File.separator + "Public" 
-                        + File.separator + "uploads" + File.separator + requestedFile;
+        // Remove leading slash
+        if (requestedFile.startsWith("/")) {
+            requestedFile = requestedFile.substring(1);
+        }
         
-        File file = new File(filePath);
+        // Build path from user home directory + medilife_uploads/uploads/
+        String uploadPath = System.getProperty("user.home") + File.separator 
+                          + "medilife_uploads" + File.separator 
+                          + "uploads" + File.separator 
+                          + requestedFile;
+        
+        File file = new File(uploadPath);
         
         if (!file.exists()) {
-            System.err.println("File not found: " + filePath);
+            System.err.println("File not found: " + uploadPath);
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }

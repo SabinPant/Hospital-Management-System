@@ -206,8 +206,7 @@
                 <div class="hero-avatar">
                     <c:choose>
                         <c:when test="${not empty sessionScope.profile_image}">
-                            <img src="${pageContext.request.contextPath}/${sessionScope.profile_image}" alt="Profile" class="profile-img">
-                        </c:when>
+<img src="${pageContext.request.contextPath}/uploads/${sessionScope.profile_image}" alt="Profile" class="profile-img">                        </c:when>
                         <c:otherwise>
                             <i class="fas fa-user-circle"></i>
                         </c:otherwise>

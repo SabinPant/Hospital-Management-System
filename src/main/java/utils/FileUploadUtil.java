@@ -9,14 +9,23 @@ import java.util.List;
 
 public class FileUploadUtil {
 
-    private static final String UPLOAD_DIR = "Public/uploads";
+    private static final String UPLOAD_DIR = "uploads";
     private static final List<String> ALLOWED_EXTENSIONS = Arrays.asList(".jpg", ".jpeg", ".png", ".gif", ".webp");
     private static final List<String> ALLOWED_MIME_TYPES = Arrays.asList("image/jpeg", "image/png", "image/gif", "image/webp");
     private static final long MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
-    // ===== YOUR ACTUAL PROJECT WEBAPP PATH =====
-    private static final String PROJECT_WEBAPP_PATH = 
-        "C:\\Users\\Acer\\eclipse-workspace\\Hospital-Management-System\\src\\main\\webapp";
+    // Get the external upload path from web.xml context param, or use a default
+    public static String getUploadBasePath(String appPath) {
+        // Default: user home directory + /medilife_uploads/
+        String defaultPath = System.getProperty("user.home") + File.separator + "medilife_uploads";
+        
+        File dir = new File(defaultPath);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        
+        return defaultPath;
+    }
 
     // Validate if file is a valid image
     public static boolean isValidImage(Part filePart) {
@@ -51,19 +60,9 @@ public class FileUploadUtil {
         return dotIndex > 0 ? fileName.substring(dotIndex).toLowerCase() : "";
     }
 
-    // Get the project webapp path (used by FileServlet)
-    public static String getProjectWebappPath(String appPath) {
-        File webappDir = new File(PROJECT_WEBAPP_PATH);
-        if (webappDir.exists() && webappDir.isDirectory()) {
-            return PROJECT_WEBAPP_PATH;
-        }
-        // Fallback to deployed path
-        return appPath;
-    }
-
-    // Save file to the REAL project webapp folder
+    // Save file to external directory
     public static String saveFile(Part filePart, String uniqueName, String appPath) throws IOException {
-        String uploadPath = PROJECT_WEBAPP_PATH + File.separator + UPLOAD_DIR.replace("/", File.separator);
+        String uploadPath = getUploadBasePath(appPath) + File.separator + UPLOAD_DIR;
 
         File uploadDir = new File(uploadPath);
         if (!uploadDir.exists()) {
@@ -78,7 +77,7 @@ public class FileUploadUtil {
         System.out.println("Saving file to: " + fullFilePath);
         filePart.write(fullFilePath);
 
-        // Return relative web path (used in <img src="...">)
-        return UPLOAD_DIR + "/" + fileName;
+        // Return just the filename (path will be resolved by FileServlet)
+        return fileName;
     }
 }

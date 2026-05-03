@@ -27,8 +27,7 @@
         <div class="hero-avatar">
             <c:choose>
                 <c:when test="${not empty sessionScope.profile_image}">
-                    <img src="${pageContext.request.contextPath}/${sessionScope.profile_image}" alt="Profile" class="profile-img">
-                </c:when>
+<img src="${pageContext.request.contextPath}/uploads/${sessionScope.profile_image}" alt="Profile" class="profile-img">                </c:when>
                 <c:otherwise>
                     <i class="fas fa-user-md"></i>
                 </c:otherwise>
@@ -160,8 +159,7 @@
                         <div class="info-row">
                             <div class="info-label">License Doc</div>
                             <div class="info-value">
-                                <img src="${pageContext.request.contextPath}/${profile.license_image}" class="license-img" alt="License Document">
-                            </div>
+<img src="${pageContext.request.contextPath}/uploads/${profile.license_image}" class="license-img" alt="License Document">                            </div>
                         </div>
                     </c:if>
                 </div>
