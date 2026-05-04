@@ -2,6 +2,7 @@
 <!-- 
     Main landing page for MediLife Hospital system.
     Uses JSP for dynamic session handling and component reused.
+    Done by: Sabin Pant, Priyanshu Mahat, Aryan Shakya, Rabin Pant, Shreya Pokharel
 -->
 
 <!DOCTYPE html>
