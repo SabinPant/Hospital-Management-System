@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import dao.AppointmentDAO;
 import dao.DoctorDAO;
 import models.Appointment;
+import utils.SessionUtil;
 
 @WebServlet("/doctor/dashboard")
 public class DoctorDashboardServlet extends HttpServlet {
@@ -32,19 +33,13 @@ public class DoctorDashboardServlet extends HttpServlet {
         
         HttpSession session = request.getSession(false);
         
-        if (session == null || session.getAttribute("user_id") == null) {
-            response.sendRedirect(request.getContextPath() + "/login");
-            return;
-        }
-        
-        String userType = (String) session.getAttribute("user_type");
-        if (!"doctor".equals(userType)) {
+        if (!SessionUtil.isDoctor(session)) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
         
         try {
-            int doctorId = (int) session.getAttribute("user_id");
+            int doctorId = SessionUtil.getUserId(session);
             
             // Get doctor's department/specialization
             String department = doctorDAO.getDoctorDepartment(doctorId);

@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import utils.SessionUtil;
 
 @WebFilter("/patient/*")
 public class PatientAuthFilter implements Filter {
@@ -28,21 +29,14 @@ public class PatientAuthFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         HttpSession session = httpRequest.getSession(false);
         
-        // Check if user is logged in
-        if (session == null || session.getAttribute("user_id") == null) {
-            httpResponse.sendRedirect(httpRequest.getContextPath() + "/login");
-            return;
-        }
-        
-        // Check if user type is patient
-        String userType = (String) session.getAttribute("user_type");
-        if (userType == null || !"patient".equals(userType)) {
+        // Check if user is logged in as patient
+        if (!SessionUtil.isPatient(session)) {
             httpResponse.sendRedirect(httpRequest.getContextPath() + "/login");
             return;
         }
         
         // Check if account is active
-        String status = (String) session.getAttribute("status");
+        String status = SessionUtil.getStatus(session);
         if (status != null && "locked".equals(status)) {
             httpResponse.sendRedirect(httpRequest.getContextPath() + "/login?error=Account locked");
             return;

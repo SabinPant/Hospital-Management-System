@@ -13,6 +13,7 @@ import dao.AppointmentDAO;
 import dao.NotificationDAO;
 import models.Appointment;
 import models.Notification;
+import utils.SessionUtil;
 
 @WebServlet("/patient/dashboard")
 public class PatientDashboardServlet extends HttpServlet {
@@ -31,12 +32,12 @@ public class PatientDashboardServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("user_id") == null) {
+        if (!SessionUtil.isUserLoggedIn(session)) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
         
-        int patientId = (int) session.getAttribute("user_id");
+        int patientId = SessionUtil.getUserId(session);
         
         // Get upcoming appointments
         List<Appointment> upcomingAppointments = appointmentDAO.getUpcomingAppointments(patientId, 5);

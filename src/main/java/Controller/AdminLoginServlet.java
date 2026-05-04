@@ -10,6 +10,7 @@ import java.io.IOException;
 
 import models.Admin;
 import services.AdminService;
+import utils.SessionUtil;
 
 @WebServlet("/admin/login")
 public class AdminLoginServlet extends HttpServlet {
@@ -69,16 +70,9 @@ public class AdminLoginServlet extends HttpServlet {
                    .forward(request, response);
             return;
         }
-        
         // Create session
         HttpSession session = request.getSession();
-        session.setAttribute("admin_id", admin.getId());
-        session.setAttribute("admin_username", admin.getUsername());
-        session.setAttribute("admin_name", admin.getFullName());
-        session.setAttribute("admin_role", admin.getRole());
-        session.setAttribute("isAdmin", true);
-        
-        System.out.println("Admin logged in: " + admin.getUsername());
+        SessionUtil.createAdminSession(session, admin);
         
         // Update last login
         adminService.updateLastLogin(admin.getId());

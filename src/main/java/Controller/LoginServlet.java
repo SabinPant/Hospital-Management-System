@@ -11,6 +11,7 @@ import java.io.IOException;
 import models.User;
 import models.PatientProfile;
 import services.UserService;
+import utils.SessionUtil;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
@@ -68,7 +69,7 @@ public class LoginServlet extends HttpServlet {
             return;
         }
         
-        // ========== BUSINESS LOGIC MOVED TO SERVICE ==========
+        // call the service package for business logic
         User user = userService.authenticate(email, password);
         
         if (user == null) {
@@ -133,37 +134,26 @@ public class LoginServlet extends HttpServlet {
         
         // ========== CREATE SESSION ==========
         HttpSession session = request.getSession();
-        session.setAttribute("user_id", user.getId());
-        session.setAttribute("user_id_display", user.getUserId());
-        session.setAttribute("email", user.getEmail());
-        session.setAttribute("full_name", user.getFullName());
-        session.setAttribute("phone", user.getPhone());
-        session.setAttribute("user_type", user.getUserType());
-        session.setAttribute("status", user.getStatus());
-        session.setAttribute("joined_date", user.getCreatedAt());
         
-        // Load profile image into session
+        // Load optional session data
         String profileImage = userService.getProfileImage(user.getId());
-        if (profileImage != null && !profileImage.isEmpty()) {
-            session.setAttribute("profile_image", profileImage);
-        }
+        String bloodGroup = null;
         
-        // Load blood group for patients
         if ("patient".equals(user.getUserType())) {
             PatientProfile profile = userService.getPatientProfile(user.getId());
             if (profile != null && profile.getBloodGroup() != null) {
-                session.setAttribute("blood_group", profile.getBloodGroup());
+                bloodGroup = profile.getBloodGroup();
             } else {
-                session.setAttribute("blood_group", "Not specified");
+                bloodGroup = "Not specified";
             }
         }
         
-        System.out.println("User logged in: " + user.getEmail() + " (" + user.getUserType() + ")");
+        SessionUtil.createUserSession(session, user, profileImage, bloodGroup);
         
         // Redirect based on user type
-        if ("patient".equals(user.getUserType())) {
+        if (SessionUtil.isPatient(session)) {
             response.sendRedirect(request.getContextPath() + "/patient/dashboard");
-        } else if ("doctor".equals(user.getUserType())) {
+        } else if (SessionUtil.isDoctor(session)) {
             response.sendRedirect(request.getContextPath() + "/doctor/dashboard");
         } else {
             response.sendRedirect(request.getContextPath() + "/");

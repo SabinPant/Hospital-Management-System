@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import utils.SessionUtil;
 
 @WebServlet("/admin/logout")
 public class AdminLogoutServlet extends HttpServlet {
@@ -15,10 +16,8 @@ public class AdminLogoutServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate();
-        }
+    	HttpSession session = request.getSession(false);
+    	SessionUtil.destroyAdminSession(session);
         
         response.sendRedirect(request.getContextPath() + "/admin/login");
     }
