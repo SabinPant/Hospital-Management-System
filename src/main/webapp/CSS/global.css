@@ -97,32 +97,40 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--gray);
     font-size: 1.05rem;
 }
-
 /* Notification Bell */
-.notification-bell {
+.notification-bell-link {
     position: relative;
-    cursor: pointer;
-    padding: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
     color: var(--gray-dark);
+    font-size: 1.2rem;
+    text-decoration: none;
     transition: color 0.3s;
+    flex-shrink: 0;
 }
 
-.notification-bell:hover {
+.notification-bell-link:hover {
     color: var(--primary-blue);
 }
 
 .notification-badge {
     position: absolute;
-    top: -5px;
-    right: -5px;
+    top: 0;
+    right: 0;
     background: #ef4444;
     color: white;
     font-size: 0.6rem;
-    font-weight: 600;
-    padding: 2px 6px;
+    font-weight: 700;
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
-    min-width: 18px;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
 }
 
 /* Notification Dropdown */
@@ -309,7 +317,7 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 20px;
 }
 
@@ -342,7 +350,7 @@ header {
 .nav-links a {
     font-weight: 600;
     color: var(--gray-dark);
-    font-size: 1rem;
+    font-size: 0.88rem;
     padding-bottom: 4px;
     position: relative;
 }
@@ -531,15 +539,8 @@ footer {
 /* -------------------------------------------- */
 /* 6. Responsive Design */
 /* -------------------------------------------- */
-@media (max-width: 1024px) {
-    .nav-links {
-        gap: 24px;
-    }
-    
-    .section-header h2 {
-        font-size: 2rem;
-    }
-}
+/* Responsive */
+
 
 @media (max-width: 900px) {
     .container {
@@ -558,13 +559,19 @@ footer {
     
     .nav-container {
         flex-direction: column;
-        text-align: center;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 16px;
     }
     
     .nav-links {
         justify-content: center;
         flex-wrap: wrap;
-        gap: 20px;
+        gap: 16px;
+    }
+    
+    .nav-links a {
+        font-size: 0.9rem;
     }
     
     .nav-buttons {
