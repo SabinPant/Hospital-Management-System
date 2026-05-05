@@ -14,6 +14,7 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 import dao.NotificationDAO;
+import utils.SessionUtil;
 
 @WebServlet("/api/notifications")
 public class NotificationBellServlet extends HttpServlet {
@@ -30,13 +31,13 @@ public class NotificationBellServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("user_id") == null) {
+        if (!SessionUtil.isUserLoggedIn(session)) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("{\"error\": \"Not logged in\"}");
             return;
         }
         
-        int userId = (int) session.getAttribute("user_id");
+        int userId = SessionUtil.getUserId(session);
         int unreadCount = notificationDAO.getUnreadCount(userId);
         List<Map<String, Object>> notifications = notificationDAO.getUserNotifications(userId);
         

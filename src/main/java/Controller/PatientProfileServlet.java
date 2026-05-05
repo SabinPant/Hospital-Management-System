@@ -11,6 +11,7 @@ import java.util.Map;
 
 import dao.PatientDAO;
 import dao.UserDAO;
+import utils.SessionUtil;
 
 @WebServlet("/patient/profile")
 public class PatientProfileServlet extends HttpServlet {
@@ -32,18 +33,12 @@ public class PatientProfileServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("user_id") == null) {
+        if (!SessionUtil.isPatient(session)) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
         
-        String userType = (String) session.getAttribute("user_type");
-        if (!"patient".equals(userType)) {
-            response.sendRedirect(request.getContextPath() + "/login");
-            return;
-        }
-        
-        int userId = (int) session.getAttribute("user_id");
+        int userId = SessionUtil.getUserId(session);
         
         // Load profile image into session
         String profileImage = userDAO.getProfileImage(userId);

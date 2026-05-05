@@ -11,6 +11,7 @@ import jakarta.servlet.http.Part;
 import java.io.IOException;
 
 import services.UserService;
+import utils.SessionUtil;
 
 @WebServlet("/upload-image")
 @MultipartConfig(
@@ -35,20 +36,20 @@ public class ImageUploadServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("user_id") == null) {
+        if (!SessionUtil.isUserLoggedIn(session)) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
         
-        int userId = (int) session.getAttribute("user_id");
-        String userType = (String) session.getAttribute("user_type");
+        int userId = SessionUtil.getUserId(session);
+        String userType = SessionUtil.getUserType(session);
         String imageType = request.getParameter("imageType");
         Part filePart = request.getPart("image");
         
         // Check file size
         if (filePart.getSize() > 5 * 1024 * 1024) { // 5MB limit
             session.setAttribute("error", "File size exceeds 5MB limit");
-            redirectBack(request, response, userType);
+            redirectBack(request, response, session);
             return;
         }
         
@@ -57,20 +58,20 @@ public class ImageUploadServlet extends HttpServlet {
         String result = userService.handleImageUpload(userId, userType, imageType, filePart, appPath);
         
         if (result != null) {
-            session.setAttribute("profile_image", result);  // ← ADD THIS LINE
+        	SessionUtil.updateProfileImage(session, result);
             session.setAttribute("success", "Image uploaded successfully");
         } else {
             session.setAttribute("error", "Failed to upload image. Only JPG, PNG, GIF allowed");
         }
         
-        redirectBack(request, response, userType);
+        redirectBack(request, response, session);
     }
     
-    private void redirectBack(HttpServletRequest request, HttpServletResponse response, String userType) 
+    private void redirectBack(HttpServletRequest request, HttpServletResponse response, HttpSession session) 
             throws IOException {
-        if ("patient".equals(userType)) {
+        if (SessionUtil.isPatient(session)) {
             response.sendRedirect(request.getContextPath() + "/patient/profile");
-        } else if ("doctor".equals(userType)) {
+        } else if (SessionUtil.isDoctor(session)) {
             response.sendRedirect(request.getContextPath() + "/doctor/profile");
         } else {
             response.sendRedirect(request.getContextPath() + "/dashboard");

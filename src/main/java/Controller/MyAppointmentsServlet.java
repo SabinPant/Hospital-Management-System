@@ -11,6 +11,7 @@ import java.util.List;
 
 import dao.AppointmentDAO;
 import models.Appointment;
+import utils.SessionUtil;
 
 @WebServlet("/patient/appointments")
 public class MyAppointmentsServlet extends HttpServlet {
@@ -27,13 +28,13 @@ public class MyAppointmentsServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("user_id") == null) {
+        if (!SessionUtil.isUserLoggedIn(session)) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
         
         try {
-            int patientId = (int) session.getAttribute("user_id");
+            int patientId = SessionUtil.getUserId(session);
             
             // Get all appointments for this patient
             List<Appointment> appointments = appointmentDAO.getAppointmentsByPatientId(patientId);

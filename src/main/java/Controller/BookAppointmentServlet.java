@@ -12,6 +12,7 @@ import java.sql.Time;
 
 import services.AppointmentService;
 import dao.AppointmentDAO;
+import utils.SessionUtil;
 
 @WebServlet("/patient/book-appointment")
 public class BookAppointmentServlet extends HttpServlet {
@@ -31,7 +32,7 @@ public class BookAppointmentServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("user_id") == null) {
+        if (!SessionUtil.isUserLoggedIn(session)) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
@@ -48,12 +49,12 @@ public class BookAppointmentServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("user_id") == null) {
+        if (!SessionUtil.isUserLoggedIn(session)) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
         
-        int patientId = (int) session.getAttribute("user_id");
+        int patientId = SessionUtil.getUserId(session);
         
         try {
             int doctorId = Integer.parseInt(request.getParameter("doctorId"));

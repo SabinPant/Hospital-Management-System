@@ -10,6 +10,7 @@ import java.io.IOException;
 
 import dao.AppointmentDAO;
 import models.Appointment;
+import utils.SessionUtil;
 
 @WebServlet("/patient/appointment-details")
 public class AppointmentDetailsServlet extends HttpServlet {
@@ -26,7 +27,7 @@ public class AppointmentDetailsServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("user_id") == null) {
+        if (!SessionUtil.isUserLoggedIn(session)) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }

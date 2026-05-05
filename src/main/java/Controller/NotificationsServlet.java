@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import dao.NotificationDAO;
+import utils.SessionUtil;
 
 @WebServlet("/notifications")
 public class NotificationsServlet extends HttpServlet {
@@ -27,12 +28,12 @@ public class NotificationsServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("user_id") == null) {
+        if (!SessionUtil.isUserLoggedIn(session)) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
         
-        int userId = (int) session.getAttribute("user_id");
+        int userId = SessionUtil.getUserId(session);
         
         // Get data from DAO
         List<Map<String, Object>> notifications = notificationDAO.getUserNotifications(userId);
