@@ -12,7 +12,7 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 import dao.AppointmentDAO;
-
+import utils.SessionUtil;
 @WebServlet("/admin/appointment-details")
 public class AdminAppointmentDetailsServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -28,9 +28,8 @@ public class AdminAppointmentDetailsServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("admin_id") == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("{\"error\": \"Unauthorized\"}");
+        if (!SessionUtil.isAdminLoggedIn(session)) {
+            response.sendRedirect(request.getContextPath() + "/admin/login");
             return;
         }
         

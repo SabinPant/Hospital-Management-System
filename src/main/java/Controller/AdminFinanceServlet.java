@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import dao.FinanceDAO;
+import utils.SessionUtil;
 
 @WebServlet("/admin/finance")
 public class AdminFinanceServlet extends HttpServlet {
@@ -27,7 +28,7 @@ public class AdminFinanceServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("admin_id") == null) {
+        if (!SessionUtil.isAdminLoggedIn(session)) {
             response.sendRedirect(request.getContextPath() + "/admin/login");
             return;
         }

@@ -12,10 +12,15 @@ import java.util.List;
 import dao.DepartmentDAO;
 import models.Department;
 import models.User;
+import utils.SessionUtil;
 
 @WebServlet("/admin/departments")
 public class AdminDepartmentServlet extends HttpServlet {
-    private DepartmentDAO departmentDAO;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private DepartmentDAO departmentDAO;
     
     @Override
     public void init() throws ServletException {
@@ -27,7 +32,7 @@ public class AdminDepartmentServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("admin_id") == null) {
+        if (!SessionUtil.isAdminLoggedIn(session)) {
             response.sendRedirect(request.getContextPath() + "/admin/login");
             return;
         }
@@ -75,7 +80,7 @@ public class AdminDepartmentServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("admin_id") == null) {
+        if (!SessionUtil.isAdminLoggedIn(session)) {
             response.sendRedirect(request.getContextPath() + "/admin/login");
             return;
         }

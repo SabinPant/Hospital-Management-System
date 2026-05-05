@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 
 import dao.AppointmentDAO;
+import utils.SessionUtil;
+
 
 @WebServlet("/doctor/patient-details")
 public class DoctorPatientDetailsServlet extends HttpServlet {
@@ -30,18 +32,12 @@ public class DoctorPatientDetailsServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("user_id") == null) {
+        if (!SessionUtil.isDoctor(session)) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
         
-        String userType = (String) session.getAttribute("user_type");
-        if (!"doctor".equals(userType)) {
-            response.sendRedirect(request.getContextPath() + "/login");
-            return;
-        }
-        
-        int doctorId = (int) session.getAttribute("user_id");
+        int doctorId = SessionUtil.getUserId(session);
         int patientId = Integer.parseInt(request.getParameter("id"));
         String patientName = request.getParameter("name");
         

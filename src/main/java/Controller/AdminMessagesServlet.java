@@ -11,6 +11,7 @@ import java.util.List;
 
 import dao.ContactDAO;
 import models.ContactMessage;
+import utils.SessionUtil;
 
 @WebServlet("/admin/messages")
 public class AdminMessagesServlet extends HttpServlet {
@@ -27,9 +28,7 @@ public class AdminMessagesServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession(false);
-        
-        // Check if admin is logged in
-        if (session == null || session.getAttribute("admin_id") == null) {
+        if (!SessionUtil.isAdminLoggedIn(session)) {
             response.sendRedirect(request.getContextPath() + "/admin/login");
             return;
         }

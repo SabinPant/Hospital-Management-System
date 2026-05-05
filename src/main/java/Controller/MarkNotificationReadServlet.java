@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
 import dao.NotificationDAO;
+import utils.SessionUtil;
 
 @WebServlet("/notification/read")
 public class MarkNotificationReadServlet extends HttpServlet {
@@ -25,7 +26,7 @@ public class MarkNotificationReadServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("user_id") == null) {
+        if (!SessionUtil.isUserLoggedIn(session)) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }

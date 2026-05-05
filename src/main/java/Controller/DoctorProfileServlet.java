@@ -12,10 +12,15 @@ import java.util.Map;
 
 import dao.DoctorDAO;
 import dao.UserDAO;
+import utils.SessionUtil;
 
 @WebServlet("/doctor/profile")
 public class DoctorProfileServlet extends HttpServlet {
-    private DoctorDAO doctorDAO;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private DoctorDAO doctorDAO;
     private UserDAO userDAO;
     
     @Override
@@ -29,18 +34,12 @@ public class DoctorProfileServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("user_id") == null) {
+        if (!SessionUtil.isDoctor(session)) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
         
-        String userType = (String) session.getAttribute("user_type");
-        if (!"doctor".equals(userType)) {
-            response.sendRedirect(request.getContextPath() + "/login");
-            return;
-        }
-        
-        int doctorId = (int) session.getAttribute("user_id");
+        int doctorId = SessionUtil.getUserId(session);
         
         // Fetch profile image from database and update session
         String profileImage = userDAO.getProfileImage(doctorId);

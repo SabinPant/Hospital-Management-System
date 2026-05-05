@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
 import services.AppointmentService;
+import utils.SessionUtil;
 
 @WebServlet("/doctor/confirm-appointment")
 public class DoctorConfirmAppointmentServlet extends HttpServlet {
@@ -26,13 +27,14 @@ public class DoctorConfirmAppointmentServlet extends HttpServlet {
         
         HttpSession session = request.getSession(false);
         
-        if (session == null || session.getAttribute("user_id") == null) {
+        if (!SessionUtil.isUserLoggedIn(session)) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
         
-        int doctorId = (int) session.getAttribute("user_id");
-        String doctorName = (String) session.getAttribute("full_name");
+        int doctorId = SessionUtil.getUserId(session);
+        String doctorName = SessionUtil.getFullName(session);
+        
         String idParam = request.getParameter("id");
         
         if (idParam == null || idParam.isEmpty()) {

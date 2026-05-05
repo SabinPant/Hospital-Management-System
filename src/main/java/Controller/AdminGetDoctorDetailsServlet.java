@@ -12,6 +12,7 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 import dao.DoctorDAO;
+import utils.SessionUtil;
 
 @WebServlet("/admin/get-doctor-details")
 public class AdminGetDoctorDetailsServlet extends HttpServlet {
@@ -30,8 +31,8 @@ public class AdminGetDoctorDetailsServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("admin_id") == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        if (!SessionUtil.isAdminLoggedIn(session)) {
+            response.sendRedirect(request.getContextPath() + "/admin/login");
             return;
         }
         

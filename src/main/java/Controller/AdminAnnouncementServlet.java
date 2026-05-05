@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import dao.NotificationDAO;
+import utils.SessionUtil;
 
 @WebServlet("/admin/announcement")
 public class AdminAnnouncementServlet extends HttpServlet {
@@ -27,11 +28,10 @@ public class AdminAnnouncementServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("admin_id") == null) {
+        if (!SessionUtil.isAdminLoggedIn(session)) {
             response.sendRedirect(request.getContextPath() + "/admin/login");
             return;
         }
-        
         // Get previous announcements from DAO
         List<Map<String, Object>> announcements = notificationDAO.getPreviousAnnouncements();
         request.setAttribute("announcements", announcements);
@@ -45,12 +45,11 @@ public class AdminAnnouncementServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("admin_id") == null) {
+        if (!SessionUtil.isAdminLoggedIn(session)) {
             response.sendRedirect(request.getContextPath() + "/admin/login");
             return;
         }
         
-        int adminId = (int) session.getAttribute("admin_id");
         
         String sendTo = request.getParameter("sendTo");
         String type = request.getParameter("type");

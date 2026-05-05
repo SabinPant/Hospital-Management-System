@@ -10,7 +10,7 @@ import java.io.IOException;
 
 import dao.AdminDashboardDAO;
 import models.AdminDashboardData;
-
+import utils.SessionUtil;
 @WebServlet("/admin/dashboard")
 public class AdminDashboardServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -26,8 +26,7 @@ public class AdminDashboardServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession(false);
-        
-        if (session == null || session.getAttribute("admin_id") == null) {
+        if (!SessionUtil.isAdminLoggedIn(session)) {
             response.sendRedirect(request.getContextPath() + "/admin/login");
             return;
         }

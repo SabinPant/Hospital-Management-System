@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import dao.AppointmentDAO;
-
+import utils.SessionUtil;
 @WebServlet("/admin/appointments")
 public class AdminAppointmentsServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -27,7 +27,7 @@ public class AdminAppointmentsServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("admin_id") == null) {
+        if (!SessionUtil.isAdminLoggedIn(session)) {
             response.sendRedirect(request.getContextPath() + "/admin/login");
             return;
         }

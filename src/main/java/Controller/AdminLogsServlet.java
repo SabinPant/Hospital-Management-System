@@ -11,6 +11,7 @@ import java.util.List;
 
 import dao.SystemLogDAO;
 import models.SystemLog;
+import utils.SessionUtil;
 
 @WebServlet("/admin/logs")
 public class AdminLogsServlet extends HttpServlet {
@@ -28,11 +29,10 @@ public class AdminLogsServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("admin_id") == null) {
+        if (!SessionUtil.isAdminLoggedIn(session)) {
             response.sendRedirect(request.getContextPath() + "/admin/login");
             return;
         }
-        
         // Get filter parameters
         String actionFilter = request.getParameter("action");
         String userTypeFilter = request.getParameter("userType");

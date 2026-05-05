@@ -10,13 +10,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import java.sql.Timestamp;
-import dao.AdminDAO;
 import dao.UserDAO;
-import utils.DBConnection;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import utils.SessionUtil;
 @WebServlet("/admin/users")
 public class AdminUsersServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -32,7 +27,7 @@ public class AdminUsersServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("admin_id") == null) {
+        if (!SessionUtil.isAdminLoggedIn(session)) {
             response.sendRedirect(request.getContextPath() + "/admin/login");
             return;
         }
