@@ -160,7 +160,8 @@ MediLife follows a strict **Model-View-Controller (MVC)** pattern with a clear s
 
 ---
 
-## 📁 Project Structure
+## 📁 Project Structure  
+*(Only a partial view shown due to overall size being a bit too big — this is just a snippet)*
 
 ```
 Hospital-Management-System/
@@ -170,18 +171,18 @@ Hospital-Management-System/
 │       ├── java/
 │       │   ├── Controller/          # Servlets — routing only
 │       │   ├── dao/                 # Data Access Objects (SQL queries)
-│       │   ├── filter/              # Auth filters (Admin, Doctor, Patient)
+│       │   ├── filter/              # Auth filters (Admin, Doctor, Patient, logs)
 │       │   ├── models/              # Entity classes (User, Doctor, Appointment…)
 │       │   ├── services/            # Business logic layer
 │       │   └── utils/               # PasswordUtil, SessionUtil, FileUploadUtil, DBConnection
 │       │
 │       └── webapp/
 │           ├── CSS/                 # Global stylesheets
-│           ├── Public/              # Static assets (images, uploads)
+│           ├── Public/              # Static assets (images/icon for web)
 │           ├── components/          # Reusable JSP fragments (header, footer, sidebar)
 │           ├── index.jsp            # Public landing page
 │           │
-│           └── WEB-INF/
+│           └── WEB-INF/ 
 │               └── views/           # Protected JSP pages
 │                   ├── admin/
 │                   ├── doctor/
