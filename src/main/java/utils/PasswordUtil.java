@@ -1,26 +1,23 @@
 package utils;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class PasswordUtil {
     
-    // Hash password using SHA-256
+    // Hash password using BCrypt
     public static String hashPassword(String password) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] hashedBytes = md.digest(password.getBytes());
-            return Base64.getEncoder().encodeToString(hashedBytes);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return BCrypt.hashpw(password, BCrypt.gensalt(10));
     }
     
     // Verify password
     public static boolean verifyPassword(String inputPassword, String storedHash) {
-        String hashedInput = hashPassword(inputPassword);
-        return hashedInput.equals(storedHash);
+        if (storedHash == null || !storedHash.startsWith("$2a$")) {
+            return false;
+        }
+        try {
+            return BCrypt.checkpw(inputPassword, storedHash);
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

@@ -193,8 +193,7 @@ CREATE TABLE system_logs (
 
 -- Default Super Admin (password: admin123)
 INSERT INTO admins (username, email, password, full_name, role, status) 
-VALUES ('admin', 'admin@medilife.com', 'admin123', 'Super Administrator', 'super_admin', 'active');
-
+VALUES ('admin', 'admin@medilife.com', '$2a$10$aTwWCaUGFb5XFs.j9SQfn.nHQs1tw3ZONQjIyI2z0Ts1c0.6SymS2', 'Super Administrator', 'super_admin', 'active');
 -- Departments
 INSERT INTO departments (dept_code, name, description) VALUES
 ('CARD', 'Cardiology', 'Heart and cardiovascular diseases treatment'),

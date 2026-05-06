@@ -144,15 +144,14 @@
                             <span><i class="fas fa-notes-medical"></i> Patient Details</span>
                         </div>
                         <div class="form-grid">
-                            <div class="form-group">
-                                <label><i class="fas fa-calendar-alt"></i> Date of Birth</label>
-                                <input type="date" name="dob">
-                            </div>
-
-                            <div class="form-group">
-                                <label><i class="fas fa-tint"></i> Blood Group</label>
-                                <select name="bloodGroup">
-                                    <option value="">Select Blood Group</option>
+                           <div class="form-group">
+    <label><i class="fas fa-calendar-alt"></i> Date of Birth <span class="req">*</span></label>
+    <input type="date" name="dob" required>
+</div>
+<div class="form-group">
+    <label><i class="fas fa-tint"></i> Blood Group <span class="req">*</span></label>
+    <select name="bloodGroup" required>
+        <option value="">Select Blood Group</option>
                                     <option value="A+">A+</option>
                                     <option value="A-">A-</option>
                                     <option value="B+">B+</option>
@@ -164,10 +163,10 @@
                                 </select>
                             </div>
 
-                            <div class="form-group">
-                                <label><i class="fas fa-phone-alt"></i> Emergency Contact</label>
-                                <input type="tel" name="emergencyContact" placeholder="Emergency phone number">
-                            </div>
+                        <div class="form-group">
+    <label><i class="fas fa-phone-alt"></i> Emergency Contact <span class="req">*</span></label>
+    <input type="tel" name="emergencyContact" placeholder="Emergency phone number" required>
+</div>
 
                             <div class="form-group">
                                 <label><i class="fas fa-camera"></i> Profile Picture</label>

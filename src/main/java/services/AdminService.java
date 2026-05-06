@@ -2,6 +2,7 @@ package services;
 
 import dao.AdminDAO;
 import models.Admin;
+import utils.PasswordUtil;
 
 public class AdminService {
     private AdminDAO adminDAO;
@@ -23,8 +24,8 @@ public class AdminService {
             return null;
         }
         
-        // Verify password
-        if (!password.equals(admin.getPassword())) {
+     // Verify password
+        if (!PasswordUtil.verifyPassword(password, admin.getPassword())) {
             return null;
         }
         

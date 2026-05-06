@@ -105,7 +105,7 @@ public class UserService {
         return patientDAO.savePatientProfile(profile);
     }
 
- /// Business logic: Register doctor profile
+ ///  logic: Register doctor profile
     public boolean registerDoctorProfile(int userId, String specialization, String otherSpecialization,
             String qualification, String licenseNumber, 
             int experienceYears, double consultationFee, String bio, Part licenseImagePart, String appPath) {

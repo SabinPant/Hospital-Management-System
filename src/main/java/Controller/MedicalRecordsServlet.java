@@ -7,34 +7,39 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.List;
 
-import dao.AdminDashboardDAO;
-import models.AdminDashboardData;
+import dao.AppointmentDAO;
+import models.Appointment;
 import utils.SessionUtil;
-@WebServlet("/admin/dashboard")
-public class AdminDashboardServlet extends HttpServlet {
+
+@WebServlet("/patient/medical-records")
+public class MedicalRecordsServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private AdminDashboardDAO dashboardDAO;
+    private AppointmentDAO appointmentDAO;
     
     @Override
     public void init() throws ServletException {
-        dashboardDAO = new AdminDashboardDAO();
+        appointmentDAO = new AppointmentDAO();
     }
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
         HttpSession session = request.getSession(false);
-        if (!SessionUtil.isAdminLoggedIn(session)) {
-            response.sendRedirect(request.getContextPath() + "/admin/login");
+        if (!SessionUtil.isPatient(session)) {
+            response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
         
-        // Fetch real data from database
-        AdminDashboardData dashboardData = dashboardDAO.getDashboardData();
-        request.setAttribute("dashboardData", dashboardData);
+        int patientId = SessionUtil.getUserId(session);
         
-        request.getRequestDispatcher("/WEB-INF/views/admin/admin-dashboard.jsp")
+        // Get all completed appointments (no limit)
+        List<Appointment> records = appointmentDAO.getCompletedAppointmentsByPatientId(patientId, 100);
+        request.setAttribute("medicalRecords", records);
+        
+        request.getRequestDispatcher("/WEB-INF/views/patient/medical-records.jsp")
                .forward(request, response);
     }
 }

@@ -106,7 +106,7 @@
                     </c:choose>
                 </div>
                 
-            <!-- Recent Medical History -->
+           <!-- Recent Medical History -->
 <div class="section-card">
     <div class="section-header">
         <h2><i class="fas fa-notes-medical"></i> Recent Medical History</h2>
@@ -118,16 +118,50 @@
             <div class="history-list">
                 <c:forEach var="record" items="${medicalHistory}">
                     <div class="history-item">
-                        <div class="history-header">
-                            <h4>Dr. ${record.doctorName} - ${record.doctorSpecialization}</h4>
-                            <span class="date"><fmt:formatDate value="${record.appointmentDate}" pattern="MMM dd, yyyy"/></span>
+                        
+                        <!-- Top: Doctor Info -->
+                        <div class="history-item-top">
+                            <div class="history-doctor-icon">
+                                <i class="fas fa-user-md"></i>
+                            </div>
+                            <div class="history-doctor-info">
+                                <h4>Dr. ${record.doctorName}</h4>
+                                <span>${record.doctorSpecialization}</span>
+                            </div>
                         </div>
-                        <div class="history-diagnosis">
-                            <strong>Diagnosis:</strong> ${record.diagnosis != null ? record.diagnosis : 'Not recorded'}
+                        
+                        <!-- Body: Diagnosis & Prescription -->
+                        <div class="history-item-body">
+                            <div class="history-field">
+                                <div class="history-field-label">
+                                    <i class="fas fa-stethoscope"></i> Diagnosis
+                                </div>
+                                <div class="history-field-value">
+                                    ${record.diagnosis != null ? record.diagnosis : 'Not recorded'}
+                                </div>
+                            </div>
+                            
+                            <div class="history-field">
+                                <div class="history-field-label">
+                                    <i class="fas fa-prescription-bottle-alt"></i> Prescription
+                                </div>
+                                <div class="history-field-value">
+                                    ${record.prescription != null ? record.prescription : 'Not recorded'}
+                                </div>
+                            </div>
                         </div>
-                        <div class="history-prescription">
-                            <strong>Prescription:</strong> ${record.prescription != null ? record.prescription : 'Not recorded'}
+                        
+                        <!-- Footer: Date & ID -->
+                        <div class="history-item-footer">
+                            <span class="history-date">
+                                <i class="fas fa-calendar"></i>
+                                <fmt:formatDate value="${record.appointmentDate}" pattern="MMM dd, yyyy"/>
+                            </span>
+                            <span class="history-appt-id">
+                                <i class="fas fa-hashtag"></i> ${record.appointmentId}
+                            </span>
                         </div>
+                        
                     </div>
                 </c:forEach>
             </div>

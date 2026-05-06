@@ -124,6 +124,23 @@ public class RegisterServlet extends HttpServlet {
                 }
             }
             
+         // Validate patient-specific required fields
+            if (dob == null || dob.trim().isEmpty()) {
+                request.setAttribute("error", "Date of Birth is required for patient registration");
+                request.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(request, response);
+                return;
+            }
+            if (bloodGroup == null || bloodGroup.trim().isEmpty()) {
+                request.setAttribute("error", "Blood Group is required for patient registration");
+                request.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(request, response);
+                return;
+            }
+            if (emergencyContact == null || emergencyContact.trim().isEmpty()) {
+                request.setAttribute("error", "Emergency Contact is required for patient registration");
+                request.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(request, response);
+                return;
+            }
+            
             boolean profileSaved = userService.registerPatientProfile(user.getId(), dob, bloodGroup, 
                                                                        emergencyContact, medicalHistory, allergies);
             

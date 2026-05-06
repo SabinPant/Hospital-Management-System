@@ -525,6 +525,143 @@
     margin-top: 5px;
 }
 
+/* ============================================
+   Medical History Cards — Improved Layout
+   ============================================ */
+
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.history-item {
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid #e8edf2;
+    overflow: hidden;
+    transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.history-item:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    border-color: #bfdbfe;
+}
+
+.history-item-top {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 20px;
+    background: #f8fafc;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.history-doctor-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: #e0f2fe;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.history-doctor-icon i {
+    font-size: 1.2rem;
+    color: #0a5c8e;
+}
+
+.history-doctor-info h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0 0 3px;
+}
+
+.history-doctor-info span {
+    font-size: 0.75rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.history-item-body {
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.history-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.history-field-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #0a5c8e;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.history-field-label i {
+    font-size: 0.7rem;
+}
+
+.history-field-value {
+    font-size: 0.88rem;
+    color: #334155;
+    line-height: 1.7;
+    padding-left: 0;
+}
+
+.history-item-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background: #fafafa;
+    border-top: 1px solid #f1f5f9;
+}
+
+.history-date {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #0a5c8e;
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.history-appt-id {
+    font-size: 0.7rem;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+@media (max-width: 600px) {
+    .history-item-body {
+        padding: 14px 16px;
+    }
+    
+    .history-item-top {
+        padding: 14px 16px;
+    }
+    
+    .history-item-footer {
+        flex-direction: column;
+        gap: 6px;
+        align-items: flex-start;
+    }
+}
+
+
 /* Responsive */
 @media (max-width: 1024px) {
     .dashboard-layout {
