@@ -134,17 +134,7 @@
 
 MediLife follows a strict **Model-View-Controller (MVC)** pattern with a clear separation of concerns across every layer.
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                        REQUEST LIFECYCLE                        │
-│                                                                 │
-│   Browser → Filter → Controller → Service → DAO → Database     │
-│                           ↓                                     │
-│                         Model                                   │
-│                           ↓                                     │
-│                    JSP View (Response)                          │
-└─────────────────────────────────────────────────────────────────┘
-```
+![MediLife System Flow & Architecture](src/main/webapp/Public/images/architecture-diagram.png)
 
 | Layer | Location | Responsibility |
 |---|---|---|
