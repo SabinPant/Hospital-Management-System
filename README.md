@@ -115,7 +115,6 @@
 - Full notification history page
 
 </details>
-*(Only a snippet there are soo many features it not possible to add everythin in here)*
 <details>
 <summary><b>📄 Doctor Portfolios & File Uploads</b></summary>
 
@@ -127,6 +126,8 @@
 - Portable file storage (works across machines)
 
 </details>
+
+*(Only a snippet there are soo many features it not possible to add everythin in here)*
 
 ---
 
