@@ -24,7 +24,7 @@
     <version>0.4</version>
 </dependency>
     
-    <!-- Gson for JSON processing -->
+    <!-- Gson: Backend JSON serialization for API responses (NotificationBellServlet) -->
 <dependency>
     <groupId>com.google.code.gson</groupId>
     <artifactId>gson</artifactId>
