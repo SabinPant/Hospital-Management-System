@@ -7,21 +7,6 @@
 <c:set var="userRole" value="${sessionScope.user_type}" />
 <c:set var="firstName" value="${sessionScope.full_name != null ? sessionScope.full_name : ''}" />
 
-<%-- Scriptlet only for DAO call (JSTL cannot call Java methods directly) --%>
-<%
-    int unreadCount = 0;
-    if (session.getAttribute("user_id") != null) {
-        try {
-            dao.NotificationDAO notifDAO = new dao.NotificationDAO();
-            int userId = (int) session.getAttribute("user_id");
-            unreadCount = notifDAO.getUnreadCount(userId);
-        } catch (Exception e) {
-            unreadCount = 0;
-        }
-    }
-    pageContext.setAttribute("unreadCount", unreadCount);
-%>
-
 <!-- ==================== TOP EMERGENCY BAR ==================== -->
 <div class="top-emergency-bar">
     <div class="container emergency-top">

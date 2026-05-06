@@ -11,14 +11,17 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import dao.NotificationDAO;
 import utils.SessionUtil;
 
 @WebFilter("/patient/*")
 public class PatientAuthFilter implements Filter {
     
+    private NotificationDAO notificationDAO;
+    
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        // Initialization if needed
+        notificationDAO = new NotificationDAO();
     }
     
     @Override
@@ -42,12 +45,18 @@ public class PatientAuthFilter implements Filter {
             return;
         }
         
-        // Continue to the requested page
+        // Set unread notification count for header
+        try {
+            int userId = SessionUtil.getUserId(session);
+            int unreadCount = notificationDAO.getUnreadCount(userId);
+            session.setAttribute("unreadCount", unreadCount);
+        } catch (Exception e) {
+            session.setAttribute("unreadCount", 0);
+        }
+        
         chain.doFilter(request, response);
     }
     
     @Override
-    public void destroy() {
-        // Cleanup if needed
-    }
+    public void destroy() {}
 }
