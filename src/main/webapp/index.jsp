@@ -14,14 +14,12 @@
     
     <title>MediLife Hospital | Advanced Care</title>
 
-    <!-- External fonts and icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:..." rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+   
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Project-specific styles -->
-    <link rel="stylesheet" href="CSS/global.css">
-    <link rel="stylesheet" href="CSS/index.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/global.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/index.css">
 
     <!-- SweetAlert for modern popup alerts -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -32,7 +30,7 @@
     <!-- Reusable header component -->
     <jsp:include page="components/header.jsp" />
 
-    <!-- ================= HERO SECTION ================= -->
+                     <!-- HERO SECTION -->
     <!-- 
         Main banner introducing hospital.
         Contains CTA (Call To Action) for booking appointment.

@@ -139,7 +139,6 @@ return doctorDAO.saveDoctorProfile(profile);
 }
     
     
-    // Business logic: Authenticate user
     public User authenticate(String email, String password) {
         User user = userDAO.getUserByEmail(email);
         
@@ -147,23 +146,14 @@ return doctorDAO.saveDoctorProfile(profile);
             return null;
         }
         
-        // Check if account is locked
-        if ("locked".equals(user.getStatus())) {
-            return null;
-        }
-        
-        // Check if account is inactive
-        if ("inactive".equals(user.getStatus())) {
-            return null;
-        }
-        
-        // Verify password
+        // Verify password first
         boolean passwordValid = PasswordUtil.verifyPassword(password, user.getPassword());
         
         if (!passwordValid) {
-            return null;
+            return null; // Wrong password — don't reveal account status
         }
         
+        // Password is correct — return user so servlet can check status
         return user;
     }
     

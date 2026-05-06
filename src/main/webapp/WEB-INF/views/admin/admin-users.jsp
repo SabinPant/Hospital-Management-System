@@ -9,25 +9,20 @@
     <title>User Management | Admin Panel</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/global.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/global.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/admin-users.css">
-            <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/admin.css">
-    
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/admin.css">
 </head>
 <body>
 
 <div class="admin-container">
-    <!-- Sidebar -->
     <div class="admin-sidebar">
-        
-<jsp:include page="/components/admin-sidebar.jsp">
-    <jsp:param name="page" value="users" />
-</jsp:include>
+        <jsp:include page="/components/admin-sidebar.jsp">
+            <jsp:param name="page" value="users" />
+        </jsp:include>
     </div>
 
-    <!-- Main Content -->
     <div class="admin-main">
-        <!-- Top Bar -->
         <div class="admin-topbar">
             <h1><i class="fas fa-users"></i> User Management</h1>
             <div class="admin-user">
@@ -36,26 +31,19 @@
             </div>
         </div>
         
-        <!-- Success/Error Messages -->
         <c:if test="${not empty param.success}">
-            <div class="alert alert-success">
-                <i class="fas fa-check-circle"></i> ${param.success}
-            </div>
+            <div class="alert alert-success"><i class="fas fa-check-circle"></i> ${param.success}</div>
         </c:if>
         <c:if test="${not empty param.error}">
-            <div class="alert alert-error">
-                <i class="fas fa-exclamation-circle"></i> ${param.error}
-            </div>
+            <div class="alert alert-error"><i class="fas fa-exclamation-circle"></i> ${param.error}</div>
         </c:if>
         
-        <!-- Filters and Search -->
         <div class="filter-bar">
             <div class="filter-buttons">
                 <a href="${pageContext.request.contextPath}/admin/users" class="filter-btn ${empty currentFilter ? 'active' : ''}">All</a>
                 <a href="${pageContext.request.contextPath}/admin/users?filter=patient" class="filter-btn ${currentFilter == 'patient' ? 'active' : ''}">Patients</a>
                 <a href="${pageContext.request.contextPath}/admin/users?filter=doctor" class="filter-btn ${currentFilter == 'doctor' ? 'active' : ''}">Doctors</a>
             </div>
-            
             <form method="get" action="${pageContext.request.contextPath}/admin/users" class="search-form">
                 <c:if test="${not empty currentFilter}">
                     <input type="hidden" name="filter" value="${currentFilter}">
@@ -65,7 +53,6 @@
             </form>
         </div>
         
-        <!-- Users Table -->
         <div class="dashboard-card">
             <c:choose>
                 <c:when test="${not empty users}">
@@ -83,9 +70,20 @@
                         </thead>
                         <tbody>
                             <c:forEach var="user" items="${users}">
-                                <tr>
+                                <tr class="user-row"
+                                    data-id="${user.id}"
+                                    data-user-id="${user.user_id}"
+                                    data-username="${user.username}"
+                                    data-email="${user.email}"
+                                    data-fullname="${user.full_name}"
+                                    data-phone="${user.phone}"
+                                    data-usertype="${user.user_type}"
+                                    data-status="${user.status}"
+                                    data-specialization="${user.specialization}"
+                                    data-consultationfee="${user.consultation_fee}"
+                                    data-bloodgroup="${user.blood_group}">
                                     <td>${user.user_id}</td>
-                                    <td>${user.full_name} (<small>${user.username}</small>)</td>
+                                    <td>${user.full_name} <small>(${user.username})</small></td>
                                     <td>${user.email}</td>
                                     <td>
                                         <c:choose>
@@ -100,8 +98,7 @@
                                     <td>
                                         <c:choose>
                                             <c:when test="${user.user_type == 'doctor'}">
-                                                ${user.specialization} <br>
-                                                <small>Fee: Rs ${user.consultation_fee}</small>
+                                                ${user.specialization}<br><small>Fee: Rs ${user.consultation_fee}</small>
                                             </c:when>
                                             <c:otherwise>
                                                 Blood: ${user.blood_group != null ? user.blood_group : 'Not specified'}
@@ -122,16 +119,9 @@
                                         </c:choose>
                                     </td>
                                     <td class="action-buttons">
-                                        <c:if test="${user.status == 'active'}">
-                                            <button class="btn-lock" onclick="lockUser(${user.id})">
-                                                <i class="fas fa-lock"></i> Lock
-                                            </button>
-                                        </c:if>
-                                        <c:if test="${user.status == 'locked'}">
-                                            <button class="btn-unlock" onclick="unlockUser(${user.id})">
-                                                <i class="fas fa-unlock-alt"></i> Unlock
-                                            </button>
-                                        </c:if>
+                                        <button class="btn-view-details" onclick="openUserModal(this)">
+                                            <i class="fas fa-eye"></i> View
+                                        </button>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -149,42 +139,126 @@
     </div>
 </div>
 
+<!-- ==================== USER DETAIL MODAL ==================== -->
+<div id="userModal" class="modal-overlay" style="display:none;">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h2 id="modalTitle"><i class="fas fa-user"></i> User Details</h2>
+            <button class="modal-close" onclick="closeUserModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <!-- Basic Info -->
+            <div class="modal-section">
+                <h3><i class="fas fa-info-circle"></i> Basic Information</h3>
+                <div class="modal-grid">
+                    <div class="modal-field"><label>Full Name</label><span id="mFullName">-</span></div>
+                    <div class="modal-field"><label>Username</label><span id="mUsername">-</span></div>
+                    <div class="modal-field"><label>User ID</label><span id="mUserId">-</span></div>
+                    <div class="modal-field"><label>Email</label><span id="mEmail">-</span></div>
+                    <div class="modal-field"><label>Phone</label><span id="mPhone">-</span></div>
+                    <div class="modal-field"><label>Type</label><span id="mType">-</span></div>
+                    <div class="modal-field"><label>Status</label><span id="mStatus">-</span></div>
+                    <div class="modal-field"><label>Blood Group</label><span id="mBloodGroup">-</span></div>
+                </div>
+            </div>
+            
+            <!-- Doctor Section (hidden for patients) -->
+            <div class="modal-section" id="doctorSection" style="display:none;">
+                <h3><i class="fas fa-stethoscope"></i> Professional Details</h3>
+                <div class="modal-grid">
+                    <div class="modal-field"><label>Specialization</label><span id="mSpecialization">-</span></div>
+                    <div class="modal-field"><label>Consultation Fee</label><span id="mConsultationFee">-</span></div>
+                </div>
+            </div>
+            
+            <!-- Actions -->
+            <div class="modal-actions">
+                <form id="lockForm" method="POST" action="${pageContext.request.contextPath}/admin/lock-user" style="display:inline;">
+                    <input type="hidden" name="id" id="lockUserId">
+                    <input type="hidden" name="reason" id="lockReason">
+                    <button type="button" class="btn-lock" id="btnLock" onclick="handleLock()">
+                        <i class="fas fa-lock"></i> Lock Account
+                    </button>
+                </form>
+                <form id="unlockForm" method="POST" action="${pageContext.request.contextPath}/admin/unlock-user" style="display:inline;">
+                    <input type="hidden" name="id" id="unlockUserId">
+                    <button type="button" class="btn-unlock" id="btnUnlock" onclick="handleUnlock()">
+                        <i class="fas fa-unlock-alt"></i> Unlock Account
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
-    function lockUser(userId) {
-        let reason = prompt('Please enter reason for locking this account:');
+    // Open modal - reads data from the clicked row's data attributes
+    function openUserModal(btn) {
+        var row = btn.closest('.user-row');
+        
+        // Read basic info
+        document.getElementById('mFullName').textContent = row.getAttribute('data-fullname') || '-';
+        document.getElementById('mUsername').textContent = row.getAttribute('data-username') || '-';
+        document.getElementById('mUserId').textContent = row.getAttribute('data-user-id') || '-';
+        document.getElementById('mEmail').textContent = row.getAttribute('data-email') || '-';
+        document.getElementById('mPhone').textContent = row.getAttribute('data-phone') || '-';
+        document.getElementById('mType').textContent = row.getAttribute('data-usertype') || '-';
+        document.getElementById('mStatus').textContent = row.getAttribute('data-status') || '-';
+        document.getElementById('mBloodGroup').textContent = row.getAttribute('data-bloodgroup') || 'Not specified';
+        
+        var userType = row.getAttribute('data-usertype');
+        var status = row.getAttribute('data-status');
+        
+        // Show/hide doctor section
+        if (userType === 'doctor') {
+            document.getElementById('doctorSection').style.display = 'block';
+            document.getElementById('mSpecialization').textContent = row.getAttribute('data-specialization') || '-';
+            document.getElementById('mConsultationFee').textContent = 'Rs ' + (row.getAttribute('data-consultationfee') || '0');
+        } else {
+            document.getElementById('doctorSection').style.display = 'none';
+        }
+        
+        // Show/hide lock/unlock buttons based on status
+        var userId = row.getAttribute('data-id');
+        document.getElementById('lockUserId').value = userId;
+        document.getElementById('unlockUserId').value = userId;
+        
+        if (status === 'locked') {
+            document.getElementById('btnLock').style.display = 'none';
+            document.getElementById('btnUnlock').style.display = 'inline-block';
+        } else {
+            document.getElementById('btnLock').style.display = 'inline-block';
+            document.getElementById('btnUnlock').style.display = 'none';
+        }
+        
+        document.getElementById('userModal').style.display = 'flex';
+    }
+    
+    function closeUserModal() {
+        document.getElementById('userModal').style.display = 'none';
+    }
+    
+    function handleLock() {
+        var reason = prompt('Please enter reason for locking this account:');
         if (reason !== null && reason.trim() !== '') {
-            var form = document.createElement('form');
-            form.method = 'POST';
-            form.action = '${pageContext.request.contextPath}/admin/lock-user';
-            var inputId = document.createElement('input');
-            inputId.type = 'hidden';
-            inputId.name = 'id';
-            inputId.value = userId;
-            var inputReason = document.createElement('input');
-            inputReason.type = 'hidden';
-            inputReason.name = 'reason';
-            inputReason.value = reason;
-            form.appendChild(inputId);
-            form.appendChild(inputReason);
-            document.body.appendChild(form);
-            form.submit();
+            document.getElementById('lockReason').value = reason;
+            document.getElementById('lockForm').submit();
         } else if (reason !== null) {
             alert('Please provide a reason for locking');
         }
     }
     
-    function unlockUser(userId) {
-        if(confirm('Unlock this user account?')) {
-            var form = document.createElement('form');
-            form.method = 'POST';
-            form.action = '${pageContext.request.contextPath}/admin/unlock-user';
-            var input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'id';
-            input.value = userId;
-            form.appendChild(input);
-            document.body.appendChild(form);
-            form.submit();
+    function handleUnlock() {
+        if (confirm('Unlock this user account?')) {
+            document.getElementById('unlockForm').submit();
+        }
+    }
+    
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        var modal = document.getElementById('userModal');
+        if (event.target === modal) {
+            closeUserModal();
         }
     }
 </script>

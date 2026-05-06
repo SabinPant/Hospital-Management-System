@@ -74,6 +74,62 @@ public class UserDAO {
         }
         return null;
     }
+    
+ // Get full user details for admin modal (patient or doctor)
+    public Map<String, Object> getUserFullDetails(int userId) {
+        Map<String, Object> user = new HashMap<>();
+        String query = "SELECT u.*, " +
+                       "dp.specialization, dp.qualification, dp.license_number, " +
+                       "dp.experience_years, dp.consultation_fee, dp.bio, dp.approval_status, " +
+                       "pp.date_of_birth, pp.blood_group, pp.emergency_contact, " +
+                       "pp.medical_history, pp.allergies " +
+                       "FROM users u " +
+                       "LEFT JOIN doctor_profiles dp ON u.id = dp.user_id " +
+                       "LEFT JOIN patient_profiles pp ON u.id = pp.user_id " +
+                       "WHERE u.id = ?";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                user.put("id", rs.getInt("id"));
+                user.put("user_id", rs.getString("user_id"));
+                user.put("username", rs.getString("username"));
+                user.put("email", rs.getString("email"));
+                user.put("full_name", rs.getString("full_name"));
+                user.put("gender", rs.getString("gender"));
+                user.put("phone", rs.getString("phone"));
+                user.put("address", rs.getString("address"));
+                user.put("user_type", rs.getString("user_type"));
+                user.put("status", rs.getString("status"));
+                user.put("lock_reason", rs.getString("lock_reason"));
+                user.put("locked_at", rs.getTimestamp("locked_at"));
+                user.put("created_at", rs.getTimestamp("created_at"));
+                // Doctor fields
+                user.put("specialization", rs.getString("specialization"));
+                user.put("qualification", rs.getString("qualification"));
+                user.put("license_number", rs.getString("license_number"));
+                user.put("experience_years", rs.getInt("experience_years"));
+                user.put("consultation_fee", rs.getDouble("consultation_fee"));
+                user.put("bio", rs.getString("bio"));
+                user.put("approval_status", rs.getString("approval_status"));
+                // Patient fields
+                user.put("date_of_birth", rs.getDate("date_of_birth"));
+                user.put("blood_group", rs.getString("blood_group"));
+                user.put("emergency_contact", rs.getString("emergency_contact"));
+                user.put("medical_history", rs.getString("medical_history"));
+                user.put("allergies", rs.getString("allergies"));
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error getting user full details: " + e.getMessage());
+        }
+        
+        return user;
+    }
 
     // Shared mapper — single place to update if columns change
     private User mapUser(ResultSet rs) throws SQLException {
@@ -157,6 +213,7 @@ public class UserDAO {
         }
         return false;
     }
+    
 
     // Get doctor approval status
     public String getDoctorApprovalStatus(int userId) {
