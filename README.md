@@ -285,6 +285,6 @@ Always run `schema.sql` on a fresh setup. It creates all tables, constraints, in
 
 <div align="center">
 
-Made with ❤️ for better healthcare management by Sabin Pant
+Made with ❤️ for better healthcare management by Sabin Team
 
 </div>
