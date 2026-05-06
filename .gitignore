@@ -14,5 +14,8 @@ target/
 .DS_Store
 Thumbs.db
 
-# Tomcat
-apache-tomcat-*
+# IDE
+.idea/
+*.iml
+.vscode/
+nbproject/
