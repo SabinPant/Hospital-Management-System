@@ -191,7 +191,8 @@ CREATE TABLE system_logs (
 -- INSERT DEFAULT DATA
 -- ============================================
 
--- Default Super Admin (password: admin123)
+-- Default Super Admin (login with username: admin, password: admin123)
+-- Password is stored as BCrypt hash for security
 INSERT INTO admins (username, email, password, full_name, role, status) 
 VALUES ('admin', 'admin@medilife.com', '$2a$10$aTwWCaUGFb5XFs.j9SQfn.nHQs1tw3ZONQjIyI2z0Ts1c0.6SymS2', 'Super Administrator', 'super_admin', 'active');
 -- Departments
