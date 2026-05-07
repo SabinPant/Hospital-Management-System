@@ -21,6 +21,10 @@ public class Appointment {
     private Timestamp updatedAt;
     private String patientEmail;
     private String patientPhone;
+    private String requestType;         // 'direct' or 'admin_assigned'
+    private String problemDescription;  // Patient's reason for visit
+    private Integer assignedBy;         // Admin who assigned the doctor
+    private String doctorNotes;         // Doctor's rejection reason or notes
 
     public Appointment() {
         // Default constructor
@@ -90,6 +94,18 @@ public class Appointment {
 
     public String getPatientPhone() { return patientPhone; }
     public void setPatientPhone(String patientPhone) { this.patientPhone = patientPhone; }
+    
+    public String getRequestType() { return requestType; }
+    public void setRequestType(String requestType) { this.requestType = requestType; }
+    
+    public String getProblemDescription() { return problemDescription; }
+    public void setProblemDescription(String problemDescription) { this.problemDescription = problemDescription; }
+    
+    public Integer getAssignedBy() { return assignedBy; }
+    public void setAssignedBy(Integer assignedBy) { this.assignedBy = assignedBy; }
+    
+    public String getDoctorNotes() { return doctorNotes; }
+    public void setDoctorNotes(String doctorNotes) { this.doctorNotes = doctorNotes; }
     
     // Display fields
     public String getDoctorName() { return doctorName; }

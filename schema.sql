@@ -99,23 +99,29 @@ CREATE TABLE departments (
 -- 6. APPOINTMENTS TABLE
 -- ============================================
 DROP TABLE IF EXISTS appointments;
+DROP TABLE IF EXISTS appointments;
 CREATE TABLE appointments (
     id INT PRIMARY KEY AUTO_INCREMENT,
     appointment_id VARCHAR(20) NOT NULL UNIQUE,
     patient_id INT NOT NULL,
-    doctor_id INT NOT NULL,
+    doctor_id INT NULL,
     appointment_date DATE NOT NULL,
     appointment_time TIME NOT NULL,
-    status ENUM('pending', 'confirmed', 'completed', 'cancelled', 'rescheduled') DEFAULT 'pending',
+    status ENUM('pending', 'confirmed', 'completed', 'cancelled', 'rescheduled', 'admin_assigned') DEFAULT 'pending',
+    request_type ENUM('direct', 'admin_assigned') DEFAULT 'direct',
     symptoms TEXT,
+    problem_description TEXT,
     diagnosis TEXT,
     prescription TEXT,
+    doctor_notes TEXT,
     notes TEXT,
     cancellation_reason TEXT,
+    assigned_by INT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (patient_id) REFERENCES users(id),
-    FOREIGN KEY (doctor_id) REFERENCES users(id)
+    FOREIGN KEY (doctor_id) REFERENCES users(id),
+    FOREIGN KEY (assigned_by) REFERENCES admins(id)
 );
 
 -- ============================================

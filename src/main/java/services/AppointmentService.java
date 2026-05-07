@@ -123,14 +123,11 @@ public class AppointmentService {
         
         // Business rule: Cannot book appointment for past dates (allow today and future)
         if (appointmentLocalDate.isBefore(today)) {
-            System.out.println("Cannot book appointment for past dates");
             return false;
         }
         
         // Create appointment
-        Appointment appointment = new Appointment(patientId, doctorId, appointmentDate, appointmentTime, symptoms);
-        appointment.setAppointmentId(appointmentDAO.generateAppointmentId());
-        
+        Appointment appointment = new Appointment(patientId, doctorId, appointmentDate, appointmentTime, symptoms);        
         boolean saved = appointmentDAO.saveAppointment(appointment);
         
         if (saved) {
@@ -141,6 +138,44 @@ public class AppointmentService {
         
         return saved;
     }
+    
+ // Business logic: Submit appointment request (admin-assigned flow)
+    public boolean bookAppointmentRequest(int patientId, Date appointmentDate, Time appointmentTime, 
+            String problemDescription, String symptoms) {
+
+LocalDate today = LocalDate.now();
+LocalDate appointmentLocalDate = appointmentDate.toLocalDate();
+
+if (appointmentLocalDate.isBefore(today)) {
+return false;
+}
+
+
+if (problemDescription == null || problemDescription.trim().isEmpty()) {
+return false;
+}
+
+
+Appointment appointment = new Appointment();
+
+appointment.setPatientId(patientId);
+appointment.setDoctorId(0);
+appointment.setAppointmentDate(appointmentDate);
+appointment.setAppointmentTime(appointmentTime);
+appointment.setStatus("admin_assigned");
+appointment.setRequestType("admin_assigned");
+appointment.setSymptoms(symptoms);
+appointment.setProblemDescription(problemDescription);
+appointment.setAppointmentId(appointmentDAO.generateAppointmentId());
+boolean saved = appointmentDAO.saveAppointment(appointment);
+
+if (saved) {
+notificationDAO.addNotification(patientId, "Appointment Request Submitted", 
+"Your appointment request has been submitted.", "info");
+}
+
+return saved;
+}
     
  // Get all approved doctors (for booking page)
     public List<Appointment> getAllDoctors() {

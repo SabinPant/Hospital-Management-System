@@ -39,7 +39,6 @@ public class AppointmentDAO {
 	        
 	        int nextNumber = lastNumber + 1;
 	        String newId = String.format("APT-%d-%04d", currentYear, nextNumber);
-	        System.out.println("Generated new appointment ID: " + newId);
 	        return newId;
 	        
 	    } catch (SQLException e) {
@@ -48,40 +47,129 @@ public class AppointmentDAO {
 	    }
 	}
     
-    // Save appointment
-    public boolean saveAppointment(Appointment appointment) {
-        String query = "INSERT INTO appointments (appointment_id, patient_id, doctor_id, appointment_date, appointment_time, status, symptoms) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            
-            pstmt.setString(1, appointment.getAppointmentId());
-            pstmt.setInt(2, appointment.getPatientId());
-            pstmt.setInt(3, appointment.getDoctorId());
-            pstmt.setDate(4, appointment.getAppointmentDate());
-            pstmt.setTime(5, appointment.getAppointmentTime());
-            pstmt.setString(6, appointment.getStatus());
-            pstmt.setString(7, appointment.getSymptoms());
-            
-            int rowsAffected = pstmt.executeUpdate();
-            
-            if (rowsAffected > 0) {
-                try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        appointment.setId(generatedKeys.getInt(1));
-                    }
-                }
-                System.out.println("Appointment saved: " + appointment.getAppointmentId());
-                return true;
-            }
-            
-        } catch (SQLException e) {
-            System.err.println("Error saving appointment: " + e.getMessage());
-            e.printStackTrace();
-        }
-        
-        return false;
-    }
+	public boolean saveAppointment(Appointment appointment) {
+	    String query = "INSERT INTO appointments (appointment_id, patient_id, doctor_id, appointment_date, appointment_time, status, request_type, symptoms, problem_description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	    
+	    
+	    try (Connection conn = DBConnection.getConnection();
+	         PreparedStatement pstmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+	        
+	        pstmt.setString(1, appointment.getAppointmentId());
+	        pstmt.setInt(2, appointment.getPatientId());
+	        
+	        if (appointment.getDoctorId() > 0) {
+	            pstmt.setInt(3, appointment.getDoctorId());
+	        } else {
+	            pstmt.setNull(3, java.sql.Types.INTEGER);
+	        }
+	        
+	        pstmt.setDate(4, appointment.getAppointmentDate());
+	        pstmt.setTime(5, appointment.getAppointmentTime());
+	        pstmt.setString(6, appointment.getStatus());
+	        pstmt.setString(7, appointment.getRequestType() != null ? appointment.getRequestType() : "direct");
+	        pstmt.setString(8, appointment.getSymptoms());
+	        pstmt.setString(9, appointment.getProblemDescription());
+	        
+	        
+	        int rowsAffected = pstmt.executeUpdate();
+	        
+	        if (rowsAffected > 0) {
+	            try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+	                if (generatedKeys.next()) {
+	                    appointment.setId(generatedKeys.getInt(1));
+	                }
+	            }
+	            return true;
+	        }
+	        
+	    } catch (SQLException e) {
+	        System.err.println("!!! SQL ERROR !!!");
+	        System.err.println("Message: " + e.getMessage());
+	        System.err.println("State: " + e.getSQLState());
+	        System.err.println("Code: " + e.getErrorCode());
+	        e.printStackTrace();
+	    }
+	    
+	    return false;
+	}
+	
+	// Admin assigns a doctor to an admin_assigned request
+	public boolean assignDoctorToRequest(int appointmentId, int doctorId, int adminId) {
+	    String query = "UPDATE appointments SET doctor_id = ?, assigned_by = ?, status = 'pending' WHERE id = ? AND status = 'admin_assigned'";
+	    
+	    try (Connection conn = DBConnection.getConnection();
+	         PreparedStatement pstmt = conn.prepareStatement(query)) {
+	        
+	        pstmt.setInt(1, doctorId);
+	        pstmt.setInt(2, adminId);
+	        pstmt.setInt(3, appointmentId);
+	        
+	        int rows = pstmt.executeUpdate();
+	        
+	        return rows > 0;
+	        
+	    } catch (SQLException e) {
+	        System.err.println("Error assigning doctor: " + e.getMessage());
+	        return false;
+	    }
+	}
+	
+	// Doctor rejects an admin-assigned appointment
+	public boolean rejectAssignedAppointment(int appointmentId, int doctorId, String reason) {
+	    String query = "UPDATE appointments SET status = 'admin_assigned', doctor_id = NULL, doctor_notes = ? WHERE id = ? AND doctor_id = ? AND status = 'pending'";
+	    
+	    try (Connection conn = DBConnection.getConnection();
+	         PreparedStatement pstmt = conn.prepareStatement(query)) {
+	        
+	        pstmt.setString(1, reason);
+	        pstmt.setInt(2, appointmentId);
+	        pstmt.setInt(3, doctorId);
+	        
+	        int rows = pstmt.executeUpdate();
+	        
+	        return rows > 0;
+	        
+	    } catch (SQLException e) {
+	        System.err.println("Error rejecting appointment: " + e.getMessage());
+	        return false;
+	    }
+	}
+	
+	// Get all admin_assigned requests (for admin to review)
+	public List<Map<String, Object>> getAdminAssignedRequests() {
+	    List<Map<String, Object>> requests = new ArrayList<>();
+	    String query = "SELECT a.*, u.full_name as patient_name, u.email as patient_email, u.phone as patient_phone " +
+	                   "FROM appointments a " +
+	                   "JOIN users u ON a.patient_id = u.id " +
+	                   "WHERE a.request_type = 'admin_assigned' AND a.status = 'admin_assigned' " +
+	                   "ORDER BY a.created_at ASC";
+	    
+	    try (Connection conn = DBConnection.getConnection();
+	         PreparedStatement pstmt = conn.prepareStatement(query);
+	         ResultSet rs = pstmt.executeQuery()) {
+	        
+	        while (rs.next()) {
+	            Map<String, Object> req = new HashMap<>();
+	            req.put("id", rs.getInt("id"));
+	            req.put("appointment_id", rs.getString("appointment_id"));
+	            req.put("patient_id", rs.getInt("patient_id"));
+	            req.put("patient_name", rs.getString("patient_name"));
+	            req.put("patient_email", rs.getString("patient_email"));
+	            req.put("patient_phone", rs.getString("patient_phone"));
+	            req.put("appointment_date", rs.getDate("appointment_date"));
+	            req.put("appointment_time", rs.getString("appointment_time"));
+	            req.put("problem_description", rs.getString("problem_description"));
+	            req.put("symptoms", rs.getString("symptoms"));
+	            req.put("created_at", rs.getTimestamp("created_at"));
+	            requests.add(req);
+	        }
+	        
+	    } catch (SQLException e) {
+	        System.err.println("Error getting admin assigned requests: " + e.getMessage());
+	    }
+	    
+	    return requests;
+	}
     
  // Get all appointments with optional status filter and search
     public List<Map<String, Object>> getAllAppointments(String status, String search) {
@@ -512,7 +600,6 @@ public class AppointmentDAO {
             
             pstmt.setInt(1, appointmentId);
             int rowsAffected = pstmt.executeUpdate();
-            System.out.println("Confirm appointment - Rows affected: " + rowsAffected);
             return rowsAffected > 0;
             
         } catch (SQLException e) {
@@ -534,7 +621,6 @@ public class AppointmentDAO {
             pstmt.setInt(3, appointmentId);
             
             int rowsAffected = pstmt.executeUpdate();
-            System.out.println("Complete appointment - Rows affected: " + rowsAffected);
             return rowsAffected > 0;
             
         } catch (SQLException e) {
