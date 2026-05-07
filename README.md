@@ -61,7 +61,8 @@
 
 - Registration with medical details (blood group, DOB, emergency contact)
 - Profile image upload
-- Book appointments with available doctors
+- **Request Appointment** — describe health problem, admin assigns best-fit doctor
+- **Quick Consult** — book directly with a chosen doctor
 - View upcoming and past appointments
 - Cancel pending appointments
 - Medical history with diagnoses and prescriptions
@@ -74,6 +75,7 @@
 - Registration with license document upload (pending admin approval)
 - Dashboard with today's appointments and statistics
 - Confirm or complete appointments
+- **Reject admin-assigned appointments** with reason
 - Add diagnosis and prescriptions
 - View patient medical history
 - Track earnings (total + monthly breakdown)
@@ -86,8 +88,10 @@
 
 - Dashboard with real-time statistics
 - Pending doctor approvals with license document review
+- **Appointment request management** — review patient problems and assign doctors
+- **Reassign rejected appointments** to different doctors
 - User management with view details modal and lock/unlock
-- View all appointments with filters and search
+- View all appointments with filters, search, and status tabs
 - Department management (add, edit, delete)
 - Financial reports with CSV export
 - System logs with CSV export
@@ -99,10 +103,12 @@
 <details>
 <summary><b>📋 Appointments & Billing</b></summary>
 
-- Book appointments for future dates only
-- Status workflow: `Pending → Confirmed → Completed`
+- Dual booking flow: **Request Appointment** (admin-assigned) and **Quick Consult** (direct)
+- Admin-assigned workflow: Patient → Admin → Doctor (with rejection handling)
+- Status workflow: `admin_assigned → pending → confirmed → completed`
 - Automatic billing generation upon completion
 - Cancellation with reason tracking
+- Doctor rejection with reason (reassigned by admin)
 
 </details>
 
@@ -110,11 +116,12 @@
 <summary><b>🔔 Notifications</b></summary>
 
 - Real-time notification bell with unread count
-- Triggered by: booking, confirmation, completion, billing, account lock/unlock
+- Triggered by: booking, confirmation, completion, billing, account lock/unlock, doctor assignment, rejection
 - Mark as read functionality
 - Full notification history page
 
 </details>
+
 <details>
 <summary><b>📄 Doctor Portfolios & File Uploads</b></summary>
 
