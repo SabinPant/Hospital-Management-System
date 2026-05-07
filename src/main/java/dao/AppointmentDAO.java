@@ -116,8 +116,7 @@ public class AppointmentDAO {
 	
 	// Doctor rejects an admin-assigned appointment
 	public boolean rejectAssignedAppointment(int appointmentId, int doctorId, String reason) {
-	    String query = "UPDATE appointments SET status = 'admin_assigned', doctor_id = NULL, doctor_notes = ? WHERE id = ? AND doctor_id = ? AND status = 'pending'";
-	    
+		String query = "UPDATE appointments SET status = 'admin_assigned', doctor_id = NULL, doctor_notes = ? WHERE id = ? AND doctor_id = ? AND status = 'pending'";	    
 	    try (Connection conn = DBConnection.getConnection();
 	         PreparedStatement pstmt = conn.prepareStatement(query)) {
 	        
@@ -284,6 +283,34 @@ public class AppointmentDAO {
         return data;
     }
     
+ // Get approved doctors for admin assign dropdown
+    public List<Map<String, Object>> getApprovedDoctorsForDropdown() {
+        List<Map<String, Object>> doctors = new ArrayList<>();
+        String query = "SELECT u.id, u.full_name, dp.specialization " +
+                       "FROM users u " +
+                       "JOIN doctor_profiles dp ON u.id = dp.user_id " +
+                       "WHERE u.user_type = 'doctor' AND dp.approval_status = 'approved' " +
+                       "ORDER BY u.full_name";
+        
+        try (Connection conn = DBConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            
+            while (rs.next()) {
+                Map<String, Object> doc = new HashMap<>();
+                doc.put("id", rs.getInt("id"));
+                doc.put("full_name", rs.getString("full_name"));
+                doc.put("specialization", rs.getString("specialization"));
+                doctors.add(doc);
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error getting approved doctors: " + e.getMessage());
+        }
+        
+        return doctors;
+    }
+    
     // Get all doctors (for booking dropdown)
     public List<Appointment> getAllDoctors() {
         List<Appointment> doctors = new ArrayList<>();
@@ -316,12 +343,15 @@ public class AppointmentDAO {
  // Get today's appointments - show pending AND confirmed
     public List<Appointment> getDoctorAppointmentsByDate(int doctorId, String date) {
         List<Appointment> appointments = new ArrayList<>();
-        String query = "SELECT a.*, u.full_name as patient_name " +
-                       "FROM appointments a " +
-                       "JOIN users u ON a.patient_id = u.id " +
-                       "WHERE a.doctor_id = ? AND a.appointment_date = ? " +
-                       "AND a.status IN ('pending', 'confirmed') " +
-                       "ORDER BY a.appointment_time ASC";
+        String query = "SELECT a.id, a.appointment_id, a.patient_id, a.doctor_id, " +
+                "a.appointment_date, a.appointment_time, a.status, a.request_type, " +
+                "a.symptoms, a.diagnosis, a.prescription, a.notes, a.cancellation_reason, " +
+                "a.created_at, a.updated_at, u.full_name as patient_name " +
+                "FROM appointments a " +
+                "JOIN users u ON a.patient_id = u.id " +
+                "WHERE a.doctor_id = ? AND a.appointment_date = ? " +
+                "AND a.status IN ('pending', 'confirmed') " +
+                "ORDER BY a.appointment_time ASC";
         
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
@@ -385,6 +415,9 @@ public class AppointmentDAO {
             while (rs.next()) {
                 Appointment apt = extractAppointmentFromResultSet(rs);
                 apt.setPatientName(rs.getString("patient_name"));
+                System.out.println("Appointment: " + apt.getAppointmentId() + 
+                        ", status=" + apt.getStatus() + 
+                        ", requestType=" + apt.getRequestType());
                 appointments.add(apt);
             }
             
@@ -829,6 +862,7 @@ public class AppointmentDAO {
         apt.setAppointmentDate(rs.getDate("appointment_date"));
         apt.setAppointmentTime(rs.getTime("appointment_time"));
         apt.setStatus(rs.getString("status"));
+        apt.setRequestType(rs.getString("request_type")); 
         apt.setSymptoms(rs.getString("symptoms"));
         apt.setDiagnosis(rs.getString("diagnosis"));
         apt.setPrescription(rs.getString("prescription"));

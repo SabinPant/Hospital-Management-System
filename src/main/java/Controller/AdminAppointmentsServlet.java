@@ -12,6 +12,7 @@ import java.util.Map;
 
 import dao.AppointmentDAO;
 import utils.SessionUtil;
+
 @WebServlet("/admin/appointments")
 public class AdminAppointmentsServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -35,12 +36,29 @@ public class AdminAppointmentsServlet extends HttpServlet {
         String status = request.getParameter("status");
         String search = request.getParameter("search");
         
-        List<Map<String, Object>> appointments = appointmentDAO.getAllAppointments(status, search);
-        request.setAttribute("appointments", appointments);
+        // Handle appointment requests tab
+        if ("requests".equals(status)) {
+            List<Map<String, Object>> requests = appointmentDAO.getAdminAssignedRequests();
+            List<Map<String, Object>> approvedDoctors = getApprovedDoctorsForDropdown();
+            request.setAttribute("appointmentRequests", requests);
+            request.setAttribute("approvedDoctors", approvedDoctors);
+        } else {
+            // Normal appointments
+            List<Map<String, Object>> appointments = appointmentDAO.getAllAppointments(status, search);
+            request.setAttribute("appointments", appointments);
+        }
+        
         request.setAttribute("currentStatus", status);
         request.setAttribute("currentSearch", search);
         
         request.getRequestDispatcher("/WEB-INF/views/admin/admin-appointments.jsp")
                .forward(request, response);
+    }
+    
+    // Get approved doctors for the assign dropdown
+    private List<Map<String, Object>> getApprovedDoctorsForDropdown() {
+    	
+    	
+    	return appointmentDAO.getApprovedDoctorsForDropdown();
     }
 }

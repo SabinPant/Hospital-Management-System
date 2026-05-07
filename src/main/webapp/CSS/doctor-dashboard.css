@@ -621,6 +621,23 @@
     transform: translateY(-1px);
 }
 
+.btn-reject {
+    background: #ef4444;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: background 0.2s;
+    margin-left: 6px;
+}
+
+.btn-reject:hover {
+    background: #dc2626;
+}
+
 /* ── Responsive ── */
 @media (max-width: 1024px) {
     .stats-row { grid-template-columns: repeat(2, 1fr); }

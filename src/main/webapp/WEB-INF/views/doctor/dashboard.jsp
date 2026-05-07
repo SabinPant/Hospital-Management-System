@@ -116,16 +116,19 @@
                             <div class="appt-note">${apt.symptoms != null ? apt.symptoms : "No symptoms noted"}</div>
                         </div>
                         <div class="appt-action">
-                            <c:if test="${apt.status == 'pending'}">
-                                <form action="${pageContext.request.contextPath}/doctor/confirm-appointment" method="post" style="display:inline;">
-                                    <input type="hidden" name="id" value="${apt.id}">
-                                    <button type="submit" class="btn-confirm">Confirm</button>
-                                </form>
-                            </c:if>
-                            <c:if test="${apt.status == 'confirmed'}">
-                                <button class="btn-complete" onclick="openCompleteModal(${apt.id})">Complete</button>
-                            </c:if>
-                        </div>
+    <c:if test="${apt.status == 'pending'}">
+        <form action="${pageContext.request.contextPath}/doctor/confirm-appointment" method="post" style="display:inline;">
+            <input type="hidden" name="id" value="${apt.id}">
+            <button type="submit" class="btn-confirm">Confirm</button>
+        </form>
+        <c:if test="${apt.requestType == 'admin_assigned'}">
+            <button class="btn-reject" onclick="openRejectModal(${apt.id})">Reject</button>
+        </c:if>
+    </c:if>
+    <c:if test="${apt.status == 'confirmed'}">
+        <button class="btn-complete" onclick="openCompleteModal(${apt.id})">Complete</button>
+    </c:if>
+</div>
                     </div>
                 </c:forEach>
             </c:when>
@@ -164,12 +167,15 @@
                                         <div class="appt-note"><fmt:formatDate value="${apt.appointmentTime}" pattern="hh:mm a"/></div>
                                     </div>
                                     <div class="appt-action">
-                                        <c:if test="${apt.status == 'pending'}">
-                                            <form action="${pageContext.request.contextPath}/doctor/confirm-appointment" method="post" style="display:inline;">
-                                                <input type="hidden" name="id" value="${apt.id}">
-                                                <button type="submit" class="btn-confirm">Confirm</button>
-                                            </form>
-                                        </c:if>
+                                       <c:if test="${apt.status == 'pending'}">
+    <form action="${pageContext.request.contextPath}/doctor/confirm-appointment" method="post" style="display:inline;">
+        <input type="hidden" name="id" value="${apt.id}">
+        <button type="submit" class="btn-confirm">Confirm</button>
+    </form>
+    <c:if test="${apt.requestType == 'admin_assigned'}">
+        <button class="btn-reject" onclick="openRejectModal(${apt.id})">Reject</button>
+    </c:if>
+</c:if>
                                         <c:if test="${apt.status == 'confirmed'}">
                                             <span class="status-confirmed">Confirmed</span>
                                         </c:if>
@@ -259,6 +265,35 @@
         </div>
     </div>
 
+<!-- Reject Modal -->
+<div id="rejectModal" class="modal">
+    <div class="modal-content" style="max-width: 450px;">
+        <div class="modal-header">
+            <h3><i class="fas fa-times-circle"></i> Reject Appointment</h3>
+            <span class="modal-close" onclick="closeRejectModal()"><i class="fas fa-times"></i></span>
+        </div>
+        <div class="modal-body">
+            <form action="${pageContext.request.contextPath}/doctor/reject-appointment" method="post">
+                <input type="hidden" name="id" id="rejectAppointmentId">
+                <div class="form-group">
+                    <label><i class="fas fa-comment"></i> Reason for Rejection</label>
+                    <select name="reason" required style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:8px;font-family:inherit;">
+                        <option value="">-- Select reason --</option>
+                        <option value="Not my specialty">Not my specialty</option>
+                        <option value="Schedule full">Schedule full</option>
+                        <option value="Out of office">Out of office</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div style="margin-top:20px;text-align:right;">
+                    <button type="button" class="btn-confirm" style="background:#94a3b8;margin-right:8px;" onclick="closeRejectModal()">Cancel</button>
+                    <button type="submit" class="btn-reject" style="padding:8px 20px;">Reject</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
     <jsp:include page="../../../components/footer.jsp" />
 
     <script>
@@ -272,6 +307,15 @@
         window.onclick = function(e) {
             if (e.target.classList.contains('modal')) e.target.classList.remove('show');
         }
+        
+        function openRejectModal(id) {
+            document.getElementById('rejectAppointmentId').value = id;
+            document.getElementById('rejectModal').classList.add('show');
+        }
+        function closeRejectModal() {
+            document.getElementById('rejectModal').classList.remove('show');
+        }
+        
     </script>
 </body>
 </html>

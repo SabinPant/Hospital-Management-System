@@ -31,6 +31,14 @@
             </div>
         </div>
         
+        <!-- Success/Error Messages -->
+        <c:if test="${not empty param.success}">
+            <div class="alert alert-success"><i class="fas fa-check-circle"></i> ${param.success}</div>
+        </c:if>
+        <c:if test="${not empty param.error}">
+            <div class="alert alert-error"><i class="fas fa-exclamation-circle"></i> ${param.error}</div>
+        </c:if>
+        
         <div class="filter-bar">
             <div class="filter-buttons">
                 <a href="${pageContext.request.contextPath}/admin/appointments" class="filter-btn ${empty currentStatus ? 'active' : ''}">All</a>
@@ -38,6 +46,9 @@
                 <a href="${pageContext.request.contextPath}/admin/appointments?status=confirmed" class="filter-btn ${currentStatus == 'confirmed' ? 'active' : ''}">Confirmed</a>
                 <a href="${pageContext.request.contextPath}/admin/appointments?status=completed" class="filter-btn ${currentStatus == 'completed' ? 'active' : ''}">Completed</a>
                 <a href="${pageContext.request.contextPath}/admin/appointments?status=cancelled" class="filter-btn ${currentStatus == 'cancelled' ? 'active' : ''}">Cancelled</a>
+                <a href="${pageContext.request.contextPath}/admin/appointments?status=requests" class="filter-btn ${currentStatus == 'requests' ? 'active' : ''}">
+                    <i class="fas fa-inbox"></i> Requests
+                </a>
             </div>
             
             <form method="get" action="${pageContext.request.contextPath}/admin/appointments" class="search-form">
@@ -49,74 +60,124 @@
             </form>
         </div>
         
-        <div class="dashboard-card">
-            <c:choose>
-                <c:when test="${not empty appointments}">
-                    <table class="appointments-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Date</th>
-                                <th>Time</th>
-                                <th>Patient</th>
-                                <th>Doctor</th>
-                                <th>Specialization</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <c:forEach var="apt" items="${appointments}">
-                                <tr class="apt-row"
-                                    data-apt-id="${apt.appointment_id}"
-                                    data-appointment-date="<fmt:formatDate value="${apt.appointment_date}" pattern="MMM dd, yyyy"/>"
-                                    data-appointment-time="${apt.appointment_time}"
-                                    data-patient-name="${apt.patient_name}"
-                                    data-patient-email="${apt.patient_email != null ? apt.patient_email : 'N/A'}"
-                                    data-patient-phone="${apt.patient_phone != null ? apt.patient_phone : 'N/A'}"
-                                    data-doctor-name="${apt.doctor_name}"
-                                    data-specialization="${apt.specialization != null ? apt.specialization : 'General'}"
-                                    data-status="${apt.status}"
-                                    data-symptoms="${apt.symptoms != null ? apt.symptoms : ''}"
-                                    data-diagnosis="${apt.diagnosis != null ? apt.diagnosis : ''}"
-                                    data-prescription="${apt.prescription != null ? apt.prescription : ''}"
-                                    data-cancellation-reason="${apt.cancellation_reason != null ? apt.cancellation_reason : ''}">
-                                    <td>${apt.appointment_id}</td>
-                                    <td><fmt:formatDate value="${apt.appointment_date}" pattern="MMM dd, yyyy"/></td>
-                                    <td>${apt.appointment_time}</td>
-                                    <td>${apt.patient_name} <small>(${apt.patient_phone})</small></td>
-                                    <td>Dr. ${apt.doctor_name}</td>
-                                    <td>${apt.specialization != null ? apt.specialization : 'General'}</td>
-                                    <td>
-                                        <c:choose>
-                                            <c:when test="${apt.status == 'pending'}"><span class="status-pending">Pending</span></c:when>
-                                            <c:when test="${apt.status == 'confirmed'}"><span class="status-confirmed">Confirmed</span></c:when>
-                                            <c:when test="${apt.status == 'completed'}"><span class="status-completed">Completed</span></c:when>
-                                            <c:when test="${apt.status == 'cancelled'}"><span class="status-cancelled">Cancelled</span></c:when>
-                                        </c:choose>
-                                    </td>
-                                    <td>
-                                        <button class="btn-view" onclick="openAptModal(this)">
-                                            <i class="fas fa-eye"></i> View
-                                        </button>
-                                    </td>
+        <!-- ==================== APPOINTMENT REQUESTS TABLE ==================== -->
+        <c:if test="${currentStatus == 'requests'}">
+            <div class="dashboard-card">
+                <c:choose>
+                    <c:when test="${not empty appointmentRequests}">
+                        <table class="appointments-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Patient</th>
+                                    <th>Problem</th>
+                                    <th>Preferred Date</th>
+                                    <th>Preferred Time</th>
+                                    <th>Submitted</th>
+                                    <th>Action</th>
                                 </tr>
-                            </c:forEach>
-                        </tbody>
-                    </table>
-                </c:when>
-                <c:otherwise>
-                    <div class="empty-state">
-                        <i class="fas fa-calendar-times"></i>
-                        <p>No appointments found</p>
-                    </div>
-                </c:otherwise>
-            </c:choose>
-        </div>
+                            </thead>
+                            <tbody>
+                                <c:forEach var="req" items="${appointmentRequests}">
+                                    <tr>
+                                        <td>${req.appointment_id}</td>
+                                        <td>${req.patient_name}<br><small>${req.patient_phone}</small></td>
+                                        <td>${req.problem_description}</td>
+                                        <td><fmt:formatDate value="${req.appointment_date}" pattern="MMM dd, yyyy"/></td>
+                                        <td>${req.appointment_time}</td>
+                                        <td><fmt:formatDate value="${req.created_at}" pattern="MMM dd, yyyy"/></td>
+                                        <td>
+                                            <button class="btn-assign" onclick="openAssignModal(${req.id}, '${req.patient_name}', '${req.problem_description}')">
+                                                <i class="fas fa-user-plus"></i> Assign
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="empty-state">
+                            <i class="fas fa-inbox"></i>
+                            <p>No pending appointment requests</p>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+        </c:if>
+        
+        <!-- ==================== REGULAR APPOINTMENTS TABLE ==================== -->
+        <c:if test="${currentStatus != 'requests'}">
+            <div class="dashboard-card">
+                <c:choose>
+                    <c:when test="${not empty appointments}">
+                        <table class="appointments-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Patient</th>
+                                    <th>Doctor</th>
+                                    <th>Specialization</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <c:forEach var="apt" items="${appointments}">
+                                    <tr class="apt-row"
+                                        data-apt-id="${apt.appointment_id}"
+                                        data-appointment-date="<fmt:formatDate value="${apt.appointment_date}" pattern="MMM dd, yyyy"/>"
+                                        data-appointment-time="${apt.appointment_time}"
+                                        data-patient-name="${apt.patient_name}"
+                                        data-patient-email="${apt.patient_email != null ? apt.patient_email : 'N/A'}"
+                                        data-patient-phone="${apt.patient_phone != null ? apt.patient_phone : 'N/A'}"
+                                        data-doctor-name="${apt.doctor_name}"
+                                        data-specialization="${apt.specialization != null ? apt.specialization : 'General'}"
+                                        data-status="${apt.status}"
+                                        data-symptoms="${apt.symptoms != null ? apt.symptoms : ''}"
+                                        data-diagnosis="${apt.diagnosis != null ? apt.diagnosis : ''}"
+                                        data-prescription="${apt.prescription != null ? apt.prescription : ''}"
+                                        data-cancellation-reason="${apt.cancellation_reason != null ? apt.cancellation_reason : ''}">
+                                        <td>${apt.appointment_id}</td>
+                                        <td><fmt:formatDate value="${apt.appointment_date}" pattern="MMM dd, yyyy"/></td>
+                                        <td>${apt.appointment_time}</td>
+                                        <td>${apt.patient_name} <small>(${apt.patient_phone})</small></td>
+                                        <td>Dr. ${apt.doctor_name}</td>
+                                        <td>${apt.specialization != null ? apt.specialization : 'General'}</td>
+                                        <td>
+                                            <c:choose>
+                                                <c:when test="${apt.status == 'pending'}"><span class="status-pending">Pending</span></c:when>
+                                                <c:when test="${apt.status == 'confirmed'}"><span class="status-confirmed">Confirmed</span></c:when>
+                                                <c:when test="${apt.status == 'completed'}"><span class="status-completed">Completed</span></c:when>
+                                                <c:when test="${apt.status == 'cancelled'}"><span class="status-cancelled">Cancelled</span></c:when>
+                                                <c:otherwise><span class="status-pending">${apt.status}</span></c:otherwise>
+                                            </c:choose>
+                                        </td>
+                                        <td>
+                                            <button class="btn-view" onclick="openAptModal(this)">
+                                                <i class="fas fa-eye"></i> View
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="empty-state">
+                            <i class="fas fa-calendar-times"></i>
+                            <p>No appointments found</p>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+        </c:if>
     </div>
 </div>
 
-<!-- Appointment Details Modal -->
+<!-- ==================== APPOINTMENT DETAILS MODAL ==================== -->
 <div id="aptModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
@@ -127,43 +188,53 @@
     </div>
 </div>
 
+<!-- ==================== ASSIGN DOCTOR MODAL ==================== -->
+<div id="assignModal" class="modal">
+    <div class="modal-content" style="max-width: 500px;">
+        <div class="modal-header">
+            <h3><i class="fas fa-user-plus"></i> Assign Doctor</h3>
+            <span class="modal-close" onclick="closeAssignModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <div id="assignPatientInfo" style="margin-bottom:16px;"></div>
+            <form id="assignForm" method="POST" action="${pageContext.request.contextPath}/admin/assign-doctor">
+                <input type="hidden" name="appointmentId" id="assignAppointmentId">
+                <div class="form-group">
+                    <label><i class="fas fa-user-md"></i> Select Doctor</label>
+                    <select name="doctorId" required style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:8px;font-family:inherit;">
+                        <option value="">-- Choose a doctor --</option>
+                        <c:forEach var="doc" items="${approvedDoctors}">
+                            <option value="${doc.id}">Dr. ${doc.full_name} - ${doc.specialization}</option>
+                        </c:forEach>
+                    </select>
+                </div>
+                <div style="margin-top:20px;text-align:right;">
+                    <button type="button" class="btn-view" style="background:#94a3b8;margin-right:8px;" onclick="closeAssignModal()">Cancel</button>
+                    <button type="submit" class="btn-assign"><i class="fas fa-check"></i> Assign Doctor</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
-    // Open modal - reads all data from row's data-* attributes 
+    // Appointment details modal
     function openAptModal(btn) {
         var row = btn.closest('.apt-row');
-        
         var html = '';
-        
-        // Always visible fields
         html += '<div class="detail-row"><div class="detail-label">Appointment ID</div><div class="detail-value">' + row.getAttribute('data-apt-id') + '</div></div>';
         html += '<div class="detail-row"><div class="detail-label">Patient</div><div class="detail-value">' + row.getAttribute('data-patient-name') + ' (' + row.getAttribute('data-patient-email') + ')</div></div>';
         html += '<div class="detail-row"><div class="detail-label">Doctor</div><div class="detail-value">Dr. ' + row.getAttribute('data-doctor-name') + ' - ' + row.getAttribute('data-specialization') + '</div></div>';
         html += '<div class="detail-row"><div class="detail-label">Date & Time</div><div class="detail-value">' + row.getAttribute('data-appointment-date') + ' at ' + row.getAttribute('data-appointment-time') + '</div></div>';
         html += '<div class="detail-row"><div class="detail-label">Status</div><div class="detail-value">' + row.getAttribute('data-status') + '</div></div>';
-        
         var symptoms = row.getAttribute('data-symptoms');
-        if (symptoms) {
-            html += '<div class="detail-row"><div class="detail-label">Symptoms</div><div class="detail-value">' + symptoms + '</div></div>';
-        } else {
-            html += '<div class="detail-row"><div class="detail-label">Symptoms</div><div class="detail-value">Not specified</div></div>';
-        }
-        
+        html += '<div class="detail-row"><div class="detail-label">Symptoms</div><div class="detail-value">' + (symptoms || 'Not specified') + '</div></div>';
         var diagnosis = row.getAttribute('data-diagnosis');
-        if (diagnosis) {
-            html += '<div class="detail-row"><div class="detail-label">Diagnosis</div><div class="detail-value">' + diagnosis + '</div></div>';
-        }
-        
+        if (diagnosis) html += '<div class="detail-row"><div class="detail-label">Diagnosis</div><div class="detail-value">' + diagnosis + '</div></div>';
         var prescription = row.getAttribute('data-prescription');
-        if (prescription) {
-            html += '<div class="detail-row"><div class="detail-label">Prescription</div><div class="detail-value">' + prescription + '</div></div>';
-        }
-        
-        var cancellationReason = row.getAttribute('data-cancellation-reason');
-        var status = row.getAttribute('data-status');
-        if (cancellationReason && status === 'cancelled') {
-            html += '<div class="detail-row"><div class="detail-label">Cancellation Reason</div><div class="detail-value">' + cancellationReason + '</div></div>';
-        }
-        
+        if (prescription) html += '<div class="detail-row"><div class="detail-label">Prescription</div><div class="detail-value">' + prescription + '</div></div>';
+        var reason = row.getAttribute('data-cancellation-reason');
+        if (reason && row.getAttribute('data-status') === 'cancelled') html += '<div class="detail-row"><div class="detail-label">Cancellation Reason</div><div class="detail-value">' + reason + '</div></div>';
         document.getElementById('aptModalBody').innerHTML = html;
         document.getElementById('aptModal').classList.add('show');
     }
@@ -172,10 +243,22 @@
         document.getElementById('aptModal').classList.remove('show');
     }
     
+    // Assign doctor modal
+    function openAssignModal(id, patientName, problem) {
+        document.getElementById('assignAppointmentId').value = id;
+        document.getElementById('assignPatientInfo').innerHTML = 
+            '<p><strong>Patient:</strong> ' + patientName + '</p>' +
+            '<p><strong>Problem:</strong> ' + problem + '</p>';
+        document.getElementById('assignModal').classList.add('show');
+    }
+    
+    function closeAssignModal() {
+        document.getElementById('assignModal').classList.remove('show');
+    }
+    
     window.onclick = function(event) {
-        if (event.target === document.getElementById('aptModal')) {
-            closeAptModal();
-        }
+        if (event.target === document.getElementById('aptModal')) closeAptModal();
+        if (event.target === document.getElementById('assignModal')) closeAssignModal();
     }
 </script>
 

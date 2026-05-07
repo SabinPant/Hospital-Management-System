@@ -246,6 +246,34 @@
     font-size: 0.9rem;
 }
 
+/* Assign Button */
+.btn-assign {
+    background: #0a5c8e;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.btn-assign:hover {
+    background: #074268;
+}
+
+/* Status for admin_assigned */
+.status-requested {
+    background: #fef3c7;
+    color: #d97706;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    display: inline-block;
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
     .appointments-table {
