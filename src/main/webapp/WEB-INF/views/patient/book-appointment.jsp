@@ -52,26 +52,66 @@
             </button>
         </div>
         
-        <!-- ==================== REQUEST APPOINTMENT FORM ==================== -->
-        <div id="requestForm" class="booking-type-form active">
-            <div class="booking-layout-single">
-                <div class="booking-form-full">
-                    <div class="section-title">
-                        <h2><i class="fas fa-clipboard-list"></i> Request an Appointment</h2>
-                        <p>Describe your problem and our admin will assign the best doctor for you.</p>
+       <!-- ==================== REQUEST APPOINTMENT FORM ==================== -->
+<div id="requestForm" class="booking-type-form active">
+    <div class="rq-shell">
+        
+        <!-- Steps Indicator -->
+        <div class="rq-steps">
+            <div class="rq-step">
+                <div class="rq-bubble done"><i class="fas fa-calendar"></i></div>
+                <span class="rq-slabel done">Schedule</span>
+            </div>
+            <div class="rq-conn filled"></div>
+            <div class="rq-step">
+                <div class="rq-bubble active"><i class="fas fa-comment-medical"></i></div>
+                <span class="rq-slabel active">Describe</span>
+            </div>
+            <div class="rq-conn"></div>
+            <div class="rq-step">
+                <div class="rq-bubble"><i class="fas fa-paper-plane"></i></div>
+                <span class="rq-slabel">Submit</span>
+            </div>
+        </div>
+
+        <!-- Main Card -->
+        <div class="rq-card">
+            <!-- Header -->
+            <div class="rq-hdr">
+                <div class="rq-hdr-icon"><i class="fas fa-clipboard-list"></i></div>
+                <div class="rq-hdr-text">
+                    <h2>Request an Appointment</h2>
+                    <p>Describe your concern — our team will match you with the right specialist</p>
+                </div>
+            </div>
+
+            <!-- Body -->
+            <div class="rq-body">
+                <!-- Info Banner -->
+                <div class="rq-banner">
+                    <div class="rq-banner-icon"><i class="fas fa-info-circle"></i></div>
+                    <div class="rq-banner-text">
+                        <strong>How this works</strong>
+                        <span>Fill in your preferred schedule and describe your health concern. Our admin will review your request and assign the most suitable doctor.</span>
                     </div>
-                    
-                    <form action="${pageContext.request.contextPath}/patient/book-request" method="post">
-                        <div class="datetime-row">
-                            <div class="form-group">
-                                <label><i class="fas fa-calendar-day"></i> Preferred Date <span class="req">*</span></label>
+                </div>
+
+                <form action="${pageContext.request.contextPath}/patient/book-request" method="post">
+                    <!-- Section 1: Schedule -->
+                    <div class="rq-sec">
+                        <div class="rq-sec-lbl">
+                            <div class="rq-sec-num">1</div>
+                            <span class="rq-sec-title">Preferred Schedule</span>
+                        </div>
+                        <div class="rq-dt-grid">
+                            <div class="rq-field">
+                                <div class="rq-lbl"><i class="fas fa-calendar-day"></i> Preferred Date <span class="rq-badge-req">Required</span></div>
                                 <input type="date" name="appointmentDate" id="requestDate" required>
                             </div>
-                            
-                            <div class="form-group">
-                                <label><i class="fas fa-clock"></i> Preferred Time <span class="req">*</span></label>
-                                <select name="appointmentTime" required>
-                                    <option value="">Select time</option>
+                            <div class="rq-field">
+                                <div class="rq-lbl"><i class="fas fa-clock"></i> Preferred Time <span class="rq-badge-req">Required</span></div>
+                                <select name="appointmentTime" required style="width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:13px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.85rem;color:#0f172a;background:#fafbfc;">
+                                    <option value="">Select a time slot</option>
                                     <option value="09:00">09:00 AM</option>
                                     <option value="10:00">10:00 AM</option>
                                     <option value="11:00">11:00 AM</option>
@@ -82,24 +122,57 @@
                                 </select>
                             </div>
                         </div>
-                        
-                        <div class="form-group">
-                            <label><i class="fas fa-comment-medical"></i> Describe Your Problem <span class="req">*</span></label>
-                            <textarea name="problemDescription" placeholder="Please describe your health issue in detail so we can assign the right specialist..." rows="4" required></textarea>
+                    </div>
+
+                    <div class="rq-divider"></div>
+
+                    <!-- Section 2: Problem -->
+                    <div class="rq-sec">
+                        <div class="rq-sec-lbl">
+                            <div class="rq-sec-num">2</div>
+                            <span class="rq-sec-title">Describe Your Problem</span>
                         </div>
-                        
-                        <div class="form-group">
-                            <label><i class="fas fa-notes-medical"></i> Symptoms (Optional)</label>
-                            <textarea name="symptoms" placeholder="Any specific symptoms you're experiencing..." rows="3"></textarea>
+                        <div class="rq-field">
+                            <div class="rq-lbl"><i class="fas fa-stethoscope"></i> What brings you in today? <span class="rq-badge-req">Required</span></div>
+                            <textarea name="problemDescription" class="rq-problem-ta" placeholder="Tell us what's bothering you. The more detail you share, the better we can match you with the right specialist…" required></textarea>
+                            <div class="rq-hints">
+                                <span class="rq-hint" onclick="fillProblem('I have persistent headaches for the past few days.')">Headache</span>
+                                <span class="rq-hint" onclick="fillProblem('I have chest discomfort and shortness of breath.')">Chest pain</span>
+                                <span class="rq-hint" onclick="fillProblem('I have joint pain and swelling in my knees and ankles.')">Joint pain</span>
+                                <span class="rq-hint" onclick="fillProblem('Persistent cough and mild fever for over a week.')">Cough & fever</span>
+                                <span class="rq-hint" onclick="fillProblem('Digestive issues — bloating, nausea, and stomach cramps.')">Digestive issues</span>
+                                <span class="rq-hint" onclick="fillProblem('A skin rash or irritation that has not cleared up.')">Skin rash</span>
+                            </div>
                         </div>
-                        
-                        <button type="submit" class="btn-book">
-                            <i class="fas fa-paper-plane"></i> Submit Request
-                        </button>
-                    </form>
-                </div>
+                    </div>
+
+                    <div class="rq-divider"></div>
+
+                    <!-- Section 3: Symptoms -->
+                    <div class="rq-sec" style="margin-bottom:0">
+                        <div class="rq-sec-lbl">
+                            <div class="rq-sec-num">3</div>
+                            <span class="rq-sec-title">Additional Symptoms</span>
+                        </div>
+                        <div class="rq-field">
+                            <div class="rq-lbl"><i class="fas fa-notes-medical"></i> Specific symptoms <span class="rq-badge-opt">Optional</span></div>
+                            <textarea name="symptoms" class="rq-sym-ta" placeholder="List any specific symptoms — duration, severity, frequency. E.g. fever 38°C for 3 days, dizziness in the morning…"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="rq-divider"></div>
+
+                    <!-- Submit -->
+                    <button type="submit" class="rq-sub-btn">
+                        <i class="fas fa-paper-plane"></i>
+                        Submit Appointment Request
+                        <span class="rq-arr"><i class="fas fa-arrow-right"></i></span>
+                    </button>
+                </form>
             </div>
         </div>
+    </div>
+</div>
         
         <!-- ==================== DIRECT BOOKING FORM (EXISTING) ==================== -->
         <div id="directForm" class="booking-type-form">
@@ -223,6 +296,12 @@
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('appointmentDate').min = today;
         document.getElementById('requestDate').min = today;
+        
+        function fillProblem(text) {
+            document.querySelector('.rq-problem-ta').value = text;
+            document.querySelector('.rq-problem-ta').focus();
+        }
+        
     </script>
 
 </body>
