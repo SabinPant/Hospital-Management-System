@@ -115,7 +115,6 @@
 - Full notification history page
 
 </details>
-
 <details>
 <summary><b>📄 Doctor Portfolios & File Uploads</b></summary>
 
@@ -127,6 +126,8 @@
 - Portable file storage (works across machines)
 
 </details>
+
+*(Only a snippet there are soo many features it not possible to add everythin in here)*
 
 ---
 
@@ -285,6 +286,6 @@ Always run `schema.sql` on a fresh setup. It creates all tables, constraints, in
 
 <div align="center">
 
-Made with ❤️ for better healthcare management by Sabin Pant
+Made with ❤️ for better healthcare management by Sabin Team
 
 </div>
