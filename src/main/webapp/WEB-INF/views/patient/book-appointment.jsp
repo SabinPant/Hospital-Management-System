@@ -17,11 +17,10 @@
 
     <div class="booking-page">
         <c:if test="${not empty sessionScope.bookingError}">
-            <div class="alert alert-error">
-                <i class="fas fa-exclamation-circle"></i> ${sessionScope.bookingError}
-                <% session.removeAttribute("bookingError"); %>
-            </div>
-        </c:if>
+    <div class="alert alert-error">
+        <i class="fas fa-exclamation-circle"></i> ${sessionScope.bookingError}
+    </div>
+</c:if>
         
         <div class="booking-header">
             <h1><i class="fas fa-calendar-plus"></i> Book an Appointment</h1>
@@ -221,18 +220,22 @@
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label><i class="fas fa-clock"></i> Appointment Time</label>
-                                    <select name="appointmentTime" id="appointmentTime" required>
-                                        <option value="">Select time</option>
-                                        <option value="09:00">09:00 AM</option>
-                                        <option value="10:00">10:00 AM</option>
-                                        <option value="11:00">11:00 AM</option>
-                                        <option value="12:00">12:00 PM</option>
-                                        <option value="14:00">02:00 PM</option>
-                                        <option value="15:00">03:00 PM</option>
-                                        <option value="16:00">04:00 PM</option>
-                                    </select>
-                                </div>
+    <label><i class="fas fa-clock"></i> Appointment Time</label>
+    <select name="appointmentTime" id="appointmentTime" required>
+        <option value="">Select time</option>
+        <option value="09:00">09:00 AM</option>
+        <option value="10:00">10:00 AM</option>
+        <option value="11:00">11:00 AM</option>
+        <option value="12:00">12:00 PM</option>
+        <option value="14:00">02:00 PM</option>
+        <option value="15:00">03:00 PM</option>
+        <option value="16:00">04:00 PM</option>
+    </select>
+    <span class="time-hint">
+        <i class="fas fa-info-circle"></i> Time slots are first-come, first-served. Book early to secure your preferred time.
+    </span>
+</div>
+
                             </div>
                             
                             <div class="form-group">
@@ -262,6 +265,13 @@
     <jsp:include page="../../../components/footer.jsp" />
 
     <script>
+    
+    // Auto-switch to Quick Consult if there's a booking error
+    <c:if test="${not empty sessionScope.bookingError}">
+        switchBookingType('direct');
+    </c:if>
+    
+    
         // ── Booking Type Toggle ──
         function switchBookingType(type) {
             document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
@@ -301,6 +311,17 @@
             document.querySelector('.rq-problem-ta').value = text;
             document.querySelector('.rq-problem-ta').focus();
         }
+        
+     // Clear booking error when user changes date or time
+        document.getElementById('appointmentDate').addEventListener('change', function() {
+            var errorEl = document.querySelector('.alert-error');
+            if (errorEl) errorEl.style.display = 'none';
+        });
+
+        document.getElementById('appointmentTime').addEventListener('change', function() {
+            var errorEl = document.querySelector('.alert-error');
+            if (errorEl) errorEl.style.display = 'none';
+        });
         
     </script>
 
