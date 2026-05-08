@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,7 +31,7 @@
                 <a href="${pageContext.request.contextPath}/admin/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div>
         </div>
-        
+
         <!-- Success/Error Messages -->
         <c:if test="${not empty param.success}">
             <div class="alert alert-success"><i class="fas fa-check-circle"></i> ${param.success}</div>
@@ -38,76 +39,154 @@
         <c:if test="${not empty param.error}">
             <div class="alert alert-error"><i class="fas fa-exclamation-circle"></i> ${param.error}</div>
         </c:if>
-        
-        <div class="filter-bar">
-            <div class="filter-buttons">
-                <a href="${pageContext.request.contextPath}/admin/appointments" class="filter-btn ${empty currentStatus ? 'active' : ''}">All</a>
-                <a href="${pageContext.request.contextPath}/admin/appointments?status=pending" class="filter-btn ${currentStatus == 'pending' ? 'active' : ''}">Pending</a>
-                <a href="${pageContext.request.contextPath}/admin/appointments?status=confirmed" class="filter-btn ${currentStatus == 'confirmed' ? 'active' : ''}">Confirmed</a>
-                <a href="${pageContext.request.contextPath}/admin/appointments?status=completed" class="filter-btn ${currentStatus == 'completed' ? 'active' : ''}">Completed</a>
-                <a href="${pageContext.request.contextPath}/admin/appointments?status=cancelled" class="filter-btn ${currentStatus == 'cancelled' ? 'active' : ''}">Cancelled</a>
-                <a href="${pageContext.request.contextPath}/admin/appointments?status=requests" class="filter-btn ${currentStatus == 'requests' ? 'active' : ''}">
-                    <i class="fas fa-inbox"></i> Requests
-                </a>
-            </div>
-            
-            <form method="get" action="${pageContext.request.contextPath}/admin/appointments" class="search-form">
-                <c:if test="${not empty currentStatus}">
-                    <input type="hidden" name="status" value="${currentStatus}">
+
+        <%-- Determine which view to open on page load.
+             If the server routed us here via ?status=requests, start on the requests view.
+             Any other status (or none) lands on the details view. --%>
+        <c:set var="initView" value="${currentStatus == 'requests' ? 'requests' : 'details'}" />
+
+        <!-- ── Main Toggle ───────────────────────────────────────── -->
+        <div class="adm-toggle">
+            <button class="adm-toggle-btn ${initView == 'requests' ? 'active' : ''}"
+                    id="toggleRequests"
+                    onclick="switchAdminView('requests')">
+                <i class="fas fa-clipboard-list"></i>
+                Appointment Requests
+                <c:if test="${not empty appointmentRequests}">
+                    <span class="adm-toggle-badge">${fn:length(appointmentRequests)}</span>
                 </c:if>
-                <input type="text" name="search" placeholder="Search by patient, doctor, or ID..." value="${currentSearch}">
-                <button type="submit"><i class="fas fa-search"></i></button>
-            </form>
+            </button>
+            <button class="adm-toggle-btn ${initView == 'details' ? 'active' : ''}"
+                    id="toggleDetails"
+                    onclick="switchAdminView('details')">
+                <i class="fas fa-calendar-alt"></i>
+                Appointment Details
+            </button>
         </div>
-        
-        <!-- ==================== APPOINTMENT REQUESTS TABLE ==================== -->
-        <c:if test="${currentStatus == 'requests'}">
+        <%-- fn: taglib is needed for the length call above — add this at top if not present:
+             <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
+             If you prefer not to use it, simply remove the badge <c:if> block. --%>
+
+        <!-- 
+             VIEW 1 — APPOINTMENT REQUESTS (card layout)
+                                                               -->
+        <div id="viewRequests" class="adm-view ${initView == 'requests' ? 'active' : ''}">
+
             <div class="dashboard-card">
                 <c:choose>
                     <c:when test="${not empty appointmentRequests}">
-                        <table class="appointments-table">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Patient</th>
-                                    <th>Problem</th>
-                                    <th>Preferred Date</th>
-                                    <th>Preferred Time</th>
-                                    <th>Submitted</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <c:forEach var="req" items="${appointmentRequests}">
-                                    <tr>
-                                        <td>${req.appointment_id}</td>
-                                        <td>${req.patient_name}<br><small>${req.patient_phone}</small></td>
-                                        <td>${req.problem_description}</td>
-                                        <td><fmt:formatDate value="${req.appointment_date}" pattern="MMM dd, yyyy"/></td>
-                                        <td>${req.appointment_time}</td>
-                                        <td><fmt:formatDate value="${req.created_at}" pattern="MMM dd, yyyy"/></td>
-                                        <td>
-                                            <button class="btn-assign" onclick="openAssignModal(${req.id}, '${req.patient_name}', '${req.problem_description}')">
-                                                <i class="fas fa-user-plus"></i> Assign
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </c:forEach>
-                            </tbody>
-                        </table>
+                        <div class="req-grid">
+                            <c:forEach var="req" items="${appointmentRequests}">
+                                <div class="req-card">
+                                    <!-- LEFT: all info -->
+                                    <div class="req-card-left">
+
+                                        <!-- Patient + date/time pills -->
+                                        <div class="req-patient-row">
+                                            <div class="req-avatar">
+                                                <i class="fas fa-user-injured"></i>
+                                            </div>
+                                            <div class="req-patient-info">
+                                                <div class="req-patient-name">${req.patient_name}</div>
+                                                <div class="req-patient-phone">
+                                                    <c:if test="${not empty req.patient_phone}">
+                                                        <i class="fas fa-phone" style="font-size:.6rem;"></i> ${req.patient_phone}
+                                                    </c:if>
+                                                </div>
+                                            </div>
+                                            <div class="req-pills">
+                                                <span class="req-pill req-pill-date">
+                                                    <i class="fas fa-calendar-day"></i>
+                                                    <fmt:formatDate value="${req.appointment_date}" pattern="MMM dd, yyyy"/>
+                                                </span>
+                                                <span class="req-pill req-pill-time">
+                                                    <i class="fas fa-clock"></i>
+                                                    ${req.appointment_time}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Problem description — the hero field -->
+                                        <div class="req-problem-block">
+                                            <div class="req-problem-label">
+                                                <i class="fas fa-comment-medical" style="margin-right:4px;"></i>Chief Complaint
+                                            </div>
+                                            <div class="req-problem-text">${req.problem_description}</div>
+                                            <c:if test="${not empty req.symptoms}">
+                                                <div class="req-symptoms-text">
+                                                    <i class="fas fa-notes-medical" style="margin-right:4px;color:#94a3b8;"></i>${req.symptoms}
+                                                </div>
+                                            </c:if>
+                                        </div>
+
+                                        <!-- Submitted date -->
+                                        <div class="req-meta-row">
+                                            <i class="fas fa-paper-plane"></i>
+                                            Submitted on <fmt:formatDate value="${req.created_at}" pattern="MMM dd, yyyy"/>
+                                        </div>
+
+                                    </div><!-- /.req-card-left -->
+
+                                    <!-- RIGHT: ID + assign button -->
+                                    <div class="req-card-right">
+                                        <div class="req-id-tag">#${req.appointment_id}</div>
+                                       <button class="btn-assign-card"
+                                        data-req-id="${req.id}"
+                                          data-patient-name="${fn:escapeXml(req.patient_name)}"
+                                          data-problem="${fn:escapeXml(req.problem_description)}"
+                                         onclick="openAssignModalFromBtn(this)">
+                                         <i class="fas fa-user-plus"></i> Assign Doctor
+                                         </button>
+                                    </div>
+
+                                </div><!-- /.req-card -->
+                            </c:forEach>
+                        </div><!-- /.req-grid -->
                     </c:when>
                     <c:otherwise>
-                        <div class="empty-state">
+                        <div class="req-empty">
                             <i class="fas fa-inbox"></i>
                             <p>No pending appointment requests</p>
+                            <span>New requests from patients will appear here</span>
                         </div>
                     </c:otherwise>
                 </c:choose>
             </div>
-        </c:if>
-        
-        <!-- ==================== REGULAR APPOINTMENTS TABLE ==================== -->
-        <c:if test="${currentStatus != 'requests'}">
+
+        </div><!-- /#viewRequests -->
+
+        <!-- ================================================================
+             VIEW 2 — APPOINTMENT DETAILS (filter tabs + table)
+             ================================================================ -->
+        <div id="viewDetails" class="adm-view ${initView == 'details' ? 'active' : ''}">
+
+            <!-- Filter bar — "Requests" tab removed -->
+            <div class="filter-bar">
+                <div class="filter-buttons">
+                    <a href="${pageContext.request.contextPath}/admin/appointments"
+                       class="filter-btn ${empty currentStatus || currentStatus == 'requests' ? 'active' : ''}">All</a>
+                    <a href="${pageContext.request.contextPath}/admin/appointments?status=pending"
+                       class="filter-btn ${currentStatus == 'pending' ? 'active' : ''}">Pending</a>
+                    <a href="${pageContext.request.contextPath}/admin/appointments?status=confirmed"
+                       class="filter-btn ${currentStatus == 'confirmed' ? 'active' : ''}">Confirmed</a>
+                    <a href="${pageContext.request.contextPath}/admin/appointments?status=completed"
+                       class="filter-btn ${currentStatus == 'completed' ? 'active' : ''}">Completed</a>
+                    <a href="${pageContext.request.contextPath}/admin/appointments?status=cancelled"
+                       class="filter-btn ${currentStatus == 'cancelled' ? 'active' : ''}">Cancelled</a>
+                </div>
+
+                <form method="get" action="${pageContext.request.contextPath}/admin/appointments" class="search-form">
+                    <c:if test="${not empty currentStatus && currentStatus != 'requests'}">
+                        <input type="hidden" name="status" value="${currentStatus}">
+                    </c:if>
+                    <input type="text" name="search"
+                           placeholder="Search by patient, doctor, or ID..."
+                           value="${currentSearch}">
+                    <button type="submit"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+
+            <!-- Appointments table -->
             <div class="dashboard-card">
                 <c:choose>
                     <c:when test="${not empty appointments}">
@@ -173,9 +252,11 @@
                     </c:otherwise>
                 </c:choose>
             </div>
-        </c:if>
-    </div>
-</div>
+
+        </div><!-- /#viewDetails -->
+
+    </div><!-- /.admin-main -->
+</div><!-- /.admin-container -->
 
 <!-- ==================== APPOINTMENT DETAILS MODAL ==================== -->
 <div id="aptModal" class="modal">
@@ -201,7 +282,8 @@
                 <input type="hidden" name="appointmentId" id="assignAppointmentId">
                 <div class="form-group">
                     <label><i class="fas fa-user-md"></i> Select Doctor</label>
-                    <select name="doctorId" required style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:8px;font-family:inherit;">
+                    <select name="doctorId" required
+                            style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:8px;font-family:inherit;">
                         <option value="">-- Choose a doctor --</option>
                         <c:forEach var="doc" items="${approvedDoctors}">
                             <option value="${doc.id}">Dr. ${doc.full_name} - ${doc.specialization}</option>
@@ -209,8 +291,12 @@
                     </select>
                 </div>
                 <div style="margin-top:20px;text-align:right;">
-                    <button type="button" class="btn-view" style="background:#94a3b8;margin-right:8px;" onclick="closeAssignModal()">Cancel</button>
-                    <button type="submit" class="btn-assign"><i class="fas fa-check"></i> Assign Doctor</button>
+                    <button type="button" class="btn-view"
+                            style="background:#94a3b8;margin-right:8px;"
+                            onclick="closeAssignModal()">Cancel</button>
+                    <button type="submit" class="btn-assign">
+                        <i class="fas fa-check"></i> Assign Doctor
+                    </button>
                 </div>
             </form>
         </div>
@@ -218,7 +304,15 @@
 </div>
 
 <script>
-    // Appointment details modal
+    /* ── View Toggle ─────────────────────────────────────── */
+    function switchAdminView(view) {
+        document.getElementById('viewRequests').classList.toggle('active', view === 'requests');
+        document.getElementById('viewDetails').classList.toggle('active', view === 'details');
+        document.getElementById('toggleRequests').classList.toggle('active', view === 'requests');
+        document.getElementById('toggleDetails').classList.toggle('active', view === 'details');
+    }
+
+    /* ── Appointment Details Modal ───────────────────────── */
     function openAptModal(btn) {
         var row = btn.closest('.apt-row');
         var html = '';
@@ -234,31 +328,41 @@
         var prescription = row.getAttribute('data-prescription');
         if (prescription) html += '<div class="detail-row"><div class="detail-label">Prescription</div><div class="detail-value">' + prescription + '</div></div>';
         var reason = row.getAttribute('data-cancellation-reason');
-        if (reason && row.getAttribute('data-status') === 'cancelled') html += '<div class="detail-row"><div class="detail-label">Cancellation Reason</div><div class="detail-value">' + reason + '</div></div>';
+        if (reason && row.getAttribute('data-status') === 'cancelled') {
+            html += '<div class="detail-row"><div class="detail-label">Cancellation Reason</div><div class="detail-value">' + reason + '</div></div>';
+        }
         document.getElementById('aptModalBody').innerHTML = html;
         document.getElementById('aptModal').classList.add('show');
     }
-    
+
     function closeAptModal() {
         document.getElementById('aptModal').classList.remove('show');
     }
-    
-    // Assign doctor modal
+
+    /* ── Assign Doctor Modal ─────────────────────────────── */
     function openAssignModal(id, patientName, problem) {
         document.getElementById('assignAppointmentId').value = id;
-        document.getElementById('assignPatientInfo').innerHTML = 
-            '<p><strong>Patient:</strong> ' + patientName + '</p>' +
-            '<p><strong>Problem:</strong> ' + problem + '</p>';
+        document.getElementById('assignPatientInfo').innerHTML =
+            '<div class="detail-row"><div class="detail-label">Patient</div><div class="detail-value">' + patientName + '</div></div>' +
+            '<div class="detail-row"><div class="detail-label">Chief Complaint</div><div class="detail-value">' + problem + '</div></div>';
         document.getElementById('assignModal').classList.add('show');
     }
-    
+
     function closeAssignModal() {
         document.getElementById('assignModal').classList.remove('show');
     }
-    
-    window.onclick = function(event) {
+
+    /* ── Close modals on backdrop click ─────────────────── */
+    window.onclick = function (event) {
         if (event.target === document.getElementById('aptModal')) closeAptModal();
         if (event.target === document.getElementById('assignModal')) closeAssignModal();
+    };
+    
+    function openAssignModalFromBtn(btn) {
+        var id = btn.getAttribute('data-req-id');
+        var patientName = btn.getAttribute('data-patient-name');
+        var problem = btn.getAttribute('data-problem');
+        openAssignModal(id, patientName, problem);
     }
 </script>
 

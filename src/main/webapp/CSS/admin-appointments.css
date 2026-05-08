@@ -274,6 +274,358 @@
     display: inline-block;
 }
 
+
+/* ============================================================
+   NEW CSS — Add to bottom of admin-appointments.css
+   Prefix: .req-  |  Also adds .adm-toggle pattern
+   ============================================================ */
+
+/* ── Section Toggle (mirrors booking-type-toggle pattern) ── */
+.adm-toggle {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 28px;
+}
+
+.adm-toggle-btn {
+    padding: 12px 28px;
+    border: 2px solid #e2e8f0;
+    background: #f8fafc;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #64748b;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.22s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.adm-toggle-btn:hover {
+    border-color: #0a5c8e;
+    background: #f0f9ff;
+    color: #0a5c8e;
+}
+
+.adm-toggle-btn.active {
+    background: #0a5c8e;
+    color: #fff;
+    border-color: #0a5c8e;
+    box-shadow: 0 4px 14px rgba(10, 92, 142, 0.22);
+}
+
+/* Badge on toggle button showing count */
+.adm-toggle-badge {
+    background: rgba(255, 255, 255, 0.25);
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 20px;
+    line-height: 1.4;
+}
+
+.adm-toggle-btn:not(.active) .adm-toggle-badge {
+    background: #e2e8f0;
+    color: #64748b;
+}
+
+/* Section views (show/hide) */
+.adm-view {
+    display: none;
+}
+
+.adm-view.active {
+    display: block;
+}
+
+/* ── Request Cards Grid ──────────────────────────────────── */
+.req-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Individual request card */
+.req-card {
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid #e8eef4;
+    box-shadow: 0 2px 8px rgba(10, 92, 142, 0.05), 0 1px 2px rgba(0,0,0,0.04);
+    padding: 22px 24px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px;
+    align-items: center;
+    transition: box-shadow 0.22s ease, transform 0.22s ease, border-color 0.22s ease;
+    cursor: default;
+}
+
+.req-card:hover {
+    box-shadow: 0 6px 24px rgba(10, 92, 142, 0.12), 0 2px 6px rgba(0,0,0,0.06);
+    transform: translateY(-2px);
+    border-color: #bdd7ef;
+}
+
+/* Left content */
+.req-card-left {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+}
+
+/* Patient row */
+.req-patient-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.req-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #e3f2fd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.req-avatar i {
+    color: #0a5c8e;
+    font-size: 1.15rem;
+}
+
+.req-patient-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.req-patient-name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0f172a;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.req-patient-phone {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    margin-top: 1px;
+}
+
+/* Date/time pills */
+.req-pills {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-left: auto;
+}
+
+.req-pill {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.req-pill-date {
+    background: #e3f2fd;
+    color: #0a5c8e;
+}
+
+.req-pill-time {
+    background: #f0fdf4;
+    color: #16a34a;
+}
+
+.req-pill i {
+    font-size: 0.65rem;
+}
+
+/* Problem section */
+.req-problem-block {
+    background: #f8fafc;
+    border-left: 3px solid #0a5c8e;
+    border-radius: 0 10px 10px 0;
+    padding: 12px 16px;
+}
+
+.req-problem-label {
+    font-size: 0.68rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #0a5c8e;
+    margin-bottom: 5px;
+}
+
+.req-problem-text {
+    font-size: 0.88rem;
+    color: #334155;
+    line-height: 1.6;
+}
+
+/* Symptoms (optional, shown when present) */
+.req-symptoms-text {
+    font-size: 0.8rem;
+    color: #64748b;
+    margin-top: 6px;
+    font-style: italic;
+}
+
+/* Footer row: submitted date */
+.req-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.72rem;
+    color: #94a3b8;
+}
+
+.req-meta-row i {
+    font-size: 0.68rem;
+}
+
+/* Right: Assign button */
+.req-card-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.req-id-tag {
+    font-size: 0.65rem;
+    color: #94a3b8;
+    font-weight: 600;
+    text-align: center;
+}
+
+.btn-assign-card {
+    background: linear-gradient(135deg, #0a5c8e 0%, #0d7cc2 100%);
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 700;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: all 0.22s ease;
+    box-shadow: 0 3px 10px rgba(10, 92, 142, 0.22);
+    white-space: nowrap;
+}
+
+.btn-assign-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(10, 92, 142, 0.32);
+}
+
+.btn-assign-card:active {
+    transform: translateY(0);
+}
+
+/* Empty state for requests view */
+.req-empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: #94a3b8;
+    background: #fff;
+    border-radius: 16px;
+    border: 1px dashed #e2e8f0;
+}
+
+.req-empty i {
+    font-size: 3rem;
+    color: #cbd5e1;
+    margin-bottom: 14px;
+    display: block;
+}
+
+.req-empty p {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.req-empty span {
+    font-size: 0.82rem;
+    color: #94a3b8;
+    display: block;
+    margin-top: 4px;
+}
+
+/* Requests view search bar */
+.req-search-bar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 18px;
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .adm-toggle {
+        flex-direction: column;
+    }
+
+    .adm-toggle-btn {
+        justify-content: center;
+    }
+
+    .req-card {
+        grid-template-columns: 1fr;
+    }
+
+    .req-card-right {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid #f1f5f9;
+        padding-top: 12px;
+        margin-top: 4px;
+    }
+
+    .req-pills {
+        margin-left: 0;
+    }
+
+    .req-patient-row {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 480px) {
+    .req-card {
+        padding: 16px;
+    }
+
+    .req-problem-block {
+        padding: 10px 12px;
+    }
+
+    .adm-toggle-btn {
+        padding: 10px 18px;
+        font-size: 0.82rem;
+    }
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
     .appointments-table {

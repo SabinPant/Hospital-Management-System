@@ -36,14 +36,14 @@ public class AdminAppointmentsServlet extends HttpServlet {
         String status = request.getParameter("status");
         String search = request.getParameter("search");
         
-        // Handle appointment requests tab
-        if ("requests".equals(status)) {
-            List<Map<String, Object>> requests = appointmentDAO.getAdminAssignedRequests();
-            List<Map<String, Object>> approvedDoctors = getApprovedDoctorsForDropdown();
-            request.setAttribute("appointmentRequests", requests);
-            request.setAttribute("approvedDoctors", approvedDoctors);
-        } else {
-            // Normal appointments
+     // Always load requests (needed for the toggle badge count)
+        List<Map<String, Object>> requests = appointmentDAO.getAdminAssignedRequests();
+        List<Map<String, Object>> approvedDoctors = getApprovedDoctorsForDropdown();
+        request.setAttribute("appointmentRequests", requests);
+        request.setAttribute("approvedDoctors", approvedDoctors);
+
+        // Load regular appointments (for the details view)
+        if (!"requests".equals(status)) {
             List<Map<String, Object>> appointments = appointmentDAO.getAllAppointments(status, search);
             request.setAttribute("appointments", appointments);
         }
