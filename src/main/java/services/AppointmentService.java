@@ -116,27 +116,38 @@ public class AppointmentService {
         return completed;
     }
     
-    public boolean bookAppointment(int patientId, int doctorId, Date appointmentDate, Time appointmentTime, String symptoms) {
-        // Convert to LocalDate for proper date-only comparison
+    public String bookAppointment(int patientId, int doctorId, Date appointmentDate, Time appointmentTime, String symptoms) {
         LocalDate today = LocalDate.now();
         LocalDate appointmentLocalDate = appointmentDate.toLocalDate();
         
-        // Business rule: Cannot book appointment for past dates (allow today and future)
+        // Check 1: Past date
         if (appointmentLocalDate.isBefore(today)) {
-            return false;
+            return "Cannot book appointment for past dates.";
         }
         
-        // Create appointment
-        Appointment appointment = new Appointment(patientId, doctorId, appointmentDate, appointmentTime, symptoms);        
+        // Check 2: Slot availability
+        String dateStr = appointmentDate.toString();
+        String timeStr = appointmentTime.toString();
+        
+        if (!appointmentDAO.isSlotAvailable(doctorId, dateStr, timeStr)) {
+            return "This time slot is already booked. Please choose another time.";
+        }
+        
+     // Create and save
+        Appointment appointment = new Appointment(patientId, doctorId, appointmentDate, appointmentTime, symptoms);
+        appointment.setRequestType("direct");
+        appointment.setAppointmentId(appointmentDAO.generateAppointmentId());
+
         boolean saved = appointmentDAO.saveAppointment(appointment);
         
         if (saved) {
             String doctorName = appointmentDAO.getDoctorNameByAppointmentId(appointment.getId());
             notificationDAO.addNotification(patientId, "Appointment Booked", 
                 "Your appointment with Dr. " + doctorName + " on " + appointmentDate + " at " + appointmentTime + " has been booked. Awaiting confirmation.", "info");
+            return null; // Success — null means no error
         }
         
-        return saved;
+        return "Failed to save appointment. Please try again.";
     }
     
  // Business logic: Submit appointment request (admin-assigned flow)
@@ -176,6 +187,48 @@ notificationDAO.addNotification(patientId, "Appointment Request Submitted",
 
 return saved;
 }
+    
+    /**
+     * Assigns a doctor to an admin-assigned appointment request.
+     * Checks slot availability before assigning.
+     * Returns error message if failed, null if success.
+     */
+    public String assignDoctorToRequest(int appointmentId, int doctorId, int adminId) {
+        // Get appointment details for slot check
+        Appointment apt = appointmentDAO.getAppointmentById(appointmentId);
+        
+        if (apt == null) {
+            return "Appointment request not found.";
+        }
+        
+        // Check slot availability
+        String dateStr = apt.getAppointmentDate().toString();
+        String timeStr = apt.getAppointmentTime().toString();
+        
+        if (!appointmentDAO.isSlotAvailable(doctorId, dateStr, timeStr)) {
+            String doctorName = appointmentDAO.getDoctorNameById(doctorId);  
+            return "Dr. " + doctorName + " is already booked at this time. Please choose another doctor.";
+        }
+        
+        // Assign the doctor
+        boolean assigned = appointmentDAO.assignDoctorToRequest(appointmentId, doctorId, adminId);
+        
+        if (!assigned) {
+            return "Failed to assign doctor. Please try again.";
+        }
+        
+        // Notify patient
+        int patientId = apt.getPatientId();
+        String doctorName = appointmentDAO.getDoctorNameById(doctorId);        notificationDAO.addNotification(patientId, "Doctor Assigned", 
+            "Dr. " + doctorName + " has been assigned to your appointment request. Awaiting confirmation.", "info");
+        
+        // Notify doctor
+        notificationDAO.addNotification(doctorId, "New Appointment Assigned", 
+            "A new patient has been assigned to you by the admin. Please confirm the appointment.", "info");
+        
+        return null; // Success — no error
+    }
+    
     
  // Get all approved doctors (for booking page)
     public List<Appointment> getAllDoctors() {

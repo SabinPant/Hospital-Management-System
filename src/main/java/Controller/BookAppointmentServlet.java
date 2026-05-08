@@ -69,13 +69,13 @@ public class BookAppointmentServlet extends HttpServlet {
                 return;
             }
             
-            boolean saved = appointmentService.bookAppointment(patientId, doctorId, appointmentDate, appointmentTime, symptoms);
-            
-            if (saved) {
+            String result = appointmentService.bookAppointment(patientId, doctorId, appointmentDate, appointmentTime, symptoms);
+
+            if (result == null) {
                 session.setAttribute("bookingSuccess", "Appointment booked successfully!");
                 response.sendRedirect(request.getContextPath() + "/patient/appointments");
             } else {
-                session.setAttribute("bookingError", "Failed to book appointment. Please try again.");
+                session.setAttribute("bookingError", result);
                 response.sendRedirect(request.getContextPath() + "/patient/book-appointment");
             }
             

@@ -46,6 +46,22 @@ public class AppointmentDAO {
 	        return String.format("APT-%d-0001", currentYear);
 	    }
 	}
+	
+	// Get doctor name by doctor ID (not appointment ID)
+	public String getDoctorNameById(int doctorId) {
+	    String query = "SELECT full_name FROM users WHERE id = ?";
+	    try (Connection conn = DBConnection.getConnection();
+	         PreparedStatement pstmt = conn.prepareStatement(query)) {
+	        pstmt.setInt(1, doctorId);
+	        ResultSet rs = pstmt.executeQuery();
+	        if (rs.next()) {
+	            return rs.getString("full_name");
+	        }
+	    } catch (SQLException e) {
+	        System.err.println("Error getting doctor name: " + e.getMessage());
+	    }
+	    return "Unknown";
+	}
     
 	public boolean saveAppointment(Appointment appointment) {
 	    String query = "INSERT INTO appointments (appointment_id, patient_id, doctor_id, appointment_date, appointment_time, status, request_type, symptoms, problem_description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -851,6 +867,48 @@ public class AppointmentDAO {
         
         return history;
     }
+    
+    /**
+     * Checks if a time slot is available for a specific doctor.
+     * Returns true if the slot is FREE, false if already booked.
+     * 
+     * A slot is considered taken if there's a pending, confirmed, or completed
+     * appointment for that doctor at that date and time.
+     * Cancelled and admin_assigned statuses do not block the slot.
+     */
+    public boolean isSlotAvailable(int doctorId, String date, String time) {
+        String query = "SELECT COUNT(*) FROM appointments " +
+                       "WHERE doctor_id = ? " +
+                       "AND appointment_date = ? " +
+                       "AND appointment_time = ? " +
+                       "AND status IN ('pending', 'confirmed', 'completed')";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, doctorId);
+            pstmt.setDate(2, java.sql.Date.valueOf(date));
+            pstmt.setTime(3, java.sql.Time.valueOf(time));
+            
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                int count = rs.getInt(1);
+                System.out.println("Slot check - Doctor: " + doctorId + 
+                                 ", Date: " + date + ", Time: " + time + 
+                                 ", Count: " + count);
+                return count == 0; // true if free, false if taken
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error checking slot availability: " + e.getMessage());
+            e.printStackTrace();
+            return false; // On error, block booking to be safe
+        }
+        
+        return false;
+    }
+    
     
     // Helper method to extract appointment from ResultSet
     private Appointment extractAppointmentFromResultSet(ResultSet rs) throws SQLException {

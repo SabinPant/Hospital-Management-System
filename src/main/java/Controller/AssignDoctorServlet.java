@@ -8,20 +8,17 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
-import dao.AppointmentDAO;
-import dao.NotificationDAO;
+import services.AppointmentService;
 import utils.SessionUtil;
 
 @WebServlet("/admin/assign-doctor")
 public class AssignDoctorServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private AppointmentDAO appointmentDAO;
-    private NotificationDAO notificationDAO;
+    private AppointmentService appointmentService;
     
     @Override
     public void init() throws ServletException {
-        appointmentDAO = new AppointmentDAO();
-        notificationDAO = new NotificationDAO();
+        appointmentService = new AppointmentService();
     }
     
     @Override
@@ -45,22 +42,13 @@ public class AssignDoctorServlet extends HttpServlet {
                 return;
             }
             
-            boolean assigned = appointmentDAO.assignDoctorToRequest(appointmentId, doctorId, adminId);
+           
+            String error = appointmentService.assignDoctorToRequest(appointmentId, doctorId, adminId);
             
-            if (assigned) {
-                // Notify the patient
-                int patientId = appointmentDAO.getPatientIdByAppointmentId(appointmentId);
-                String doctorName = appointmentDAO.getDoctorNameByAppointmentId(appointmentId);
-                notificationDAO.addNotification(patientId, "Doctor Assigned", 
-                    "Dr. " + doctorName + " has been assigned to your appointment request. Awaiting confirmation.", "info");
-                
-                // Notify the doctor
-                notificationDAO.addNotification(doctorId, "New Appointment Assigned", 
-                    "A new patient has been assigned to you by the admin. Please confirm the appointment.", "info");
-                
+            if (error == null) {
                 response.sendRedirect(request.getContextPath() + "/admin/appointments?status=requests&success=Doctor assigned successfully");
             } else {
-                response.sendRedirect(request.getContextPath() + "/admin/appointments?status=requests&error=Failed to assign doctor");
+                response.sendRedirect(request.getContextPath() + "/admin/appointments?status=requests&error=" + java.net.URLEncoder.encode(error, "UTF-8"));
             }
             
         } catch (NumberFormatException e) {
