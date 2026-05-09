@@ -443,11 +443,24 @@
         doctorFields.classList.toggle('active',   isDoctor);
         userTypeInput.value = type;
 
+        // Toggle required on doctor fields
         document.querySelectorAll('#doctorFields input, #doctorFields select, #doctorFields textarea').forEach(f => {
             const required = ['specialization','qualification','licenseNumber','experienceYears','consultationFee'];
             if (isDoctor && required.includes(f.name)) f.setAttribute('required','required');
             else f.removeAttribute('required');
         });
+        
+        // Remove required from patient fields when doctor is selected
+        if (isDoctor) {
+            document.querySelectorAll('#patientFields input[required], #patientFields select[required]').forEach(f => {
+                f.removeAttribute('required');
+            });
+        } else {
+            // Restore required on patient fields
+            document.querySelector('input[name="dob"]')?.setAttribute('required', 'required');
+            document.querySelector('select[name="bloodGroup"]')?.setAttribute('required', 'required');
+            document.querySelector('input[name="emergencyContact"]')?.setAttribute('required', 'required');
+        }
     }
 
     patientBtn.addEventListener('click', () => setUserType('patient'));
