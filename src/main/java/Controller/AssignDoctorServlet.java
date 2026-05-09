@@ -34,16 +34,25 @@ public class AssignDoctorServlet extends HttpServlet {
         int adminId = SessionUtil.getAdminId(session);
         
         try {
-            int appointmentId = Integer.parseInt(request.getParameter("appointmentId"));
-            int doctorId = Integer.parseInt(request.getParameter("doctorId"));
-            
-            if (doctorId <= 0) {
-                response.sendRedirect(request.getContextPath() + "/admin/appointments?status=requests&error=Please select a doctor");
-                return;
-            }
-            
-           
-            String error = appointmentService.assignDoctorToRequest(appointmentId, doctorId, adminId);
+        	int appointmentId = Integer.parseInt(request.getParameter("appointmentId"));
+        	int doctorId = Integer.parseInt(request.getParameter("doctorId"));
+        	String newDate = request.getParameter("newDate");
+        	String newTime = request.getParameter("newTime");
+
+        	System.out.println("=== ASSIGN DEBUG ===");
+        	System.out.println("appointmentId: " + appointmentId);
+        	System.out.println("doctorId: " + doctorId);
+        	System.out.println("newDate: '" + newDate + "'");
+        	System.out.println("newTime: '" + newTime + "'");
+        	
+        	
+        	if (doctorId <= 0) {
+        	    response.sendRedirect(request.getContextPath() + "/admin/appointments?status=requests&error=Please select a doctor");
+        	    return;
+        	}
+
+        	// Delegate all business logic to service (with optional new date/time)
+        	String error = appointmentService.assignDoctorToRequest(appointmentId, doctorId, adminId, newDate, newTime);
             
             if (error == null) {
                 response.sendRedirect(request.getContextPath() + "/admin/appointments?status=requests&success=Doctor assigned successfully");

@@ -909,6 +909,30 @@ public class AppointmentDAO {
         return false;
     }
     
+    /**
+     * Updates the date and time for an appointment.
+     * Used when admin reschedules during doctor assignment.
+     */
+    public boolean updateDateTime(int appointmentId, String date, String time) {
+        String query = "UPDATE appointments SET appointment_date = ?, appointment_time = ? WHERE id = ?";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setDate(1, java.sql.Date.valueOf(date));
+            pstmt.setTime(2, java.sql.Time.valueOf(time + ":00"));            pstmt.setInt(3, appointmentId);
+            
+            int rows = pstmt.executeUpdate();
+            System.out.println("Appointment date/time updated - ID: " + appointmentId + 
+                              ", Rows: " + rows);
+            return rows > 0;
+            
+        } catch (SQLException e) {
+            System.err.println("Error updating appointment date/time: " + e.getMessage());
+            return false;
+        }
+    }
+    
     
     // Helper method to extract appointment from ResultSet
     private Appointment extractAppointmentFromResultSet(ResultSet rs) throws SQLException {

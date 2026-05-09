@@ -190,43 +190,58 @@ return saved;
     
     /**
      * Assigns a doctor to an admin-assigned appointment request.
+     * Optionally updates the date/time before assigning.
      * Checks slot availability before assigning.
      * Returns error message if failed, null if success.
      */
-    public String assignDoctorToRequest(int appointmentId, int doctorId, int adminId) {
-        // Get appointment details for slot check
+    public String assignDoctorToRequest(int appointmentId, int doctorId, int adminId, 
+                                         String newDate, String newTime) {
+        // Step 1: If new date/time provided, update the appointment
+        if (newDate != null && !newDate.trim().isEmpty() && 
+            newTime != null && !newTime.trim().isEmpty()) {
+            boolean updated = appointmentDAO.updateDateTime(appointmentId, newDate, newTime);
+            if (!updated) {
+                return "Failed to update appointment schedule. Please try again.";
+            }
+        }
+        
+        // Step 2: Get appointment details for slot check
         Appointment apt = appointmentDAO.getAppointmentById(appointmentId);
         
         if (apt == null) {
             return "Appointment request not found.";
         }
         
-        // Check slot availability
+        // Step 3: Check slot availability
         String dateStr = apt.getAppointmentDate().toString();
         String timeStr = apt.getAppointmentTime().toString();
         
         if (!appointmentDAO.isSlotAvailable(doctorId, dateStr, timeStr)) {
-            String doctorName = appointmentDAO.getDoctorNameById(doctorId);  
-            return "Dr. " + doctorName + " is already booked at this time. Please choose another doctor.";
+            String doctorName = appointmentDAO.getDoctorNameById(doctorId);
+            return "Dr. " + doctorName + " is already booked at " + timeStr + " on " + dateStr + 
+                   ". Please choose another time or doctor.";
         }
         
-        // Assign the doctor
+        // Step 4: Assign the doctor
         boolean assigned = appointmentDAO.assignDoctorToRequest(appointmentId, doctorId, adminId);
         
         if (!assigned) {
             return "Failed to assign doctor. Please try again.";
         }
         
-        // Notify patient
+        // Step 5: Notify patient
         int patientId = apt.getPatientId();
-        String doctorName = appointmentDAO.getDoctorNameById(doctorId);        notificationDAO.addNotification(patientId, "Doctor Assigned", 
-            "Dr. " + doctorName + " has been assigned to your appointment request. Awaiting confirmation.", "info");
+        String doctorName = appointmentDAO.getDoctorNameById(doctorId);
+        notificationDAO.addNotification(patientId, "Doctor Assigned", 
+            "Dr. " + doctorName + " has been assigned to your appointment on " + 
+            dateStr + " at " + timeStr + ". Awaiting confirmation.", "info");
         
-        // Notify doctor
+        // Step 6: Notify doctor
         notificationDAO.addNotification(doctorId, "New Appointment Assigned", 
-            "A new patient has been assigned to you by the admin. Please confirm the appointment.", "info");
+            "A new patient has been assigned to you by the admin for " + 
+            dateStr + " at " + timeStr + ". Please confirm the appointment.", "info");
         
-        return null; // Success — no error
+        return null; // Success
     }
     
     

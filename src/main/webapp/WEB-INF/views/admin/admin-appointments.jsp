@@ -277,19 +277,48 @@
             <span class="modal-close" onclick="closeAssignModal()">&times;</span>
         </div>
         <div class="modal-body">
-            <div id="assignPatientInfo" style="margin-bottom:16px;"></div>
-            <form id="assignForm" method="POST" action="${pageContext.request.contextPath}/admin/assign-doctor">
-                <input type="hidden" name="appointmentId" id="assignAppointmentId">
-                <div class="form-group">
-                    <label><i class="fas fa-user-md"></i> Select Doctor</label>
-                    <select name="doctorId" required
-                            style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:8px;font-family:inherit;">
-                        <option value="">-- Choose a doctor --</option>
-                        <c:forEach var="doc" items="${approvedDoctors}">
-                            <option value="${doc.id}">Dr. ${doc.full_name} - ${doc.specialization}</option>
-                        </c:forEach>
-                    </select>
-                </div>
+           <div id="assignPatientInfo" style="margin-bottom:16px;"></div>
+<form id="assignForm" method="POST" action="${pageContext.request.contextPath}/admin/assign-doctor">
+    <input type="hidden" name="appointmentId" id="assignAppointmentId">
+    
+    <div class="form-group" style="margin-bottom:16px;">
+    <label><i class="fas fa-user-md"></i> Select Doctor</label>
+    <select name="doctorId" required
+            style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:8px;font-family:inherit;">
+        <option value="">-- Choose a doctor --</option>
+        <c:forEach var="doc" items="${approvedDoctors}">
+            <option value="${doc.id}">Dr. ${doc.full_name} - ${doc.specialization}</option>
+        </c:forEach>
+    </select>
+</div>
+    
+    <!-- Schedule adjustment -->
+    <div style="background:#f8fafc;border-radius:12px;padding:14px 16px;margin-bottom:16px;border:1px solid #e2e8f0;">
+        <label style="font-size:0.75rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:10px;">
+            <i class="fas fa-calendar-alt"></i> Adjust Schedule (optional)
+        </label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div>
+                <label style="font-size:0.7rem;color:#94a3b8;display:block;margin-bottom:4px;">Date</label>
+                <input type="date" name="newDate" id="assignNewDate" 
+                       style="width:100%;padding:8px 10px;border:1px solid #e2e8f0;border-radius:8px;font-family:inherit;font-size:0.85rem;">
+            </div>
+            <div>
+                <label style="font-size:0.7rem;color:#94a3b8;display:block;margin-bottom:4px;">Time</label>
+                <select name="newTime" id="assignNewTime"
+                        style="width:100%;padding:8px 10px;border:1px solid #e2e8f0;border-radius:8px;font-family:inherit;font-size:0.85rem;">
+                    <option value="">No change</option>
+                    <option value="09:00">09:00 AM</option>
+                    <option value="10:00">10:00 AM</option>
+                    <option value="11:00">11:00 AM</option>
+                    <option value="12:00">12:00 PM</option>
+                    <option value="14:00">02:00 PM</option>
+                    <option value="15:00">03:00 PM</option>
+                    <option value="16:00">04:00 PM</option>
+                </select>
+            </div>
+        </div>
+    </div>
                 <div style="margin-top:20px;text-align:right;">
                     <button type="button" class="btn-view"
                             style="background:#94a3b8;margin-right:8px;"
@@ -340,13 +369,13 @@
     }
 
     /* ── Assign Doctor Modal ─────────────────────────────── */
-    function openAssignModal(id, patientName, problem) {
-        document.getElementById('assignAppointmentId').value = id;
-        document.getElementById('assignPatientInfo').innerHTML =
-            '<div class="detail-row"><div class="detail-label">Patient</div><div class="detail-value">' + patientName + '</div></div>' +
-            '<div class="detail-row"><div class="detail-label">Chief Complaint</div><div class="detail-value">' + problem + '</div></div>';
-        document.getElementById('assignModal').classList.add('show');
-    }
+function openAssignModal(id, patientName, problem) {
+    document.getElementById('assignAppointmentId').value = id;
+    document.getElementById('assignPatientInfo').innerHTML =
+        '<div class="detail-row"><div class="detail-label">Patient</div><div class="detail-value">' + patientName + '</div></div>' +
+        '<div class="detail-row"><div class="detail-label">Chief Complaint</div><div class="detail-value">' + problem + '</div></div>';
+    document.getElementById('assignModal').classList.add('show');
+}
 
     function closeAssignModal() {
         document.getElementById('assignModal').classList.remove('show');
