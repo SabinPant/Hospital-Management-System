@@ -215,10 +215,6 @@
     <jsp:include page="../../../components/footer.jsp" />
 
     <script>
-        /**
-         * Writing cancellation reason prompt if it is vaild in end point
-         * @param {number} id - The unique appointment ID to cancel.
-         */
         function cancelAppointment(id) {
             var reason = prompt('Please enter a reason for cancellation:');
 
