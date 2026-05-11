@@ -7,11 +7,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Department Management | MediLife Admin</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/global.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/admin.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/admin_Department.css">
+     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+   <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/global.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/admin.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/admin_Department.css">
     
 </head>
 <body>
@@ -27,20 +27,16 @@
 
     <!-- Main -->
     <div class="admin-main">
-        <div class="dept-wrapper">
+     
 
             <!-- Page Header -->
-            <div class="page-header">
-                <div class="page-header-left">
-                    <h1><i class="fas fa-building"></i> Department Management</h1>
-                    <p>Create and manage hospital departments</p>
-                </div>
-                <div class="admin-user">
-                    <span><i class="fas fa-user-shield"></i> ${sessionScope.admin_name != null ? sessionScope.admin_name : 'Admin'}</span>
-                    <a href="${pageContext.request.contextPath}/admin/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
-                </div>
-            </div>
-
+<div class="admin-topbar">
+    <h1><i class="fas fa-building"></i> Department Management</h1>
+    <div class="admin-user">
+        <span><i class="fas fa-user-shield"></i> ${sessionScope.admin_name != null ? sessionScope.admin_name : 'Admin'}</span>
+        <a href="${pageContext.request.contextPath}/admin/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+</div>
             <!-- Alerts -->
             <c:if test="${not empty sessionScope.success}">
                 <div class="alert alert-success">

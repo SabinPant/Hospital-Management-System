@@ -34,7 +34,7 @@
 }
 
 body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     background-color: var(--white);
     color: var(--gray-dark);
     line-height: 1.5;
@@ -343,14 +343,14 @@ header {
 
 .nav-links {
     display: flex;
-    gap: 32px;
+    gap: 28px;
     list-style: none;
 }
 
 .nav-links a {
     font-weight: 600;
     color: var(--gray-dark);
-    font-size: 1rem;
+    font-size: 0.95rem;
     padding-bottom: 4px;
     position: relative;
 }

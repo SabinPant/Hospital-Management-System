@@ -192,6 +192,26 @@
     box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2);
 }
 
+/* Financial Stats Grid */
+.finance-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+@media (max-width: 1400px) {
+    .finance-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .finance-stats {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
     .finance-two-columns {

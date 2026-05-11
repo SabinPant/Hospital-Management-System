@@ -7,8 +7,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Finance | Admin Panel</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/global.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/admin.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/admin-finance.css">
 </head>
@@ -24,15 +25,15 @@
 
     <!-- Main Content -->
    <div class="admin-main">
-        <div class="admin-topbar" style="margin-bottom: 32px;">
-            <h1 style="color: #1e293b; font-size: 1.8rem; font-weight: 700;">Financial Reports</h1>
-            <div class="admin-user" style="display: flex; gap: 20px; align-items: center;">
-                <span style="color: #64748b; font-weight: 500;"><i class="fas fa-user-shield" style="color: #0ea5e9;"></i> ${sessionScope.admin_name != null ? sessionScope.admin_name : 'Admin'}</span>
-                <a href="${pageContext.request.contextPath}/admin/logout" style="color: #ef4444; text-decoration: none; font-weight: 600; padding: 8px 16px; background: #fef2f2; border-radius: 8px; transition: 0.2s;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        <div class="admin-topbar">
+                  <h1><i class="fas fa-chart-line"></i> Financial Reports</h1>    
+                  <div class="admin-user" style="display: flex; gap: 20px; align-items: center;">
+                <span><i class="fas fa-user-shield"></i> ${sessionScope.admin_name != null ? sessionScope.admin_name : 'Admin'}</span>
+                <a href="${pageContext.request.contextPath}/admin/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div>
         </div>
         
-        <div class="stats-grid">
+              <div class="finance-stats">
             <div class="stat-card">
                 <div class="stat-icon" style="background: #e0f2fe; color: #0ea5e9;">
                     <i class="fas fa-dollar-sign"></i>
@@ -45,7 +46,7 @@
             
             <div class="stat-card">
                 <div class="stat-icon" style="background: #dcfce7; color: #10b981;">
-                    <i class="fas fa-calendar-month"></i>
+                    <i class="fas fa-calendar-alt"></i>
                 </div>
                 <div class="stat-details">
                     <p style="color: #64748b; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin: 0 0 4px 0;">This Month</p>
