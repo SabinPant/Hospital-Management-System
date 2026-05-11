@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpSession;
 import dao.DoctorDAO;
 import dao.NotificationDAO;
 import jakarta.servlet.http.Part;
+import utils.ValidationUtil;
 
 public class UserService {
     private UserDAO userDAO;
@@ -50,6 +51,15 @@ public class UserService {
         }
         if (phone == null || phone.trim().isEmpty()) {
             return "Phone number is required";
+        }
+        if (!ValidationUtil.isValidPhone(phone)) {
+            return "Phone number must be exactly 10 digits";
+        }
+        if (!ValidationUtil.isValidEmail(email)) {
+            return "Please enter a valid email address";
+        }
+        if (!ValidationUtil.isValidUsername(username)) {
+            return "Username must be 3-20 characters (letters, numbers, underscore)";
         }
         return null; // No error
     }

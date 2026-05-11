@@ -129,8 +129,7 @@
 
                         <div class="form-group">
                             <label><i class="fas fa-phone"></i> Phone Number <span class="req">*</span></label>
-                            <input type="tel" name="phone" placeholder="10-digit number" required>
-                        </div>
+                             <input type="tel" name="phone" placeholder="10-digit number" required pattern="[0-9]{10}" title="Phone number must be exactly 10 digits">                        </div>
 
                         <div class="form-group">
                             <label><i class="fas fa-map-marker-alt"></i> Address</label>
@@ -164,9 +163,8 @@
                             </div>
 
                         <div class="form-group">
-    <label><i class="fas fa-phone-alt"></i> Emergency Contact <span class="req">*</span></label>
-    <input type="tel" name="emergencyContact" placeholder="Emergency phone number" required>
-</div>
+                          <label><i class="fas fa-phone-alt"></i> Emergency Contact <span class="req">*</span></label>
+                            <input type="tel" name="emergencyContact" placeholder="Emergency phone number" required pattern="[0-9]{10}" title="Emergency contact must be exactly 10 digits"></div>
 
                             <div class="form-group">
                                 <label><i class="fas fa-camera"></i> Profile Picture</label>
@@ -478,6 +476,16 @@
             input.removeAttribute('required');
         }
     });
+
+        // Set max date for DOB (must be at least 12 years old)
+    const dobInput = document.querySelector('input[name="dob"]');
+    if (dobInput) {
+        const today = new Date();
+        const maxDate = new Date(today.getFullYear() - 12, today.getMonth(), today.getDate());
+        dobInput.max = maxDate.toISOString().split('T')[0];
+    }
+
+    setUserType('patient');
 
     setUserType('patient');
 </script>
