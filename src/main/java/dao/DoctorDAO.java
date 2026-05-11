@@ -251,35 +251,6 @@ public class DoctorDAO {
         return earnings;
     }
 
-    // Get monthly earnings for doctor
-    public List<Map<String, Object>> getMonthlyEarnings(int doctorId) {
-        List<Map<String, Object>> monthly = new ArrayList<>();
-        String query = "SELECT DATE_FORMAT(b.payment_date, '%b %Y') as month, " +
-                       "COUNT(b.id) as appointments, SUM(b.amount) as revenue " +
-                       "FROM billings b " +
-                       "WHERE b.doctor_id = ? " +
-                       "GROUP BY DATE_FORMAT(b.payment_date, '%Y-%m') " +
-                       "ORDER BY b.payment_date DESC LIMIT 6";
-        
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-            
-            pstmt.setInt(1, doctorId);
-            ResultSet rs = pstmt.executeQuery();
-            
-            while (rs.next()) {
-                Map<String, Object> month = new HashMap<>();
-                month.put("month", rs.getString("month"));
-                month.put("appointments", rs.getInt("appointments"));
-                month.put("revenue", rs.getDouble("revenue"));
-                monthly.add(month);
-            }
-            
-        } catch (SQLException e) {
-            System.err.println("Error getting monthly earnings: " + e.getMessage());
-        }
-        
-        return monthly;
-    }
+   
     
 }
