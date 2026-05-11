@@ -257,18 +257,7 @@ public class UserDAO {
         return null;
     }
 
-    // Update profile image
-    public void updateProfileImage(int userId, String imagePath) {
-        String query = "UPDATE users SET profile_image = ? WHERE id = ?";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setString(1, imagePath);
-            pstmt.setInt(2, userId);
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println("Error updating profile image: " + e.getMessage());
-        }
-    }
+  
 
     // Lock user
     public boolean lockUser(int userId, String reason) {
