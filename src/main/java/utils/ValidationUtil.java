@@ -2,6 +2,19 @@ package utils;
 
 import java.util.regex.Pattern;
 
+/*
+ * A centralized validation facade that codifies the domain's input integrity
+ * rules into a single, stateless utility surface. Every public contract is a
+ * pure function; null and blank values are rejected early, while domain-specific
+ * constraints (Nepali 10‑digit phones, canonical blood groups, tiered password
+ * strength) are enforced declaratively through compiled regex and scoring
+ * heuristics. The nested {@link PasswordStrength} record-style type elevates
+ * password evaluation from a binary gate to a diagnostic feedback channel,
+ * enabling richer client-side experiences without coupling business logic to
+ * any particular presentation framework. Designed to serve as both an inline
+ * guard layer in service commands and a backing delegate for annotation-driven
+ * validation adapters.
+ */
 public class ValidationUtil {
     
     // Email validation
