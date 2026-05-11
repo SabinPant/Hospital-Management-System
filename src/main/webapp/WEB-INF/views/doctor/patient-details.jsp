@@ -10,80 +10,8 @@
      <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/global.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/doctor-dashboard.css">
-    <style>
-        .history-container {
-            max-width: 1000px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
-        
-        .patient-info-card {
-            background: linear-gradient(135deg, #0a5c8e, #074268);
-            color: white;
-            padding: 25px;
-            border-radius: 16px;
-            margin-bottom: 30px;
-        }
-        
-        .patient-info-card h2 {
-            color: white;
-            margin-bottom: 5px;
-        }
-        
-        .history-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        
-        .history-table th {
-            text-align: left;
-            padding: 14px;
-            background: #f8fafc;
-            color: #1e293b;
-            font-weight: 600;
-            border-bottom: 2px solid #e2e8f0;
-        }
-        
-        .history-table td {
-            padding: 12px 14px;
-            border-bottom: 1px solid #e2e8f0;
-            vertical-align: top;
-        }
-        
-        .diagnosis-cell {
-            background: #f0fdf4;
-            padding: 6px 10px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-        }
-        
-        .prescription-cell {
-            background: #fef3c7;
-            padding: 6px 10px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-        }
-        
-        .back-link {
-            display: inline-block;
-            margin-top: 20px;
-            color: #0a5c8e;
-            text-decoration: none;
-        }
-        
-        .empty-state {
-            text-align: center;
-            padding: 60px;
-            color: #64748b;
-            background: white;
-            border-radius: 12px;
-        }
-    </style>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/doctors/doctor_my_patients.css">
+
 </head>
 <body>
 

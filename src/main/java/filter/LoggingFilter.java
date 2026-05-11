@@ -104,7 +104,6 @@ public class LoggingFilter implements Filter {
         
         // Log the action
         systemLogDAO.addLog(adminId, userId, action, entityType, entityId, details, ipAddress);
-        System.out.println("[LOG] " + action + " by " + actorType + " (" + actorName + ") from " + ipAddress);
     }
     
     private String determineAction(String uri, String method) {
