@@ -230,16 +230,6 @@
 
     <jsp:include page="../../../components/footer.jsp" />
 
-  <script>
-    function cancelAppointment(appointmentId) {
-        const reason = prompt('Please enter reason for cancellation:');
-        if (reason !== null && reason.trim() !== '') {
-            window.location.href = '${pageContext.request.contextPath}/patient/cancel-appointment?id=' + appointmentId + '&reason=' + encodeURIComponent(reason);
-        } else if (reason !== null) {
-            alert('Please provide a reason for cancellation');
-        }
-    }
-</script>
-
+  
 </body>
 </html>
