@@ -215,33 +215,7 @@ public class UserDAO {
     }
     
 
-    // Get doctor approval status
-    public String getDoctorApprovalStatus(int userId) {
-        String query = "SELECT approval_status FROM doctor_profiles WHERE user_id = ?";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setInt(1, userId);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) return rs.getString("approval_status");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    // Get doctor rejection reason
-    public String getDoctorRejectionReason(int userId) {
-        String query = "SELECT rejection_reason FROM doctor_profiles WHERE user_id = ?";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setInt(1, userId);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) return rs.getString("rejection_reason");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+    
 
     // Get profile image path
     public String getProfileImage(int userId) {
@@ -257,7 +231,18 @@ public class UserDAO {
         return null;
     }
 
-  
+    // Update profile image
+    public void updateProfileImage(int userId, String imagePath) {
+        String query = "UPDATE users SET profile_image = ? WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, imagePath);
+            pstmt.setInt(2, userId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Error updating profile image: " + e.getMessage());
+        }
+    }
 
     // Lock user
     public boolean lockUser(int userId, String reason) {
