@@ -15,7 +15,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Appointment Details | MediLife</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<<<<<<< HEAD
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+=======
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+>>>>>>> 643ff4420aab867d869929eac3cd2a68a3d5a40d
     <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/global.css">
     <style>
         /* ── Page Layout ─────────────────────────────────────── */
@@ -215,6 +219,13 @@
     <jsp:include page="../../../components/footer.jsp" />
 
     <script>
+<<<<<<< HEAD
+=======
+        /**
+         * Writing cancellation reason prompt if it is vaild in end point
+         * @param {number} id - The unique appointment ID to cancel.
+         */
+>>>>>>> 643ff4420aab867d869929eac3cd2a68a3d5a40d
         function cancelAppointment(id) {
             var reason = prompt('Please enter a reason for cancellation:');
 
@@ -230,4 +241,8 @@
     </script>
 
 </body>
+<<<<<<< HEAD
 </html>
+=======
+</html>
+>>>>>>> 643ff4420aab867d869929eac3cd2a68a3d5a40d

@@ -135,8 +135,26 @@ public class RegisterServlet extends HttpServlet {
                 request.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(request, response);
                 return;
             }
-            if (emergencyContact == null || emergencyContact.trim().isEmpty()) {
-                request.setAttribute("error", "Emergency Contact is required for patient registration");
+         // Validate DOB - must be at least 12 years old
+            if (dob != null && !dob.trim().isEmpty()) {
+                try {
+                    java.time.LocalDate dobDate = java.time.LocalDate.parse(dob);
+                    java.time.LocalDate twelveYearsAgo = java.time.LocalDate.now().minusYears(12);
+                    if (dobDate.isAfter(twelveYearsAgo)) {
+                        request.setAttribute("error", "You must be at least 12 years old to register");
+                        request.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(request, response);
+                        return;
+                    }
+                } catch (Exception e) {
+                    request.setAttribute("error", "Invalid date of birth");
+                    request.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(request, response);
+                    return;
+                }
+            }
+
+            // Validate emergency contact - must be 10 digits
+            if (!utils.ValidationUtil.isValidPhone(emergencyContact)) {
+                request.setAttribute("error", "Emergency contact must be exactly 10 digits");
                 request.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(request, response);
                 return;
             }

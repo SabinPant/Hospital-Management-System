@@ -7,6 +7,10 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Utility class for validating and storing user-uploaded image files.
+ * Files are saved to an external directory outside the application deployment path.
+ */
 public class FileUploadUtil {
 
     private static final String UPLOAD_DIR = "uploads";
@@ -14,9 +18,11 @@ public class FileUploadUtil {
     private static final List<String> ALLOWED_MIME_TYPES = Arrays.asList("image/jpeg", "image/png", "image/gif", "image/webp");
     private static final long MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
-    // Get the external upload path from web.xml context param, or use a default
+    /**
+     * Returns the base directory path for storing uploaded files.
+     * Defaults to ~/medilife_uploads/ and creates the directory if it doesn't exist.
+     */
     public static String getUploadBasePath(String appPath) {
-        // Default: user home directory + /medilife_uploads/
         String defaultPath = System.getProperty("user.home") + File.separator + "medilife_uploads";
         
         File dir = new File(defaultPath);
@@ -27,7 +33,10 @@ public class FileUploadUtil {
         return defaultPath;
     }
 
-    // Validate if file is a valid image
+    /**
+     * Validates the uploaded file against size, MIME type, and extension rules.
+     * Returns false if the file is null, empty, too large, or not an allowed image format.
+     */
     public static boolean isValidImage(Part filePart) {
         if (filePart == null || filePart.getSize() == 0) {
             System.out.println("File is null or empty");
@@ -53,14 +62,20 @@ public class FileUploadUtil {
         return true;
     }
 
-    // Get file extension from Part
+    /**
+     * Extracts the lowercase file extension from the submitted file name.
+     * Returns an empty string if no extension is found.
+     */
     public static String getFileExtension(Part filePart) {
         String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
         int dotIndex = fileName.lastIndexOf(".");
         return dotIndex > 0 ? fileName.substring(dotIndex).toLowerCase() : "";
     }
 
-    // Save file to external directory
+    /**
+     * Saves the uploaded file to the uploads directory using the provided unique name.
+     * Returns the saved file name (without path) for later retrieval via FileServlet.
+     */
     public static String saveFile(Part filePart, String uniqueName, String appPath) throws IOException {
         String uploadPath = getUploadBasePath(appPath) + File.separator + UPLOAD_DIR;
 
@@ -77,7 +92,6 @@ public class FileUploadUtil {
         System.out.println("Saving file to: " + fullFilePath);
         filePart.write(fullFilePath);
 
-        // Return just the filename (path will be resolved by FileServlet)
         return fileName;
     }
 }

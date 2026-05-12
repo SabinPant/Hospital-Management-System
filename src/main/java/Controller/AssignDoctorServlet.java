@@ -38,12 +38,6 @@ public class AssignDoctorServlet extends HttpServlet {
         	int doctorId = Integer.parseInt(request.getParameter("doctorId"));
         	String newDate = request.getParameter("newDate");
         	String newTime = request.getParameter("newTime");
-
-        	System.out.println("=== ASSIGN DEBUG ===");
-        	System.out.println("appointmentId: " + appointmentId);
-        	System.out.println("doctorId: " + doctorId);
-        	System.out.println("newDate: '" + newDate + "'");
-        	System.out.println("newTime: '" + newTime + "'");
         	
         	
         	if (doctorId <= 0) {
@@ -51,7 +45,6 @@ public class AssignDoctorServlet extends HttpServlet {
         	    return;
         	}
 
-        	// Delegate all business logic to service (with optional new date/time)
         	String error = appointmentService.assignDoctorToRequest(appointmentId, doctorId, adminId, newDate, newTime);
             
             if (error == null) {
