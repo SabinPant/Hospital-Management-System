@@ -254,32 +254,7 @@
 
 <jsp:include page="../../../components/footer.jsp" />
 
-<script>
-    function checkLoginAndRedirect(event) {
-        event.preventDefault();
-        var isLoggedIn = ${not empty sessionScope.user_id};
-        if (isLoggedIn) {
-            window.location.href = '${pageContext.request.contextPath}/patient/book-appointment';
-        } else {
-            Swal.fire({
-                title: 'Login Required',
-                text: 'Please login or create an account to book an appointment.',
-                icon: 'info',
-                confirmButtonColor: '#0a5c8e',
-                cancelButtonColor: '#64748b',
-                confirmButtonText: 'Go to Login',
-                showCancelButton: true,
-                cancelButtonText: 'Register'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = '${pageContext.request.contextPath}/login';
-                } else if (result.dismiss === Swal.DismissReason.cancel) {
-                    window.location.href = '${pageContext.request.contextPath}/register';
-                }
-            });
-        }
-    }
-</script>
+
 
 </body>
 </html>
