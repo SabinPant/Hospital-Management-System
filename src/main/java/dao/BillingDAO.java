@@ -74,22 +74,7 @@ public class BillingDAO {
 	    }
 	}
     
-    // Check if billing already exists for an appointment (prevents duplicate billing)
-    public boolean billingExists(int appointmentId) {
-        String query = "SELECT id FROM billings WHERE appointment_id = ?";
-        
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-            
-            pstmt.setInt(1, appointmentId);
-            ResultSet rs = pstmt.executeQuery();
-            return rs.next();
-            
-        } catch (SQLException e) {
-            System.err.println("Error checking billing existence: " + e.getMessage());
-            return false;
-        }
-    }
+    
     
     // Get billing by appointment ID
     public Map<String, Object> getBillingByAppointmentId(int appointmentId) {
