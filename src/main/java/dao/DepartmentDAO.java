@@ -150,28 +150,7 @@ public class DepartmentDAO {
         return false;
     }
     
-    // Update department
-    public boolean updateDepartment(Department department) {
-        String query = "UPDATE departments SET dept_code = ?, name = ?, description = ?, head_doctor_id = ?, status = ? WHERE id = ?";
-        
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-            
-            pstmt.setString(1, department.getDeptCode());
-            pstmt.setString(2, department.getName());
-            pstmt.setString(3, department.getDescription());
-            pstmt.setObject(4, department.getHeadDoctorId());
-            pstmt.setString(5, department.getStatus());
-            pstmt.setInt(6, department.getId());
-            
-            return pstmt.executeUpdate() > 0;
-            
-        } catch (SQLException e) {
-            System.err.println("Error updating department: " + e.getMessage());
-        }
-        
-        return false;
-    }
+    
     
     // Delete department (only if no doctors assigned)
     public boolean deleteDepartment(int id) {
