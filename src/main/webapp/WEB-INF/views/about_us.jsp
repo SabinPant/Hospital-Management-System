@@ -52,14 +52,14 @@
                     <p> Over the past two decades, MediLife has grown significantly, evolving into a full-service hospital 
                     equipped with modern facilities and advanced medical technology. Today, it is home to more than 500 
                     medical professionals, including highly trained doctors, nurses, and specialists across various departments 
-                    such as cardiology, neurology, emergency care, and diagnostics. This growth reflects MediLife’s commitment 
+                    such as cardiology, neurology, emergency care, and diagnostics. This growth reflects MediLife's commitment 
                     to continuously improving healthcare services and meeting the increasing demands of the community.</p>	
                  </div>
                 <div class="au-col">
                     <p>
                     Situated in the heart of Kathmandu, the hospital serves as a vital healthcare hub for both urban and 
                     surrounding populations. Its flagship campus is designed to ensure patient comfort while maintaining high 
-                    standards of medical excellence. MediLife’s journey from a small clinic to a leading healthcare institution 
+                    standards of medical excellence. MediLife's journey from a small clinic to a leading healthcare institution 
                     is rooted in its dedication to innovation, trust, and compassion.
                     </p>
                     <p>Through years of service, MediLife has remained focused on its core mission—enhancing lives through quality 
@@ -166,8 +166,8 @@
 
     <!-- ================================================
          MEET OUR SPECIALISTS
-         Each row: image left | name + role + profile link right
-         5 rows total (A–E), each in its own card
+         Professional row layout — one specialist per row
+         Fixed square images for perfect consistency
          ================================================ -->
     <section class="au-specialists">
         <div class="container">
@@ -176,155 +176,160 @@
                 <p>Compassionate, highly skilled doctors ready to give you the best care.</p>
             </div>
 
-    <!-- Team A — Dr. Sabin Pant -->
-<div class="au-spec-card">
-    <div class="au-spec-img">
-        <img src="Public/Doctors/SabinPant.jpg" alt="Dr. Sabin Pant"
-             onerror="this.src='https://placehold.co/300x220/9e9e9e/ffffff?text=Dr.+Sabin'">
-    </div>
-    <div class="au-spec-info">
-        <h3>Dr. Sabin Pant</h3>
-        <span class="au-spec-tag">Chief Cardiologist</span>
-        <div class="au-spec-meta">
-            <span><i class="fas fa-graduation-cap"></i> MBBS, MD – Cardiology</span>
-            <span><i class="fas fa-clock"></i> 15+ Years Experience</span>
-            <span><i class="fas fa-hospital"></i> Cardiology Dept, MediLife</span>
-        </div>
-        <p>Leading interventional cardiologist specialising in heart failure management,
-           angioplasty, and preventive cardiac care. Performed over 2,000 successful
-           cardiac procedures and is visiting faculty at Tribhuvan University.</p>
-        <div class="au-spec-actions">
-            <a href="${pageContext.request.contextPath}/portfolio/sabin-pant" class="au-profile-btn">
-                View Profile <i class="fas fa-arrow-right"></i>
-            </a>
-            <div class="au-spec-social">
-                <a href="#"><i class="fab fa-facebook-f"></i></a>
-                <a href="#"><i class="fab fa-twitter"></i></a>
-                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            <!-- Dr. Sabin Pant -->
+            <div class="au-spec-card">
+                <div class="au-spec-img">
+                    <img src="Public/Doctors/SabinPant.jpg" alt="Dr. Sabin Pant"
+                         onerror="this.src='https://placehold.co/440x440/9e9e9e/ffffff?text=Dr.+Sabin'">
+                </div>
+                <div class="au-spec-info">
+                    <span class="au-spec-tag">Chief Cardiologist</span>
+                    <h3>Dr. Sabin Pant</h3>
+                    <div class="au-spec-meta">
+                        <span><i class="fas fa-graduation-cap"></i> MBBS, MD – Cardiology</span>
+                        <span><i class="fas fa-clock"></i> 15+ Years Experience</span>
+                        <span><i class="fas fa-hospital"></i> Cardiology Dept, MediLife</span>
+                    </div>
+                    <div class="au-spec-divider"></div>
+                    <p>Leading interventional cardiologist specialising in heart failure management,
+                       angioplasty, and preventive cardiac care. Performed over 2,000 successful
+                       cardiac procedures and is visiting faculty at Tribhuvan University.</p>
+                    <div class="au-spec-actions">
+                        <a href="${pageContext.request.contextPath}/portfolio/sabin-pant" class="au-profile-btn">
+                            View Profile <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <div class="au-spec-social">
+                            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-</div>
 
-<!-- Team B — Dr. Priyanshu Mahat -->
-<div class="au-spec-card">
-    <div class="au-spec-img">
-        <img src="Public/Doctors/PriyanshuMahat.jpeg" alt="Dr. Priyanshu Mahat"
-             onerror="this.src='https://placehold.co/300x220/9e9e9e/ffffff?text=Dr.+Priyanshu'">
-    </div>
-    <div class="au-spec-info">
-        <h3>Dr. Priyanshu Mahat</h3>
-        <span class="au-spec-tag">Senior Neurologist</span>
-        <div class="au-spec-meta">
-            <span><i class="fas fa-graduation-cap"></i> MBBS, DM – Neurology</span>
-            <span><i class="fas fa-clock"></i> 12+ Years Experience</span>
-            <span><i class="fas fa-hospital"></i> Neurology Dept, MediLife</span>
-        </div>
-        <p>Expert in stroke management, epilepsy, and movement disorders. Research on
-           early stroke intervention published in multiple international journals. Leads
-           MediLife's neurology outreach programme.</p>
-        <div class="au-spec-actions">
-            <a href="${pageContext.request.contextPath}/portfolio/priyanshu-mahat" class="au-profile-btn">
-                View Profile <i class="fas fa-arrow-right"></i>
-            </a>
-            <div class="au-spec-social">
-                <a href="#"><i class="fab fa-facebook-f"></i></a>
-                <a href="#"><i class="fab fa-twitter"></i></a>
-                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            <!-- Dr. Priyanshu Mahat -->
+            <div class="au-spec-card">
+                <div class="au-spec-img">
+                    <img src="Public/Doctors/PriyanshuMahat.jpeg" alt="Dr. Priyanshu Mahat"
+                         onerror="this.src='https://placehold.co/440x440/9e9e9e/ffffff?text=Dr.+Priyanshu'">
+                </div>
+                <div class="au-spec-info">
+                    <span class="au-spec-tag">Senior Neurologist</span>
+                    <h3>Dr. Priyanshu Mahat</h3>
+                    <div class="au-spec-meta">
+                        <span><i class="fas fa-graduation-cap"></i> MBBS, DM – Neurology</span>
+                        <span><i class="fas fa-clock"></i> 12+ Years Experience</span>
+                        <span><i class="fas fa-hospital"></i> Neurology Dept, MediLife</span>
+                    </div>
+                    <div class="au-spec-divider"></div>
+                    <p>Expert in stroke management, epilepsy, and movement disorders. Research on
+                       early stroke intervention published in multiple international journals. Leads
+                       MediLife's neurology outreach programme.</p>
+                    <div class="au-spec-actions">
+                        <a href="${pageContext.request.contextPath}/portfolio/priyanshu-mahat" class="au-profile-btn">
+                            View Profile <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <div class="au-spec-social">
+                            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-</div>
 
-<!-- Team C — Dr. Aryan Shakya -->
-<div class="au-spec-card">
-    <div class="au-spec-img">
-        <img src="Public/Doctors/AryanShakya.jpeg" alt="Dr. Aryan Shakya"
-             onerror="this.src='https://placehold.co/300x220/9e9e9e/ffffff?text=Dr.+Aryan'">
-    </div>
-    <div class="au-spec-info">
-        <h3>Dr. Aryan Shakya</h3>
-        <span class="au-spec-tag">Orthopedic Surgeon</span>
-        <div class="au-spec-meta">
-            <span><i class="fas fa-graduation-cap"></i> MBBS, MS – Orthopedics</span>
-            <span><i class="fas fa-clock"></i> 10+ Years Experience</span>
-            <span><i class="fas fa-hospital"></i> Surgery Dept, MediLife</span>
-        </div>
-        <p>Specialist in joint replacement, complex spine procedures, and sports injury
-           rehabilitation. Trained at AIIMS New Delhi — introduced minimally invasive
-           orthopedic techniques to MediLife.</p>
-        <div class="au-spec-actions">
-            <a href="${pageContext.request.contextPath}/portfolio/aryan-shakya" class="au-profile-btn">
-                View Profile <i class="fas fa-arrow-right"></i>
-            </a>
-            <div class="au-spec-social">
-                <a href="#"><i class="fab fa-facebook-f"></i></a>
-                <a href="#"><i class="fab fa-twitter"></i></a>
-                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            <!-- Dr. Aryan Shakya -->
+            <div class="au-spec-card">
+                <div class="au-spec-img">
+                    <img src="Public/Doctors/AryanShakya.jpeg" alt="Dr. Aryan Shakya"
+                         onerror="this.src='https://placehold.co/440x440/9e9e9e/ffffff?text=Dr.+Aryan'">
+                </div>
+                <div class="au-spec-info">
+                    <span class="au-spec-tag">Orthopedic Surgeon</span>
+                    <h3>Dr. Aryan Shakya</h3>
+                    <div class="au-spec-meta">
+                        <span><i class="fas fa-graduation-cap"></i> MBBS, MS – Orthopedics</span>
+                        <span><i class="fas fa-clock"></i> 10+ Years Experience</span>
+                        <span><i class="fas fa-hospital"></i> Surgery Dept, MediLife</span>
+                    </div>
+                    <div class="au-spec-divider"></div>
+                    <p>Specialist in joint replacement, complex spine procedures, and sports injury
+                       rehabilitation. Trained at AIIMS New Delhi — introduced minimally invasive
+                       orthopedic techniques to MediLife.</p>
+                    <div class="au-spec-actions">
+                        <a href="${pageContext.request.contextPath}/portfolio/aryan-shakya" class="au-profile-btn">
+                            View Profile <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <div class="au-spec-social">
+                            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-</div>
 
-<!-- Team D — Dr. Rabin Pant -->
-<div class="au-spec-card">
-    <div class="au-spec-img">
-        <img src="Public/Doctors/RabinPant.jpeg" alt="Dr. Rabin Pant"
-             onerror="this.src='https://placehold.co/300x220/9e9e9e/ffffff?text=Dr.+Rabin'">
-    </div>
-    <div class="au-spec-info">
-        <h3>Dr. Rabin Pant</h3>
-        <span class="au-spec-tag">Pediatrician</span>
-        <div class="au-spec-meta">
-            <span><i class="fas fa-graduation-cap"></i> MBBS, MD – Pediatrics</span>
-            <span><i class="fas fa-clock"></i> 13+ Years Experience</span>
-            <span><i class="fas fa-hospital"></i> Pediatrics Dept, MediLife</span>
-        </div>
-        <p>Dedicated to child health, vaccination programmes, and neonatal care. Heads
-           MediLife's child wellness initiative and has conducted free health camps across
-           rural communities in Bagmati Province.</p>
-        <div class="au-spec-actions">
-            <a href="${pageContext.request.contextPath}/portfolio/rabin-pant" class="au-profile-btn">
-                View Profile <i class="fas fa-arrow-right"></i>
-            </a>
-            <div class="au-spec-social">
-                <a href="#"><i class="fab fa-facebook-f"></i></a>
-                <a href="#"><i class="fab fa-twitter"></i></a>
-                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            <!-- Dr. Rabin Pant -->
+            <div class="au-spec-card">
+                <div class="au-spec-img">
+                    <img src="Public/Doctors/RabinPant.jpeg" alt="Dr. Rabin Pant"
+                         onerror="this.src='https://placehold.co/440x440/9e9e9e/ffffff?text=Dr.+Rabin'">
+                </div>
+                <div class="au-spec-info">
+                    <span class="au-spec-tag">Pediatrician</span>
+                    <h3>Dr. Rabin Pant</h3>
+                    <div class="au-spec-meta">
+                        <span><i class="fas fa-graduation-cap"></i> MBBS, MD – Pediatrics</span>
+                        <span><i class="fas fa-clock"></i> 13+ Years Experience</span>
+                        <span><i class="fas fa-hospital"></i> Pediatrics Dept, MediLife</span>
+                    </div>
+                    <div class="au-spec-divider"></div>
+                    <p>Dedicated to child health, vaccination programmes, and neonatal care. Heads
+                       MediLife's child wellness initiative and has conducted free health camps across
+                       rural communities in Bagmati Province.</p>
+                    <div class="au-spec-actions">
+                        <a href="${pageContext.request.contextPath}/portfolio/rabin-pant" class="au-profile-btn">
+                            View Profile <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <div class="au-spec-social">
+                            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-</div>
 
-<!-- Team E — Dr. Shreya Pokharel -->
-<div class="au-spec-card">
-    <div class="au-spec-img">
-        <img src="Public/Doctors/ShreyaPokharel.jpeg" alt="Dr. Shreya Pokharel"
-             onerror="this.src='https://placehold.co/300x220/9e9e9e/ffffff?text=Dr.+Shreya'">
-    </div>
-    <div class="au-spec-info">
-        <h3>Dr. Shreya Pokharel</h3>
-        <span class="au-spec-tag">Dentist &amp; Maxillofacial Surgeon</span>
-        <div class="au-spec-meta">
-            <span><i class="fas fa-graduation-cap"></i> BDS, MDS – Oral Surgery</span>
-            <span><i class="fas fa-clock"></i> 9+ Years Experience</span>
-            <span><i class="fas fa-hospital"></i> Dental Dept, MediLife</span>
-        </div>
-        <p>Specialist in cosmetic dentistry, dental implants, corrective jaw surgery, and
-           complex oral procedures. Her advanced training has made MediLife the leading
-           dental centre in the Kathmandu Valley.</p>
-        <div class="au-spec-actions">
-            <a href="${pageContext.request.contextPath}/portfolio/shreya-pokharel" class="au-profile-btn">
-                View Profile <i class="fas fa-arrow-right"></i>
-            </a>
-            <div class="au-spec-social">
-                <a href="#"><i class="fab fa-facebook-f"></i></a>
-                <a href="#"><i class="fab fa-twitter"></i></a>
-                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            <!-- Dr. Shreya Pokharel -->
+            <div class="au-spec-card">
+                <div class="au-spec-img">
+                    <img src="Public/Doctors/ShreyaPokharel.jpeg" alt="Dr. Shreya Pokharel"
+                         onerror="this.src='https://placehold.co/440x440/9e9e9e/ffffff?text=Dr.+Shreya'">
+                </div>
+                <div class="au-spec-info">
+                    <span class="au-spec-tag">Dentist &amp; Maxillofacial Surgeon</span>
+                    <h3>Dr. Shreya Pokharel</h3>
+                    <div class="au-spec-meta">
+                        <span><i class="fas fa-graduation-cap"></i> BDS, MDS – Oral Surgery</span>
+                        <span><i class="fas fa-clock"></i> 9+ Years Experience</span>
+                        <span><i class="fas fa-hospital"></i> Dental Dept, MediLife</span>
+                    </div>
+                    <div class="au-spec-divider"></div>
+                    <p>Specialist in cosmetic dentistry, dental implants, corrective jaw surgery, and
+                       complex oral procedures. Her advanced training has made MediLife the leading
+                       dental centre in the Kathmandu Valley.</p>
+                    <div class="au-spec-actions">
+                        <a href="${pageContext.request.contextPath}/portfolio/shreya-pokharel" class="au-profile-btn">
+                            View Profile <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <div class="au-spec-social">
+                            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-</div>
 
         </div>
     </section>

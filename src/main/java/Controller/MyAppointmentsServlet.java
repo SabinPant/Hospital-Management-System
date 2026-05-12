@@ -40,7 +40,6 @@ public class MyAppointmentsServlet extends HttpServlet {
             List<Appointment> appointments = appointmentDAO.getAppointmentsByPatientId(patientId);
             request.setAttribute("appointments", appointments);
             
-            System.out.println("Found " + appointments.size() + " appointments for patient: " + patientId);
             
             request.getRequestDispatcher("/WEB-INF/views/patient/my-appointments.jsp")
                    .forward(request, response);

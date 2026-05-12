@@ -171,7 +171,6 @@ public class UserDAO {
                 }
             }
             String nextUserId = String.format("%s-%03d", prefix, maxNumber + 1);
-            System.out.println("Generated new user_id: " + nextUserId);
             return nextUserId;
         } catch (SQLException e) {
             System.err.println("Error generating user_id: " + e.getMessage());
@@ -202,7 +201,6 @@ public class UserDAO {
                 try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
                         user.setId(generatedKeys.getInt(1));
-                        System.out.println("User saved with ID: " + user.getId());
                     }
                 }
                 return true;

@@ -204,7 +204,7 @@ public class NotificationDAO {
              PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, userId);
             int rows = pstmt.executeUpdate();
-            System.out.println("Marked " + rows + " notifications as read for user " + userId);
+          
             return rows > 0;
         } catch (SQLException e) {
             System.err.println("Error marking all as read: " + e.getMessage());

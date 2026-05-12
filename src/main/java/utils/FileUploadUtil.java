@@ -39,23 +39,23 @@ public class FileUploadUtil {
      */
     public static boolean isValidImage(Part filePart) {
         if (filePart == null || filePart.getSize() == 0) {
-            System.out.println("File is null or empty");
+            
             return false;
         }
         if (filePart.getSize() > MAX_FILE_SIZE) {
-            System.out.println("File too large: " + filePart.getSize());
+           
             return false;
         }
 
         String contentType = filePart.getContentType();
         if (contentType == null || !ALLOWED_MIME_TYPES.contains(contentType.toLowerCase())) {
-            System.out.println("Invalid content type: " + contentType);
+           
             return false;
         }
 
         String extension = getFileExtension(filePart);
         if (!ALLOWED_EXTENSIONS.contains(extension)) {
-            System.out.println("Invalid extension: " + extension);
+           
             return false;
         }
 
@@ -89,7 +89,7 @@ public class FileUploadUtil {
         String fileName = uniqueName + extension;
         String fullFilePath = uploadPath + File.separator + fileName;
 
-        System.out.println("Saving file to: " + fullFilePath);
+       
         filePart.write(fullFilePath);
 
         return fileName;
