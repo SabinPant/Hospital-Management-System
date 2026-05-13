@@ -36,7 +36,7 @@ public class BillingDAO {
 	        
 	        int nextNumber = lastNumber + 1;
 	        String newId = String.format("BIL-%d-%04d", currentYear, nextNumber);
-	        System.out.println("Generated new billing ID: " + newId);
+	       
 	        return newId;
 	        
 	    } catch (SQLException e) {
@@ -64,7 +64,7 @@ public class BillingDAO {
 	        pstmt.setTimestamp(7, new Timestamp(System.currentTimeMillis()));
 	        
 	        int rowsAffected = pstmt.executeUpdate();
-	        System.out.println("Billing created - ID: " + billingId + ", Rows affected: " + rowsAffected);
+	       
 	        return rowsAffected > 0;
 	        
 	    } catch (SQLException e) {
@@ -155,7 +155,7 @@ public class BillingDAO {
             
             if (rs.next()) {
                 double fee = rs.getDouble("consultation_fee");
-                System.out.println("Doctor consultation fee: " + fee);
+               
                 return fee;
             }
             

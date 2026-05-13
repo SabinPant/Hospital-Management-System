@@ -171,7 +171,6 @@ public class UserDAO {
                 }
             }
             String nextUserId = String.format("%s-%03d", prefix, maxNumber + 1);
-            System.out.println("Generated new user_id: " + nextUserId);
             return nextUserId;
         } catch (SQLException e) {
             System.err.println("Error generating user_id: " + e.getMessage());
@@ -202,7 +201,6 @@ public class UserDAO {
                 try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
                         user.setId(generatedKeys.getInt(1));
-                        System.out.println("User saved with ID: " + user.getId());
                     }
                 }
                 return true;
@@ -331,5 +329,33 @@ public class UserDAO {
         }
 
         return users;
+    }
+    
+ // Get count of approved doctors
+    public int getApprovedDoctorCount() {
+        String query = "SELECT COUNT(*) FROM users u " +
+                       "JOIN doctor_profiles dp ON u.id = dp.user_id " +
+                       "WHERE u.user_type = 'doctor' AND dp.approval_status = 'approved'";
+        try (Connection conn = DBConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) {
+            System.err.println("Error getting doctor count: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    // Get count of patients
+    public int getPatientCount() {
+        String query = "SELECT COUNT(*) FROM users WHERE user_type = 'patient'";
+        try (Connection conn = DBConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) {
+            System.err.println("Error getting patient count: " + e.getMessage());
+        }
+        return 0;
     }
 }

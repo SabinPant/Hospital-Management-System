@@ -431,9 +431,7 @@ public class AppointmentDAO {
             while (rs.next()) {
                 Appointment apt = extractAppointmentFromResultSet(rs);
                 apt.setPatientName(rs.getString("patient_name"));
-                System.out.println("Appointment: " + apt.getAppointmentId() + 
-                        ", status=" + apt.getStatus() + 
-                        ", requestType=" + apt.getRequestType());
+             
                 appointments.add(apt);
             }
             
@@ -894,9 +892,7 @@ public class AppointmentDAO {
             
             if (rs.next()) {
                 int count = rs.getInt(1);
-                System.out.println("Slot check - Doctor: " + doctorId + 
-                                 ", Date: " + date + ", Time: " + time + 
-                                 ", Count: " + count);
+                
                 return count == 0; // true if free, false if taken
             }
             
@@ -923,8 +919,7 @@ public class AppointmentDAO {
             pstmt.setTime(2, java.sql.Time.valueOf(time + ":00"));            pstmt.setInt(3, appointmentId);
             
             int rows = pstmt.executeUpdate();
-            System.out.println("Appointment date/time updated - ID: " + appointmentId + 
-                              ", Rows: " + rows);
+          
             return rows > 0;
             
         } catch (SQLException e) {
@@ -933,6 +928,19 @@ public class AppointmentDAO {
         }
     }
     
+    
+ // Get count of completed appointments (successful surgeries/treatments)
+    public int getCompletedAppointmentCount() {
+        String query = "SELECT COUNT(*) FROM appointments WHERE status = 'completed'";
+        try (Connection conn = DBConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) {
+            System.err.println("Error getting completed count: " + e.getMessage());
+        }
+        return 0;
+    }
     
     // Helper method to extract appointment from ResultSet
     private Appointment extractAppointmentFromResultSet(ResultSet rs) throws SQLException {

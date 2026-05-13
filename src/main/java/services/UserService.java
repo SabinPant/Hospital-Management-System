@@ -130,7 +130,7 @@ if (licenseImagePart != null && licenseImagePart.getSize() > 0) {
 if (FileUploadUtil.isValidImage(licenseImagePart)) {
 try {
 licenseImagePath = FileUploadUtil.saveFile(licenseImagePart, "license_" + userId, appPath);
-System.out.println("License image saved: " + licenseImagePath);
+
 } catch (IOException e) {
 System.err.println("Error saving license image: " + e.getMessage());
 }

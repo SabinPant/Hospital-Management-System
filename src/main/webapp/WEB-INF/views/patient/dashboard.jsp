@@ -175,54 +175,7 @@
         </c:otherwise>
     </c:choose>
 </div>
-              <%-- 
-<div class="section-card">
-    <div class="section-header">
-        <h2><i class="fas fa-bell"></i> Recent Activity</h2>
-    </div>
-    
-    <c:choose>
-        <c:when test="${not empty recentActivities}">
-            <div class="activity-list">
-                <c:forEach var="activity" items="${recentActivities}">
-                    <div class="activity-item">
-                        <div class="activity-icon ${activity.type}">
-                            <c:choose>
-                                <c:when test="${activity.type == 'success'}">
-                                    <i class="fas fa-check-circle"></i>
-                                </c:when>
-                                <c:when test="${activity.type == 'warning'}">
-                                    <i class="fas fa-exclamation-triangle"></i>
-                                </c:when>
-                                <c:when test="${activity.type == 'error'}">
-                                    <i class="fas fa-times-circle"></i>
-                                </c:when>
-                                <c:otherwise>
-                                    <i class="fas fa-info-circle"></i>
-                                </c:otherwise>
-                            </c:choose>
-                        </div>
-                        <div class="activity-content">
-                            <div class="activity-title">${activity.title}</div>
-                            <div class="activity-message">${activity.message}</div>
-                            <div class="activity-time">
-                                <fmt:formatDate value="${activity.createdAt}" pattern="MMM dd, yyyy HH:mm"/>
-                            </div>
-                        </div>
-                    </div>
-                </c:forEach>
-            </div>
-        </c:when>
-        <c:otherwise>
-            <div class="empty-state">
-                <i class="fas fa-bell-slash"></i>
-                <p>No recent activity</p>
-                <p style="font-size: 0.8rem;">Activities like booking, confirmations, and completions will appear here.</p>
-            </div>
-        </c:otherwise>
-    </c:choose>
-</div>
---%>
+
                 
             </div>
         </div>
@@ -230,6 +183,11 @@
 
     <jsp:include page="../../../components/footer.jsp" />
 
+<<<<<<< HEAD
   
+=======
+
+
+>>>>>>> 234c3dbe3a0c89d0e30e9f81d3f0d90f2fb090a7
 </body>
 </html>

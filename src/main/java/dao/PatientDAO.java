@@ -32,9 +32,7 @@ public class PatientDAO {
             pstmt.setString(5, profile.getMedicalHistory());
             pstmt.setString(6, profile.getAllergies());
             
-            System.out.println("Saving patient profile for user_id: " + profile.getUserId());
             int rowsAffected = pstmt.executeUpdate();
-            System.out.println("Rows affected: " + rowsAffected);
             
             if (rowsAffected > 0) {
                 try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {

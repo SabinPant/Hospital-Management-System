@@ -65,11 +65,11 @@
                 </div>
 
                 <!-- Hospital statistics -->
-                <div class="stats">
-                    <div><span>25+</span> Years of Excellence</div>
-                    <div><span>500+</span> Expert Doctors</div>
-                    <div><span>50k+</span> Happy Patients</div>
-                </div>
+               <div class="stats">
+    <div><span>25+</span> Years of Excellence</div>
+    <div><span>${doctorCount}+</span> Expert Doctors</div>
+    <div><span>${patientCount}+</span> Happy Patients</div>
+</div>
             </div>
 
             <!-- Right Image -->
@@ -199,15 +199,15 @@
                 <p>Years of Excellence</p>
             </div>
             <div class="stat-item">
-                <div class="stat-number">500+</div>
+                <div class="stat-number">${doctorCount}+</div>
                 <p>Expert Doctors</p>
             </div>
             <div class="stat-item">
-                <div class="stat-number">50,000+</div>
+                <div class="stat-number">${patientCount}+</div>
                 <p>Happy Patients</p>
             </div>
             <div class="stat-item">
-                <div class="stat-number">15,000+</div>
+                <div class="stat-number">${completedCount}+</div>
                 <p>Successful Surgeries</p>
             </div>
         </div>
