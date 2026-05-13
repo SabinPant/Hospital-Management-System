@@ -190,7 +190,7 @@
     </div>
 </section>
 
-<!-- ==================== STATS COUNTER ==================== -->
+
 <section class="stats-counter">
     <div class="container">
         <div class="stats-counter-grid">
