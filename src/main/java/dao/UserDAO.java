@@ -356,4 +356,32 @@ public class UserDAO {
 
         return users;
     }
+    
+ // Get count of approved doctors
+    public int getApprovedDoctorCount() {
+        String query = "SELECT COUNT(*) FROM users u " +
+                       "JOIN doctor_profiles dp ON u.id = dp.user_id " +
+                       "WHERE u.user_type = 'doctor' AND dp.approval_status = 'approved'";
+        try (Connection conn = DBConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) {
+            System.err.println("Error getting doctor count: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    // Get count of patients
+    public int getPatientCount() {
+        String query = "SELECT COUNT(*) FROM users WHERE user_type = 'patient'";
+        try (Connection conn = DBConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) {
+            System.err.println("Error getting patient count: " + e.getMessage());
+        }
+        return 0;
+    }
 }

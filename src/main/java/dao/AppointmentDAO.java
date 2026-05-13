@@ -929,6 +929,19 @@ public class AppointmentDAO {
     }
     
     
+ // Get count of completed appointments (successful surgeries/treatments)
+    public int getCompletedAppointmentCount() {
+        String query = "SELECT COUNT(*) FROM appointments WHERE status = 'completed'";
+        try (Connection conn = DBConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) {
+            System.err.println("Error getting completed count: " + e.getMessage());
+        }
+        return 0;
+    }
+    
     // Helper method to extract appointment from ResultSet
     private Appointment extractAppointmentFromResultSet(ResultSet rs) throws SQLException {
         Appointment apt = new Appointment();
