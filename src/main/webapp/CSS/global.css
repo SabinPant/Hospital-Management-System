@@ -1,11 +1,11 @@
-/* ============================================
-   Global Styles - Shared Across All Pages
-   Theme: Blue & White | Fully Responsive
-   ============================================ */
+/* 
+   Global Styles used  Shared for Pages in the system
+   Theme for GLobal Style Blue and White 
+    */
 
-/* -------------------------------------------- */
+
 /* 1. CSS Variables & Reset */
-/* -------------------------------------------- */
+
 :root {
     --primary-blue: #0a5c8e;
     --primary-dark: #074268;
@@ -58,9 +58,9 @@ img {
     display: block;
 }
 
-/* -------------------------------------------- */
-/* 2. Typography */
-/* -------------------------------------------- */
+
+/* 2. Text, Fonts Styling and Designing*/
+
 h1, h2, h3, h4, h5, h6 {
     color: var(--dark);
     font-weight: 700;
@@ -248,9 +248,9 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 0.85rem;
 }
 
-/* -------------------------------------------- */
+
 /* 3. Top Emergency Bar */
-/* -------------------------------------------- */
+
 .top-emergency-bar {
     background: var(--primary-dark);
     color: var(--white);
@@ -301,9 +301,9 @@ h1, h2, h3, h4, h5, h6 {
     color: #4ade80;
 }
 
-/* -------------------------------------------- */
-/* 4. Navbar */
-/* -------------------------------------------- */
+
+/* 4. Navigation bar */
+
 header {
     background: var(--white);
     box-shadow: var(--shadow-sm);
@@ -372,7 +372,7 @@ header {
     border-radius: 2px;
 }
 
-/* Login & Register & Logout Buttons */
+/* Login and  Register and Logout Buttons Design */
 .nav-buttons {
     display: flex;
     gap: 12px;
@@ -435,9 +435,9 @@ header {
     box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
 }
 
-/* -------------------------------------------- */
-/* 5. Footer */
-/* -------------------------------------------- */
+
+/* 5. Design for Footer */
+
 footer {
     background: var(--dark);
     color: #cbd5e1;
@@ -520,7 +520,7 @@ footer {
     color: #ef4444;
 }
 
-/* Make nav-buttons align properly */
+/* Navigation buttons alignment  */
 .nav-buttons {
     display: flex;
     align-items: center;
@@ -536,10 +536,9 @@ footer {
     color: var(--primary-blue);
 }
 
-/* -------------------------------------------- */
-/* 6. Responsive Design */
-/* -------------------------------------------- */
-/* Responsive */
+
+/* 6. Design for making Resposive */
+
 
 
 @media (max-width: 900px) {
