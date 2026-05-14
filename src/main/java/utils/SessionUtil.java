@@ -164,5 +164,12 @@ public class SessionUtil {
         }
     }
 
-    
+    /**
+     * Destroys the user session.
+     */
+    public static void destroyUserSession(HttpSession session) {
+        if (session != null) {
+            session.invalidate();
+        }
+    }
 }
