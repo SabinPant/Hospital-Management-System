@@ -167,5 +167,13 @@ public class FinanceDAO {
         return list;
     }
     
-   
+    // Get max revenue for bar chart
+    public double getMaxRevenue(List<Map<String, Object>> monthlyRevenueList) {
+        double max = 0;
+        for (Map<String, Object> month : monthlyRevenueList) {
+            double revenue = (double) month.get("revenue");
+            if (revenue > max) max = revenue;
+        }
+        return max;
+    }
 }
