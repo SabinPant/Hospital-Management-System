@@ -30,7 +30,7 @@ public class SessionUtil {
 
     // 
     // ADMIN SESSION HELPERS
-    // ============================================
+    // 
 
     /**
      * Creates an admin session with all required attributes.
