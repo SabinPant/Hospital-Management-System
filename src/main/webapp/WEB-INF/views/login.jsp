@@ -14,7 +14,135 @@
     <!-- External CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/global.css">
 
-    
+    <!-- Internal CSS Styling for Login Page -->
+    <style>
+        /* Main container for login box */
+        .login-container {
+            max-width: 500px;
+            margin: 80px auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        /* Header section */
+        .login-header {
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-dark));
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .login-header h1 {
+            color: white;
+            margin-bottom: 10px;
+        }
+        
+        /* Body section */
+        .login-body {
+            padding: 40px;
+        }
+        
+        /* Form input group */
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        /* Labels */
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--gray-dark);
+        }
+        
+        /* Input fields */
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+        }
+        
+        /* Input focus effect */
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(10, 92, 142, 0.1);
+        }
+        
+        /* Login button */
+        .btn-login-submit {
+            width: 100%;
+            background: var(--primary-blue);
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        /* Button hover effect */
+        .btn-login-submit:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        /* Alert message box */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        /* Error alert */
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid #ef4444;
+        }
+        
+        /* Register section */
+        .register-link {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        /* Register link */
+        .register-link a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        /* Admin login section */
+        .admin-link {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.85rem;
+        }
+        
+        .admin-link a {
+            color: var(--gray);
+            text-decoration: none;
+        }A
+        
+        /* Admin link hover */
+        .admin-link a:hover {
+            color: var(--primary-blue);
+        }
+    </style>
 </head>
 
 <body>
