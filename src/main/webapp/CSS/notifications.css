@@ -1,10 +1,10 @@
-/* ============================================================
+/* 
    MediLife — Notifications Page
    Font: Plus Jakarta Sans
    Palette: #0a5c8e primary · #0f172a dark · semantic type colors
-   ============================================================ */
+*/
 
-/* ---------- Reset & Base ---------- */
+/* Reset & Base */
 *, *::before, *::after {
     margin: 0;
     padding: 0;
@@ -59,14 +59,14 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-/* ---------- Page Shell ---------- */
+/*  Page Shell */
 .notif-page {
     max-width: 860px;
     margin: 0 auto;
     padding: 36px 20px 64px;
 }
 
-/* ---------- Header ---------- */
+/* Header  */
 .notif-header {
     display: flex;
     align-items: center;
@@ -205,14 +205,14 @@ body {
     transform: translateY(0);
 }
 
-/* ---------- Notification List ---------- */
+/*  Notification List  */
 .notif-list {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-/* ---------- Notification Card ---------- */
+/* Notification Card  */
 .notif-card {
     display: flex;
     align-items: flex-start;
@@ -252,7 +252,7 @@ body {
     opacity: 1;
 }
 
-/* ---------- Left Accent Bar ---------- */
+/* Left Accent Bar  */
 .notif-card__accent {
     position: absolute;
     left: 0;
@@ -266,7 +266,7 @@ body {
 .accent-warning .notif-card__accent { background: var(--warning); }
 .accent-error   .notif-card__accent { background: var(--error); }
 
-/* ---------- Type Icon ---------- */
+/* Type Icon */
 .notif-card__icon-wrap {
     flex-shrink: 0;
     width: 42px;
@@ -285,7 +285,7 @@ body {
 .notif-card__icon-wrap.type-warning { background: var(--warning-bg); color: var(--warning); }
 .notif-card__icon-wrap.type-error   { background: var(--error-bg);   color: var(--error); }
 
-/* ---------- Card Body ---------- */
+/* Card Body  */
 .notif-card__body {
     flex: 1;
     min-width: 0;
@@ -349,7 +349,7 @@ body {
     font-weight: 500;
 }
 
-/* ---------- Card Action ---------- */
+/* Card Action  */
 .notif-card__action {
     flex-shrink: 0;
     display: flex;
@@ -394,7 +394,7 @@ body {
     font-weight: 600;
 }
 
-/* ---------- Empty State ---------- */
+/*  Empty State  */
 .empty-state {
     display: flex;
     flex-direction: column;
@@ -456,7 +456,7 @@ body {
     box-shadow: 0 4px 14px rgba(10,92,142,.35);
 }
 
-/* ---------- Responsive ---------- */
+/* Responsive  */
 @media (max-width: 620px) {
     .notif-page {
         padding: 20px 12px 48px;
