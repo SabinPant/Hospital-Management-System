@@ -143,5 +143,23 @@ public class ContactDAO {
         return 0;
     }
     
-   
+    // Get unread messages count
+    public int getUnreadCount() {
+        String query = "SELECT COUNT(*) FROM contact_messages";
+        
+        try (Connection conn = DBConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error getting message count: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return 0;
+    }
 }
