@@ -395,7 +395,7 @@
                     text: 'Please login or create an account.',
                     icon: 'info',
 
-                    // UI customization
+                    // 
                     confirmButtonColor: '#2563eb',
                     cancelButtonColor: '#0ea5e9',
 
