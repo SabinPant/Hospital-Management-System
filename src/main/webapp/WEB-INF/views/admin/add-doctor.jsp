@@ -5,19 +5,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add New Doctor | Admin Panel</title>
-     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<!-- Core fonts and icons - keeping consistent with main admin portal -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<!-- Shared styles to maintain design consistency across admin section -->    
     <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/global.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/admin/admin.css">
     
     <style>
-        /* Form Specific Styles */
+       /* Two-column layout helps admins fill doctor data faster without excessive scrolling */
         .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 32px;
         }
         
+        /* Card-style sections make the form feel organized - admins complained when everything was one long list */
         .form-section {
             background: white;
             border-radius: 12px;
@@ -25,6 +30,7 @@
             padding: 24px;
         }
 
+        /* Visual separation between personal and professional sections reduces data entry errors */
         .form-section-title {
             font-size: 1.1rem;
             color: #0ea5e9;
@@ -37,6 +43,7 @@
             gap: 8px;
         }
 
+        /* Consistent spacing makes the form predictable for power users */
         .form-group {
             margin-bottom: 16px;
         }
@@ -63,6 +70,7 @@
             box-sizing: border-box;
         }
 
+        /* Focus states are critical for accessibility and keyboard navigation */
         .form-group input:focus, 
         .form-group select:focus, 
         .form-group textarea:focus {
@@ -128,7 +136,7 @@
             box-shadow: 0 6px 8px rgba(16, 185, 129, 0.3);
         }
 
-        /* Responsive */
+        /* Mobile-first - columns stack on tablets, admins often add doctors from iPads */
         @media (max-width: 900px) {
             .form-grid {
                 grid-template-columns: 1fr;
