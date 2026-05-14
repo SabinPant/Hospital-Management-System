@@ -134,5 +134,13 @@ public class ValidationUtil {
         return fee >= 0 && fee <= 100000;
     }
     
-    
+    // Blood group validation
+    public static boolean isValidBloodGroup(String bloodGroup) {
+        if (bloodGroup == null || bloodGroup.isEmpty()) return true; // Optional
+        String[] validGroups = {"A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"};
+        for (String group : validGroups) {
+            if (group.equals(bloodGroup)) return true;
+        }
+        return false;
+    }
 }
