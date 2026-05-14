@@ -916,7 +916,8 @@ public class AppointmentDAO {
              PreparedStatement pstmt = conn.prepareStatement(query)) {
             
             pstmt.setDate(1, java.sql.Date.valueOf(date));
-            pstmt.setTime(2, java.sql.Time.valueOf(time + ":00"));            pstmt.setInt(3, appointmentId);
+            pstmt.setTime(2, java.sql.Time.valueOf(time + ":00"));            
+            pstmt.setInt(3, appointmentId);
             
             int rows = pstmt.executeUpdate();
           
