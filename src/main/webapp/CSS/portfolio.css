@@ -1,7 +1,8 @@
-/* ============================================================
+/*
    Doctor Profile Page — CSS/portfolio.css
-   Professional, clean design compatible with global.css
-   ============================================================ */
+   Design Layout responsive for doctor Profile Menu
+
+*/
 
 .dp-wrapper {
     max-width: 1100px;
@@ -9,7 +10,7 @@
     padding: 0 24px 60px;
 }
 
-/* ── Hero Banner ── */
+/* Hero Banner */
 .dp-hero {
     background: linear-gradient(135deg, #0a5c8e 0%, #0369a1 60%, #0284c7 100%);
     border-radius: 20px;
@@ -97,7 +98,7 @@
     border: 1px solid rgba(255,255,255,0.2);
 }
 
-/* ── Main Content Grid ── */
+/* Grid for Main Content  */
 .dp-content {
     display: grid;
     grid-template-columns: 1fr 340px;
@@ -105,14 +106,14 @@
     margin-top: 32px;
 }
 
-/* ── Left Column ── */
+/* Left Column  */
 .dp-main-col {
     display: flex;
     flex-direction: column;
     gap: 24px;
 }
 
-/* ── Inner 2-column card row ── */
+/* Inner 2-column card row*/
 .dp-card-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -129,7 +130,7 @@
     flex: 1;
 }
 
-/* ── Cards ── */
+/*  Cards  */
 .dp-card {
     background: #fff;
     border-radius: 16px;
@@ -174,7 +175,7 @@
     margin-bottom: 0;
 }
 
-/* ── Timeline ── */
+/*  Timeline*/
 .dp-timeline {
     position: relative;
     padding-left: 24px;
@@ -233,7 +234,7 @@
     line-height: 1.6;
 }
 
-/* ── Expertise Tags ── */
+/*  Expertise Tags  */
 .dp-expertise-list {
     display: flex;
     flex-wrap: wrap;
@@ -250,7 +251,7 @@
     border: 1px solid #bfdbfe;
 }
 
-/* ── Certifications ── */
+/* Certifications  */
 .dp-cert-list {
     list-style: none;
     padding: 0;
@@ -274,7 +275,7 @@
     flex-shrink: 0;
 }
 
-/* ── Publications ── */
+/* Publications */
 .dp-pub-list {
     list-style: none;
     padding: 0;
@@ -305,7 +306,7 @@
     font-style: italic;
 }
 
-/* ── Sidebar ── */
+/* Sidebar */
 .dp-sidebar {
     display: flex;
     flex-direction: column;
@@ -354,7 +355,7 @@
     text-align: center;
 }
 
-/* ── CTA Button ── */
+/* CTA Button  */
 .dp-cta-btn {
     display: flex;
     align-items: center;
@@ -381,7 +382,7 @@
     color: #fff;
 }
 
-/* ── Social Links ── */
+/*  Social Links  */
 .dp-social-links {
     display: flex;
     gap: 10px;
@@ -415,7 +416,7 @@
     box-shadow: 0 4px 12px rgba(10,92,142,0.25);
 }
 
-/* ── Back Link ── */
+/*  Back Link  */
 .dp-back {
     display: inline-flex;
     align-items: center;
@@ -432,7 +433,7 @@
     color: #0a5c8e;
 }
 
-/* ── Responsive ── */
+/*  Responsive  */
 @media (max-width: 900px) {
     .dp-content {
         grid-template-columns: 1fr;
