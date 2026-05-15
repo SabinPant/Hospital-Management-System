@@ -3,9 +3,7 @@
    Matches MediLife Theme (Blue & White)
    ============================================ */
 
-/* -------------------------------------------- */
 /* Page Banner Section */
-/* -------------------------------------------- */
 .page-banner {
     background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-dark) 100%);
     padding: 80px 0 60px;
@@ -38,9 +36,8 @@
     opacity: 0.95;
 }
 
-/* -------------------------------------------- */
+
 /* Contact Section Grid */
-/* -------------------------------------------- */
 .contact-section {
     padding: 80px 0;
     background: var(--white);
@@ -231,9 +228,8 @@
     margin-right: 5px;
 }
 
-/* -------------------------------------------- */
+
 /* Map Section */
-/* -------------------------------------------- */
 .map-section {
     padding: 0 0 80px 0;
     background: var(--white);
@@ -252,9 +248,8 @@
     border: none;
 }
 
-/* -------------------------------------------- */
+
 /* Success/Error Message Styles */
-/* -------------------------------------------- */
 .alert {
     padding: 15px 20px;
     border-radius: var(--border-radius-sm);
@@ -292,9 +287,8 @@
     }
 }
 
-/* -------------------------------------------- */
+
 /* Responsive Design */
-/* -------------------------------------------- */
 @media (max-width: 1024px) {
     .contact-grid {
         gap: 40px;
