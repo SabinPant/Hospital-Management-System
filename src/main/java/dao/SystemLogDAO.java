@@ -282,7 +282,6 @@ return false;
             
  
             int deleted = pstmt.executeUpdate();
-            System.out.println("Deleted " + deleted + " old log entries");
             return deleted;
             
         } catch (SQLException e) {

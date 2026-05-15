@@ -15,8 +15,8 @@
     <title>MediLife Hospital | Advanced Care</title>
 
    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <!-- Project-specific styles -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/global.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/index.css">
@@ -65,11 +65,11 @@
                 </div>
 
                 <!-- Hospital statistics -->
-                <div class="stats">
-                    <div><span>25+</span> Years of Excellence</div>
-                    <div><span>500+</span> Expert Doctors</div>
-                    <div><span>50k+</span> Happy Patients</div>
-                </div>
+               <div class="stats">
+    <div><span>25+</span> Years of Excellence</div>
+    <div><span>${doctorCount}+</span> Expert Doctors</div>
+    <div><span>${patientCount}+</span> Happy Patients</div>
+</div>
             </div>
 
             <!-- Right Image -->
@@ -84,7 +84,7 @@
         </div>
     </section>
 
-   <!-- ==================== SERVICES SECTION ==================== -->
+   <!-- = SERVICES SECTION  -->
 <section class="services">
     <div class="container">
         <div class="section-header">
@@ -145,7 +145,7 @@
     </div>
 </section>
 
-<!-- ==================== WHY CHOOSE US ==================== -->
+<!--  WHY CHOOSE US  -->
 <section class="why-us">
     <div class="container">
         <div class="section-header">
@@ -190,7 +190,7 @@
     </div>
 </section>
 
-<!-- ==================== STATS COUNTER ==================== -->
+
 <section class="stats-counter">
     <div class="container">
         <div class="stats-counter-grid">
@@ -199,22 +199,22 @@
                 <p>Years of Excellence</p>
             </div>
             <div class="stat-item">
-                <div class="stat-number">500+</div>
+                <div class="stat-number">${doctorCount}+</div>
                 <p>Expert Doctors</p>
             </div>
             <div class="stat-item">
-                <div class="stat-number">50,000+</div>
+                <div class="stat-number">${patientCount}+</div>
                 <p>Happy Patients</p>
             </div>
             <div class="stat-item">
-                <div class="stat-number">15,000+</div>
+                <div class="stat-number">${completedCount}+</div>
                 <p>Successful Surgeries</p>
             </div>
         </div>
     </div>
 </section>
 
-    <!-- ================= DOCTORS SECTION ================= -->
+    <!--  DOCTORS SECTION  -->
     <!-- Displays list of doctors (currently static, can be dynamic later) -->
     <section class="doctors">
     <div class="container">
@@ -273,7 +273,7 @@
     </div>
 </section>
 
-<!-- ==================== NEWS / HEALTH TIPS ==================== -->
+<!-- NEWS AND HEALTH TIPS  -->
 <section class="news-section">
     <div class="container">
         <div class="section-header">
@@ -322,7 +322,7 @@
     </div>
 </section>
 
-    <!-- ==================== TESTIMONIAL SECTION ==================== -->
+    <!-- TESTIMONIAL SECTION  -->
 <section class="testimonial">
     <div class="container testimonial-wrapper">
         <div class="testimonial-content">
@@ -362,12 +362,11 @@
     <!-- Reusable footer component -->
     <jsp:include page="components/footer.jsp" />
 
-    <!-- ================= JAVASCRIPT SECTION ================= -->
+    <!--  JAVASCRIPT SECTION  -->
     <script>
 
         /*
          * Function: checkLoginAndRedirect
-         * --------------------------------
          * Checks if user session exists before allowing appointment booking.
          * 
          * Behavior:
@@ -395,7 +394,7 @@
                     text: 'Please login or create an account.',
                     icon: 'info',
 
-                    // UI customization
+                    // 
                     confirmButtonColor: '#2563eb',
                     cancelButtonColor: '#0ea5e9',
 

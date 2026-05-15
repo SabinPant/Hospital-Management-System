@@ -330,7 +330,7 @@
 }
 
 /* ------------------------------------------------------------ */
-/* 6. MEET OUR SPECIALISTS                                       */
+/* 6. MEET OUR SPECIALISTS — Redesigned Professional Rows        */
 /* ------------------------------------------------------------ */
 .au-specialists {
     padding: 72px 0 80px;
@@ -354,28 +354,34 @@
     color: var(--gray);
 }
 
-/* Each specialist: full-width card, image left | info right */
+/* ---- Specialist Row Card ---- */
 .au-spec-card {
     display: grid;
-    grid-template-columns: 300px 1fr;
-    background: var(--gray-light);
-    border-radius: var(--border-radius-sm);
-    overflow: hidden;
+    grid-template-columns: 220px 1fr;
+    gap: 0;
+    background: var(--white);
+    border: 1px solid #e8ecf1;
+    border-left: 4px solid var(--primary-blue);
     margin-bottom: 20px;
-    border: 1px solid rgba(10, 92, 142, 0.08);
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    transition: box-shadow 0.25s ease, border-left-color 0.25s ease;
 }
 
-.au-spec-card:last-child { margin-bottom: 0; }
+.au-spec-card:last-child {
+    margin-bottom: 0;
+}
 
 .au-spec-card:hover {
-    box-shadow: var(--shadow-hover);
-    transform: translateY(-3px);
+    box-shadow: 0 4px 20px rgba(10, 92, 142, 0.08);
+    border-left-color: var(--primary-dark);
 }
 
+/* ---- Image Container — Fixed Square ---- */
 .au-spec-img {
+    width: 220px;
+    height: 220px;
     overflow: hidden;
-    background: #cdd5de;
+    background: #eef2f6;
+    flex-shrink: 0;
 }
 
 .au-spec-img img {
@@ -384,77 +390,82 @@
     object-fit: cover;
     object-position: top center;
     display: block;
-    transition: transform 0.4s ease;
-    min-height: 220px;
 }
 
-.au-spec-card:hover .au-spec-img img { transform: scale(1.04); }
-
+/* ---- Info Area ---- */
 .au-spec-info {
     padding: 28px 32px;
-    background: var(--white);
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-/* "Team A" label */
-.au-spec-label {
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: var(--gray);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
+/* Specialty Tag */
 .au-spec-tag {
     display: inline-block;
     background: var(--primary-light);
     color: var(--primary-blue);
     font-size: 0.72rem;
     font-weight: 700;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.6px;
     text-transform: uppercase;
     padding: 4px 12px;
     border-radius: var(--border-radius-full);
     width: fit-content;
 }
 
+/* Name */
 .au-spec-info h3 {
-    font-size: 1.15rem;
-    font-weight: 800;
+    font-size: 1.2rem;
+    font-weight: 700;
     color: var(--dark);
     margin: 0;
+    letter-spacing: -0.2px;
 }
 
+/* Meta Data Row */
 .au-spec-meta {
     display: flex;
-    flex-direction: column;
-    gap: 5px;
+    flex-wrap: wrap;
+    gap: 6px 20px;
 }
 
 .au-spec-meta span {
-    font-size: 0.8rem;
+    font-size: 0.82rem;
     color: var(--gray);
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
+    white-space: nowrap;
 }
 
 .au-spec-meta i {
     color: var(--primary-blue);
-    width: 13px;
+    font-size: 0.75rem;
+    width: 14px;
+    text-align: center;
     flex-shrink: 0;
 }
 
+/* Divider */
+.au-spec-divider {
+    width: 40px;
+    height: 2px;
+    background: #e2e8f0;
+    margin: 2px 0;
+}
+
+/* Description */
 .au-spec-info > p {
     font-size: 0.88rem;
     color: var(--gray-dark);
     line-height: 1.75;
     margin: 0;
     flex: 1;
+    max-width: 680px;
 }
 
+/* Actions Row */
 .au-spec-actions {
     display: flex;
     align-items: center;
@@ -467,44 +478,55 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: var(--primary-blue);
-    color: #fff;
-    padding: 10px 22px;
+    background: transparent;
+    color: var(--primary-blue);
+    border: 1.5px solid var(--primary-blue);
+    padding: 8px 20px;
     border-radius: var(--border-radius-full);
-    font-weight: 700;
-    font-size: 0.85rem;
+    font-weight: 600;
+    font-size: 0.84rem;
     text-decoration: none;
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
 }
 
 .au-profile-btn:hover {
-    background: var(--primary-dark);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(10, 92, 142, 0.3);
+    background: var(--primary-blue);
     color: #fff;
 }
 
+.au-profile-btn i {
+    font-size: 0.7rem;
+    transition: transform 0.2s ease;
+}
+
+.au-profile-btn:hover i {
+    transform: translateX(3px);
+}
+
+/* Social Icons */
 .au-spec-social {
     display: flex;
-    gap: 8px;
+    gap: 6px;
 }
 
 .au-spec-social a {
-    width: 34px;
-    height: 34px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
-    background: var(--primary-light);
-    color: var(--primary-blue);
+    background: transparent;
+    border: 1px solid #dde4ed;
+    color: var(--gray);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     transition: all 0.2s ease;
     text-decoration: none;
 }
 
 .au-spec-social a:hover {
     background: var(--primary-blue);
+    border-color: var(--primary-blue);
     color: #fff;
 }
 
@@ -512,7 +534,13 @@
 /* 7. RESPONSIVE                                                 */
 /* ------------------------------------------------------------ */
 @media (max-width: 1024px) {
-    .au-spec-card { grid-template-columns: 240px 1fr; }
+    .au-spec-card {
+        grid-template-columns: 180px 1fr;
+    }
+    .au-spec-img {
+        width: 180px;
+        height: 180px;
+    }
 }
 
 @media (max-width: 900px) {
@@ -523,12 +551,26 @@
     .au-mv-grid { grid-template-columns: 1fr; gap: 36px; }
     .au-mv-image        { order: -1; }
     .au-research-card   { grid-template-columns: 1fr; padding: 32px 24px; }
-    .au-spec-card       { grid-template-columns: 1fr; }
-    .au-spec-img img    { min-height: 220px; max-height: 260px; width: 100%; }
+
+    .au-spec-card {
+        grid-template-columns: 1fr;
+        border-left: none;
+        border-top: 4px solid var(--primary-blue);
+    }
+    .au-spec-img {
+        width: 100%;
+        height: 240px;
+    }
+    .au-spec-info {
+        padding: 20px 24px;
+    }
 }
 
 @media (max-width: 600px) {
     .au-hero-content h1 { font-size: 1.8rem; }
     .au-sec-title       { font-size: 1.5rem; }
-    .au-spec-info       { padding: 20px; }
+    .au-spec-info       { padding: 16px 20px; }
+    .au-spec-img        { height: 200px; }
+    .au-spec-meta       { flex-direction: column; gap: 4px; }
+    .au-spec-actions    { flex-direction: column; align-items: flex-start; gap: 12px; }
 }

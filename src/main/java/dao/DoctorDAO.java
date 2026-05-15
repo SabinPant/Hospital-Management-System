@@ -27,7 +27,7 @@ public class DoctorDAO {
 	        pstmt.setString(2, profile.getSpecialization());
 	        pstmt.setString(3, profile.getQualification());
 	        pstmt.setString(4, profile.getLicenseNumber());
-	        pstmt.setString(5, profile.getLicenseImage());  // Add this line
+	        pstmt.setString(5, profile.getLicenseImage());  
 	        pstmt.setInt(6, profile.getExperienceYears());
 	        pstmt.setDouble(7, profile.getConsultationFee());
 	        pstmt.setString(8, profile.getBio());
@@ -41,7 +41,7 @@ public class DoctorDAO {
 	                    profile.setId(generatedKeys.getInt(1));
 	                }
 	            }
-	            System.out.println("Doctor profile saved successfully!");
+	           
 	            return true;
 	        }
 	        
@@ -65,7 +65,7 @@ public class DoctorDAO {
             pstmt.setInt(3, userId);
             
             int rowsAffected = pstmt.executeUpdate();
-            System.out.println("Doctor approved - Rows affected: " + rowsAffected);
+            
             
             return rowsAffected > 0;
             
@@ -89,7 +89,7 @@ public class DoctorDAO {
             pstmt.setInt(4, userId);
             
             int rowsAffected = pstmt.executeUpdate();
-            System.out.println("Doctor rejected - Rows affected: " + rowsAffected);
+            
             
             return rowsAffected > 0;
             

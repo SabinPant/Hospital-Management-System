@@ -9,7 +9,8 @@
 }
 
 body {
-    font-family: -apple-system, 'Segoe UI', sans-serif;
+    
+    font-fmaily: 'Inter', -apple-system, 'Segoe UI', sans-serif;
     background-color: var(--white);
     color: var(--gray-dark);
     line-height: 1.5;

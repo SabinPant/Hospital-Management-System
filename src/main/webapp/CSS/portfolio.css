@@ -10,7 +10,11 @@
     padding: 0 24px 60px;
 }
 
+<<<<<<< HEAD
 /* Hero Banner */
+=======
+/* ── Heroo Banner ── */
+>>>>>>> 5d83fcb44b66ad9e4f8a24b2af8e110b275d905e
 .dp-hero {
     background: linear-gradient(135deg, #0a5c8e 0%, #0369a1 60%, #0284c7 100%);
     border-radius: 20px;

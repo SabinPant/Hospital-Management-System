@@ -28,9 +28,15 @@ public class SessionUtil {
     public static final String PROFILE_IMAGE   = "profile_image";
     public static final String BLOOD_GROUP     = "blood_group";
 
+<<<<<<< HEAD
     
     // ADMIN SESSION HELPERS
    
+=======
+    // 
+    // ADMIN SESSION HELPERS
+    // 
+>>>>>>> 5d83fcb44b66ad9e4f8a24b2af8e110b275d905e
 
     /**
      * Creates an admin session with all required attributes.

@@ -9,12 +9,8 @@
     
     <title>Login | MediLife Hospital</title> <!-- Page title -->
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <!-- External CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/CSS/global.css">
 
@@ -140,7 +136,7 @@
         .admin-link a {
             color: var(--gray);
             text-decoration: none;
-        }
+        }A
         
         /* Admin link hover */
         .admin-link a:hover {
