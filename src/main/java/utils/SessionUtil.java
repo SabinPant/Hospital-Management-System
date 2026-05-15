@@ -28,9 +28,9 @@ public class SessionUtil {
     public static final String PROFILE_IMAGE   = "profile_image";
     public static final String BLOOD_GROUP     = "blood_group";
 
-    // ============================================
+    
     // ADMIN SESSION HELPERS
-    // ============================================
+   
 
     /**
      * Creates an admin session with all required attributes.
@@ -79,7 +79,7 @@ public class SessionUtil {
     // USER (PATIENT / DOCTOR) SESSION HELPERS
 
     /**
-     * Creates a user session with all required attributes.
+     * Creates session for user with all attributes required.
      */
     public static void createUserSession(HttpSession session, User user, 
                                           String profileImage, String bloodGroup) {
