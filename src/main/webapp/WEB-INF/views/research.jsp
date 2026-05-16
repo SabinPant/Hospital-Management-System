@@ -60,7 +60,7 @@
 
             <div class="res-grid">
 
-                <div class="res-card">
+                <a href= "https://www.cancer.gov/about-cancer/treatment/research/car-t-cells" class="res-card">
                     <div class="res-card-icon" style="background:#e3f2fd;color:#0a5c8e;">
                         <i class="fas fa-dna"></i>
                     </div>
@@ -75,9 +75,9 @@
                             <span>Immunotherapy</span><span>Oncology</span><span>Cell Biology</span>
                         </div>
                     </div>
-                </div>
+                </a>
 
-                <div class="res-card">
+                <a href= "https://pmc.ncbi.nlm.nih.gov/articles/PMC11148729/" class="res-card">
                     <div class="res-card-icon" style="background:#e8f5e9;color:#2e7d32;">
                         <i class="fas fa-heartbeat"></i>
                     </div>
@@ -92,9 +92,9 @@
                             <span>Artificial Intelligence</span><span>Cardiology</span><span>Wearables</span>
                         </div>
                     </div>
-                </div>
+                </a>
 
-                <div class="res-card">
+                <a href= "https://www.tandfonline.com/doi/full/10.2147/DNND.S471174" class="res-card">
                     <div class="res-card-icon" style="background:#fce4ec;color:#c62828;">
                         <i class="fas fa-brain"></i>
                     </div>
@@ -109,9 +109,9 @@
                             <span>Alzheimer's</span><span>Biomarkers</span><span>Neurology</span>
                         </div>
                     </div>
-                </div>
+                </a>
 
-                <div class="res-card">
+                <a href= "https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(23)02444-3/fulltext" class="res-card">
                     <div class="res-card-icon" style="background:#fff3e0;color:#e65100;">
                         <i class="fas fa-virus"></i>
                     </div>
@@ -125,9 +125,9 @@
                             <span>mRNA</span><span>Vaccines</span><span>Infectious Disease</span>
                         </div>
                     </div>
-                </div>
+                </a>
 
-                <div class="res-card">
+                <a href= "https://www.medrxiv.org/content/10.1101/2024.12.03.24318382v2" class="res-card">
                     <div class="res-card-icon" style="background:#f3e5f5;color:#6a1b9a;">
                         <i class="fas fa-baby"></i>
                     </div>
@@ -142,9 +142,9 @@
                             <span>Neonatal</span><span>Diagnostics</span><span>Sepsis</span>
                         </div>
                     </div>
-                </div>
+                </a>
 
-                <div class="res-card">
+                <a href= "https://blog.boston-engineering.com/haptic-feedback-in-surgical-robotics" class="res-card">
                     <div class="res-card-icon" style="background:#e0f7fa;color:#00695c;">
                         <i class="fas fa-robot"></i>
                     </div>
@@ -159,7 +159,7 @@
                             <span>Robotics</span><span>Surgery</span><span>Tele-Medicine</span>
                         </div>
                     </div>
-                </div>
+                </a>
 
             </div>
         </div>
