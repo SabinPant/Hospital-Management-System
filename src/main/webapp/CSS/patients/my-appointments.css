@@ -1,6 +1,6 @@
-/* ============================================
-   My Appointments — Clean Minimal Styles
-   ============================================ */
+/* 
+   My Appointments CSS/my-appointments,css
+    */
 
 .appointments-page {
     max-width: 1100px;
@@ -185,9 +185,9 @@
     margin-bottom: 18px;
 }
 
-/* ============================================
-   MODAL POPUP STYLES - FIXED
-   ============================================ */
+/*
+   FIXED Modal Popup Style
+   */
 .modal {
     display: none;
     position: fixed;
