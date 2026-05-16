@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Research | MediLife Hospital</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="CSS/global.css">
     <link rel="stylesheet" href="CSS/research.css">
 </head>
@@ -14,7 +14,11 @@
 
     <jsp:include page="/components/header.jsp" />
 
-    <!-- Hero -->
+    /**
+    *   Hero section
+    *   Displays the page banner with an overlay, section eyebrow label,
+    *   heading, and a short description of MediLife's research focus.
+    */
     <section class="res-hero">
         <div class="res-hero-overlay"></div>
         <div class="container res-hero-content">
@@ -25,7 +29,12 @@
         </div>
     </section>
 
-    <!-- Intro -->
+    /**
+    *   Research mission section
+    *   Outlines the history and goals of MediLife's Research & Innovation Centre.
+    *   Includes a two-column layout with descriptive text on the left and a
+    *   photo on the right, along with three key statistics below the text.
+    */
     <section class="res-intro">
         <div class="container res-intro-grid">
             <div class="res-intro-text">
@@ -49,7 +58,12 @@
         </div>
     </section>
 
-    <!-- Latest Global Research Topics -->
+    /**
+    *   Global research topics section
+    *   Renders a grid of six clickable cards, each representing an active
+    *   medical research area. Every card links to an external reference source
+    *   and displays an icon, category label, title, summary, and topic tags.
+    */
     <section class="res-topics">
         <div class="container">
             <div class="res-topics-head">
@@ -60,7 +74,7 @@
 
             <div class="res-grid">
 
-                <a href= "https://www.cancer.gov/about-cancer/treatment/research/car-t-cells" class="res-card">
+                <a href="https://www.cancer.gov/about-cancer/treatment/research/car-t-cells" class="res-card">
                     <div class="res-card-icon" style="background:#e3f2fd;color:#0a5c8e;">
                         <i class="fas fa-dna"></i>
                     </div>
@@ -77,7 +91,7 @@
                     </div>
                 </a>
 
-                <a href= "https://pmc.ncbi.nlm.nih.gov/articles/PMC11148729/" class="res-card">
+                <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11148729/" class="res-card">
                     <div class="res-card-icon" style="background:#e8f5e9;color:#2e7d32;">
                         <i class="fas fa-heartbeat"></i>
                     </div>
@@ -94,7 +108,7 @@
                     </div>
                 </a>
 
-                <a href= "https://www.tandfonline.com/doi/full/10.2147/DNND.S471174" class="res-card">
+                <a href="https://www.tandfonline.com/doi/full/10.2147/DNND.S471174" class="res-card">
                     <div class="res-card-icon" style="background:#fce4ec;color:#c62828;">
                         <i class="fas fa-brain"></i>
                     </div>
@@ -111,7 +125,7 @@
                     </div>
                 </a>
 
-                <a href= "https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(23)02444-3/fulltext" class="res-card">
+                <a href="https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(23)02444-3/fulltext" class="res-card">
                     <div class="res-card-icon" style="background:#fff3e0;color:#e65100;">
                         <i class="fas fa-virus"></i>
                     </div>
@@ -127,7 +141,7 @@
                     </div>
                 </a>
 
-                <a href= "https://www.medrxiv.org/content/10.1101/2024.12.03.24318382v2" class="res-card">
+                <a href="https://www.medrxiv.org/content/10.1101/2024.12.03.24318382v2" class="res-card">
                     <div class="res-card-icon" style="background:#f3e5f5;color:#6a1b9a;">
                         <i class="fas fa-baby"></i>
                     </div>
@@ -144,7 +158,7 @@
                     </div>
                 </a>
 
-                <a href= "https://blog.boston-engineering.com/haptic-feedback-in-surgical-robotics" class="res-card">
+                <a href="https://blog.boston-engineering.com/haptic-feedback-in-surgical-robotics" class="res-card">
                     <div class="res-card-icon" style="background:#e0f7fa;color:#00695c;">
                         <i class="fas fa-robot"></i>
                     </div>
@@ -165,7 +179,11 @@
         </div>
     </section>
 
-    <!-- CTA -->
+    /**
+    *   Collaboration CTA section
+    *   Invites academic institutions, pharmaceutical companies, and health
+    *   organisations to reach out via the contact page for research partnerships.
+    */
     <section class="res-cta">
         <div class="container res-cta-inner">
             <h2>Collaborate with Our Research Team</h2>
