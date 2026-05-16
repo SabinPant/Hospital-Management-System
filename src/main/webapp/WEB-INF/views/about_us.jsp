@@ -14,9 +14,9 @@
 
 <jsp:include page="../../components/header.jsp" />
 
-    <!-- ================================================
+    <!-- 
          HERO — background image + dark overlay + text
-         ================================================ -->
+          -->
     <section class="au-hero">
         <div class="au-hero-bg">
             <img src="Public/Hospital/aboutus.png" alt="MediLife Hospital"
@@ -31,10 +31,10 @@
         </div>
     </section>
 
-    <!-- ================================================
+    <!-- 
          THE MEDILIFE STORY
          Icon + centred title → two equal text columns
-         ================================================ -->
+          -->
     <section class="au-story" id="story">
         <div class="container">
             <div class="au-story-head">
@@ -69,9 +69,9 @@
         </div>
     </section>
 
-    <!-- ================================================
+    <!-- 
          OUR SERVICES — 3 clickable image cards
-         ================================================ -->
+          -->
     <section class="au-services">
         <div class="container">
             <h2 class="au-sec-title">Our Services</h2>
@@ -105,10 +105,10 @@
         </div>
     </section>
 
-    <!-- ================================================
+    <!-- 
          MISSION & VALUE
          Centred heading → left text | right image
-         ================================================ -->
+          -->
 <section class="au-mv">
     <div class="container">
         <h2 class="au-sec-title">Our mission and value</h2>
@@ -139,10 +139,10 @@
         </div>
     </div>
 </section>
-    <!-- ================================================
+    <!-- 
          RESEARCH AT MEDILIFE
          Grey card: image left | title + text + Read More right
-         ================================================ -->
+          -->
     <section class="au-research">
         <div class="container">
             <div class="au-research-card">
@@ -164,11 +164,11 @@
         </div>
     </section>
 
-    <!-- ================================================
+    <!--
          MEET OUR SPECIALISTS
          Professional row layout — one specialist per row
          Fixed square images for perfect consistency
-         ================================================ -->
+          -->
     <section class="au-specialists">
         <div class="container">
             <div class="au-spec-header">
