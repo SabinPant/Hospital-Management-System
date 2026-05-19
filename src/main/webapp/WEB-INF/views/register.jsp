@@ -52,8 +52,7 @@
                     </div>
                 </c:if>
 
-                <form action="${pageContext.request.contextPath}/register" method="post" id="registerForm" enctype="multipart/form-data">
-                    <input type="hidden" name="userType" id="userType" value="patient">
+                  <form action="${pageContext.request.contextPath}/register" method="post" id="registerForm" enctype="multipart/form-data" onsubmit="return validatePasswordBeforeSubmit()">                    <input type="hidden" name="userType" id="userType" value="patient">
 
                     <!-- Type Selector -->
                     <div class="type-selector">
@@ -490,6 +489,33 @@
     setUserType('patient');
 
     setUserType('patient');
+    
+    function validatePasswordBeforeSubmit() {
+        var pw = document.getElementById('password').value;
+        
+        if (pw.length < 8) {
+            alert('Password must be at least 8 characters.');
+            return false;
+        }
+        if (!/[A-Z]/.test(pw)) {
+            alert('Password must contain at least one uppercase letter.');
+            return false;
+        }
+        if (!/[a-z]/.test(pw)) {
+            alert('Password must contain at least one lowercase letter.');
+            return false;
+        }
+        if (!/[0-9]/.test(pw)) {
+            alert('Password must contain at least one number.');
+            return false;
+        }
+        if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(pw)) {
+            alert('Password must contain at least one special character.');
+            return false;
+        }
+        return true;
+    }
+    
 </script>
 </body>
 </html>

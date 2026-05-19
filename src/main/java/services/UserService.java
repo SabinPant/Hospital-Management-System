@@ -43,9 +43,22 @@ public class UserService {
         if (password == null || password.trim().isEmpty()) {
             return "Password is required";
         }
-        if (!password.equals(confirmPassword)) {
-            return "Passwords do not match";
+        if (password.length() < 8) {
+            return "Password must be at least 8 characters";
         }
+        if (!password.matches(".*[A-Z].*")) {
+            return "Password must contain at least one uppercase letter";
+        }
+        if (!password.matches(".*[a-z].*")) {
+            return "Password must contain at least one lowercase letter";
+        }
+        if (!password.matches(".*[0-9].*")) {
+            return "Password must contain at least one number";
+        }
+        if (!password.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?].*")) {
+            return "Password must contain at least one special character";
+        }
+        
         if (fullName == null || fullName.trim().isEmpty()) {
             return "Full name is required";
         }
