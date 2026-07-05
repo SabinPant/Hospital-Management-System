@@ -99,7 +99,6 @@ CREATE TABLE departments (
 -- 6. APPOINTMENTS TABLE
 -- ============================================
 DROP TABLE IF EXISTS appointments;
-DROP TABLE IF EXISTS appointments;
 CREATE TABLE appointments (
     id INT PRIMARY KEY AUTO_INCREMENT,
     appointment_id VARCHAR(20) NOT NULL UNIQUE,

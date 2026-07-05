@@ -201,12 +201,14 @@ Before you begin, install the following:
 
 | Tool | Version | Download |
 |---|---|---|
-| JDK | 21 | [Download](https://www.oracle.com/java/technologies/downloads/) |
+| JDK | 21 (or newer — see note below) | [Download](https://adoptium.net/temurin/releases/?version=21) |
 | Apache Tomcat | 10.1.36 | [Download](https://tomcat.apache.org/download-10.cgi) |
 | XAMPP | Latest | [Download](https://www.apachefriends.org/) |
-| Eclipse IDE (Enterprise Java) | Latest | [Download](https://www.eclipse.org/downloads/) |
+| IDE | Eclipse (Enterprise Java) **or** IntelliJ IDEA Ultimate | [Eclipse](https://www.eclipse.org/downloads/) / [IntelliJ](https://www.jetbrains.com/idea/download/) |
 
-> Maven is bundled with Eclipse — no separate installation needed.
+> Maven is bundled with both Eclipse and IntelliJ Ultimate — no separate installation needed.
+
+> **JDK note:** The project is built targeting Java 21 (`maven.compiler.release=21`). It has also been verified to compile and run correctly on **JDK 25**, since newer JDKs can compile down to older bytecode releases. If you have a different/newer JDK already installed, you don't need to install JDK 21 separately — just make sure your `pom.xml` uses the `<release>` tag (not `<source>`/`<target>`) so the compiler correctly restricts the API surface to Java 21, avoiding class files that reference newer-JDK-only APIs.
 
 ---
 
@@ -221,35 +223,37 @@ Before you begin, install the following:
 
 ---
 
-### Step 2 — Configure Tomcat in Eclipse
+### Step 2A — Setup in Eclipse
 
-1. Open Eclipse → **Window → Preferences → Server → Runtime Environments**
-2. Click **Add → Apache → Apache Tomcat 10.1**
-3. Browse to your Tomcat installation folder
-4. Click **Finish**
-
----
-
-### Step 3 — Import the Project
-
-1. **File → Import → Existing Maven Projects**
-2. Browse to the project folder (ensure `pom.xml` is detected)
-3. Click **Finish**
-4. Wait for Maven to resolve all dependencies
+1. **Window → Preferences → Server → Runtime Environments → Add → Apache → Apache Tomcat 10.1** → browse to your Tomcat folder → **Finish**
+2. **File → Import → Existing Maven Projects** → browse to the project folder (ensure `pom.xml` is detected) → **Finish**
+3. Wait for Maven to resolve all dependencies
+4. Right-click the project → **Run As → Run on Server** → select **Tomcat 10.1** → **Finish**
 
 ---
 
-### Step 4 — Run the Application
+### Step 2B — Setup in IntelliJ IDEA (Ultimate)
 
-1. Right-click the project → **Run As → Run on Server**
-2. Select **Tomcat 10.1** → click **Finish**
-3. The app will launch at:
+1. **File → Open** → select the project folder (containing `pom.xml`) → let Maven auto-import
+2. `File → Project Structure` → set **Project SDK** to your installed JDK (21, or 25+ as noted above)
+3. `Run → Edit Configurations → + → Tomcat Server → Local`
+4. Next to **Application server**, click **Configure...** → `+` → browse to your Tomcat 10.1.36 folder → **OK**
+5. On the **Server** tab: leave **HTTP port** as `8080`; set **On 'Update' action** to **"Update classes and resources"** for fast reload during development
+6. On the **Deployment** tab: click `+` → **Artifact...** → select **`Hospital-Management-System:war exploded`** (not the plain `.war` — exploded gives hot-reload for JSP/class changes)
+7. Set **Application context** to `/Hospital-Management-System`
+8. Click **Apply → OK**, then hit **Run** ▶️
+
+> **Note:** IntelliJ Community Edition does not support built-in application server deployment (Ultimate-only feature). Community users can use the **Smart Tomcat** plugin, the Cargo Maven plugin, or manually deploy the built WAR to Tomcat's `webapps/` folder.
+
+---
+
+### Step 3 — Run the Application
+
+Regardless of IDE, once deployed, the app launches at:
 
 ```
 http://localhost:8080/Hospital-Management-System/
 ```
-
----
 
 ## 🔑 Default Credentials
 
